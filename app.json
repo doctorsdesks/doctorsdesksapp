@@ -2,6 +2,7 @@
   "expo": {
     "name": "doctorsdesksapp",
     "slug": "doctorsdesksapp",
+    "plugins": ["@react-native-firebase/app", "@react-native-firebase/auth"],
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -16,10 +17,12 @@
       "supportsTablet": true
     },
     "android": {
+      "googleServicesFile": "./google-services.json",
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.doctorsdesks.doctorsdesksapp"
     },
     "web": {
       "bundler": "metro",
@@ -31,6 +34,11 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "eas": {
+        "projectId": "dcf2fb39-f394-4bb0-8d68-502913a234db"
+      }
     }
   }
 }

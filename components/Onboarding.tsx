@@ -1,18 +1,23 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Dimensions } from 'react-native';
+import { useNavigation } from '@react-navigation/native'; // Import the useNavigation hook
 import CustomButton from './CustomButton';
-import Carousal from './Carousal';
+import Carousel from './Carousel';
+import { router } from 'expo-router';
+
+const { height } = Dimensions.get('window');
 
 const Onboarding = () => {
+  const navigation = useNavigation(); // Use the useNavigation hook to access the navigation object
+
   const handlePress = () => {
-    alert('Button Pressed!');
+    router.push('/login');
   };
 
   return (
     <View style={styles.container}>
-      <Carousal />
-      <Text style={styles.bodyText}>This is a basic page with a header, some text, and a button.</Text>
-      <CustomButton title="Press Me" onPress={handlePress} />
+      <Carousel />
+      <CustomButton containerStyle={styles.buttonFixedBottom} title="Get Started" onPress={handlePress} />
     </View>
   );
 };
@@ -20,18 +25,20 @@ const Onboarding = () => {
 const styles = StyleSheet.create({
   container: {
     marginHorizontal: 16, 
-    marginVertical: 32,
+    marginVertical: 40,
+    height: height - 80,
   },
   header: {
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 20,
   },
-  bodyText: {
-    fontSize: 16,
-    marginBottom: 20,
-    textAlign: 'center',
-  },
+  buttonFixedBottom: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+  }
 });
 
 export default Onboarding;

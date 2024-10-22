@@ -1,20 +1,31 @@
 import React from 'react';
-import { TouchableOpacity, Text, StyleSheet, GestureResponderEvent } from 'react-native';
+import { Text, StyleSheet, GestureResponderEvent, Pressable } from 'react-native';
 
 // Define the prop types for the CustomButton
 interface CustomButtonProps {
   title: string;
   onPress: (event: GestureResponderEvent) => void;
-  backgroundColor?: string;
   textColor?: string;
+  containerStyle?: object;
+  isDisabled?: boolean;
+  width?: string;
 }
 
 // Functional component definition using the props interface
-const CustomButton: React.FC<CustomButtonProps> = ({ title, onPress, backgroundColor = '#2196F3', textColor = '#FFFFFF' }) => {
+const CustomButton: React.FC<CustomButtonProps> = ({ title, onPress, textColor = '#FFFFFF', containerStyle, isDisabled = false, width = "AUTO" }) => {
   return (
-    <TouchableOpacity style={[styles.button, { backgroundColor }]} onPress={onPress}>
+    <Pressable
+      style={[
+        styles.button,
+        { backgroundColor: isDisabled ? '#99E4DF' : '#009688' },
+        containerStyle,
+        { width: width === "FULL" ? '100%' : 'auto' }
+      ]}
+      onPress={(e) => onPress(e)}
+      disabled={isDisabled}
+    >
       <Text style={[styles.buttonText, { color: textColor }]}>{title}</Text>
-    </TouchableOpacity>
+    </Pressable>
   );
 };
 
@@ -23,6 +34,7 @@ const styles = StyleSheet.create({
   button: {
     padding: 10,
     borderRadius: 5,
+    backgroundColor: '#009688',
     alignItems: 'center',
   },
   buttonText: {
