@@ -1,13 +1,18 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import SignUpHeader from './SignupHeader';
 import CustomInput2 from '@/components/CustomInput2';
 import CustomButton from '@/components/CustomButton';
 import CustomInput from '@/components/CustomInput';
 import CustomRadio from '@/components/CustomRadio';
+import IdProof from './IdProof';
+import { CardProps } from '@/constants/Enums';
+import { useAppContext } from '@/context/AppContext';
+const asd  =  require('../../assets/images/registration.png');
 
 
 const SignUp = () => {
+    const { idProofData, setIdProofData } = useAppContext();
     const scrollViewRef = React.useRef(null);
     const [ headerData, setHeaderData ] = React.useState([
         {
@@ -24,7 +29,7 @@ const SignUp = () => {
         }
     ]);
 
-    const [step, setStep] = React.useState("PD");
+    const [step, setStep] = React.useState("IDP");
 
     const [personalDetails, setPersonalDetails] = React.useState([
         {
@@ -132,6 +137,35 @@ const SignUp = () => {
         },
     ]);
 
+    useEffect(() => {
+        setIdProofData([
+            {
+                id: "registration",
+                label: "Registration Card",
+                isUploaded: false,
+                value: "",
+                url: "",
+                docIcon: asd,
+            },
+            {
+                id: "aadharCard",
+                label: "Aadhar Card",
+                isUploaded: false,
+                value: "",
+                url: "",
+                docIcon: require('../../assets/images/address.png'),
+            },
+            {
+                id: "panCard",
+                label: "Pan Card",
+                isUploaded: false,
+                value: "",
+                url: "",
+                docIcon: require('../../assets/images/address.png'),
+            }
+        ]);
+    }, [])
+
     const handleChange = (value: string, id: string, detailType: string) => {
         if (detailType === "PD") {
             const pDUpdatedData = personalDetails.map((item) => {
@@ -155,7 +189,6 @@ const SignUp = () => {
 
     const handleButtonClick = () => {
         step === "PD" ? setStep("CD") : setStep("IDP");
-        // If step is "PD" set headerData. 1. Change status of "Personal Details" to "COMPLETED" 2. Change status of "Clinic Details" to "STARTED" and if step is "CD" change headerData. 1. Change status of "Clinic Details" to "COMPLETED" 2. Change status of "ID Proof" to "STARTED"
         const updatedHeaderData = headerData.map((item, index) => {
             if (step === "PD") {
                 if (index === 0) {
@@ -176,13 +209,11 @@ const SignUp = () => {
             return item;
         });
         setHeaderData(updatedHeaderData);
-        // i want to scroll to top of the screen after clicking on continue button
         if (scrollViewRef.current) {
           (scrollViewRef.current as any).scrollTo({ x: 0, y: 0, animated: true });
         }
     }
 
-    // define a function handleDisable which will return true if any of the input field is empty from profileDetails
     const handleDisable = () => {
         if (step === "PD") {
             return personalDetails.some((item) => item.isMandatory && item.value === "");
@@ -240,8 +271,9 @@ const SignUp = () => {
                 break;
             case "IDP":
                 return (
-                    <Text> ID Proof </Text>
-                )
+                    <IdProof data={idProofData} />
+                );
+                break;
             default:
                 break;
         }

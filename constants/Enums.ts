@@ -5,3 +5,12 @@ export const InputType = {
     "DATE": "DATE",
     "AMOUNT": "AMOUNT"
 };
+
+export interface CardProps {
+    id: string;
+    label: string;
+    value: string;
+    isUploaded: boolean;
+    docIcon: any;
+    url: string;
+}

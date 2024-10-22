@@ -37,7 +37,7 @@ const Login = () => {
     const handleOtpTrigger = (e: any) => {
         console.log('OTP Triggered');
         router.replace("/signup")
-        signInWithPhoneNumber();
+        // signInWithPhoneNumber();
     }
 
     const handleOTP = (value: string) => {
