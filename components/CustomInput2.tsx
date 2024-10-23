@@ -50,7 +50,14 @@ const CustomInput2: React.FC<CustomInput2Props> = ({ data, onChange }) => {
 
   const onLocalChange = (value: string) => {
     setIsError(false);
-    onChange(value, data.id);
+    if(data?.id === "pincode") {
+      if (value?.length <= 6){
+        onChange(value, data.id);
+      }
+    } else {
+      onChange(value, data.id);
+    }
+    
   }
 
   return (

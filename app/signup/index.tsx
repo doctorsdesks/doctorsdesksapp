@@ -197,7 +197,7 @@ const SignUp = () => {
             case "PD":
                 return (personalDetails?.map((item: any) => {
                             return (
-                                <View key={item?.id} style={{ marginBottom: 16 }} >
+                                <View key={item?.id} style={{ marginBottom: 16, paddingBottom: 16 }} >
                                     {renderInputType(item, "PD")}
                                 </View>
                             )
@@ -206,7 +206,7 @@ const SignUp = () => {
             case "CD":
                 return (clinicDetails?.map((item: any) => {
                     return (
-                        <View key={item?.id} style={{ marginBottom: 16 }} >
+                        <View key={item?.id} style={{ marginBottom: 16, paddingBottom: 16 }} >
                             {renderInputType(item, "CD")}
                         </View>
                     )

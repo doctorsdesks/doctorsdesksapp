@@ -33,6 +33,7 @@ const CustomInputBoxes: React.FC<CustomInputBoxesProps> = ({ data, onChange }) =
                 {languages?.map((language: string) => {
                     return (
                         <Pressable 
+                            key={language}
                             style={{ 
                                 borderWidth: 1, 
                                 borderRadius: 20, 
