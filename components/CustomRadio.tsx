@@ -49,14 +49,16 @@ const CustomRadio: React.FC<CustomRadioProps> = ({ data, onChange }) => {
                 }}
                 onPress={() => handleSelect(option)}
             />
-            <Text
-              style={[
-                styles.optionText,
-                selectedValue === option && styles.optionTextSelected,
-              ]}
-            >
-              {option}
-            </Text>
+            <Pressable onPress={() => handleSelect(option)}>
+              <Text
+                style={[
+                  styles.optionText,
+                  selectedValue === option && styles.optionTextSelected,
+                ]}
+              >
+                {option}
+              </Text>
+            </Pressable>
           </View>
         ))}
       </View>

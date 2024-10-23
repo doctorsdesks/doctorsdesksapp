@@ -54,7 +54,7 @@ const CustomInput2: React.FC<CustomInput2Props> = ({ data, onChange }) => {
   }
 
   return (
-    <View style={styles.container}>
+    <View>
         <Text style={[styles.label, isFocused && styles.labelFocused, isError && styles.labelError]}>
           {label} {isMandatory && <Text style={styles.mandatory}>*</Text>}
         </Text>
@@ -77,9 +77,6 @@ const CustomInput2: React.FC<CustomInput2Props> = ({ data, onChange }) => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    marginVertical: 10,
-  },
   label: {
     backgroundColor: '#FCFCFC',
     fontSize: 14,

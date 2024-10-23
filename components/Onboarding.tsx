@@ -1,6 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, Dimensions } from 'react-native';
-import { useNavigation } from '@react-navigation/native'; // Import the useNavigation hook
+import { View, StyleSheet, Dimensions } from 'react-native';
 import CustomButton from './CustomButton';
 import Carousel from './Carousel';
 import { router } from 'expo-router';
@@ -8,7 +7,6 @@ import { router } from 'expo-router';
 const { height } = Dimensions.get('window');
 
 const Onboarding = () => {
-  const navigation = useNavigation(); // Use the useNavigation hook to access the navigation object
 
   const handlePress = () => {
     router.push('/login');
@@ -25,8 +23,8 @@ const Onboarding = () => {
 const styles = StyleSheet.create({
   container: {
     marginHorizontal: 16, 
-    marginVertical: 40,
-    height: height - 80,
+    marginVertical: 20,
+    height: height - 20,
   },
   header: {
     fontSize: 24,

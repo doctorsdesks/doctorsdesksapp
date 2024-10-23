@@ -1,14 +1,16 @@
 import CustomButton from '@/components/CustomButton';
 import CustomInput from '@/components/CustomInput';
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { useEffect } from 'react';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 import auth from '@react-native-firebase/auth';
-import firestore from '@react-native-firebase/firestore';
 import { router } from 'expo-router';
+import Toast from 'react-native-toast-message';
+import Loader from '@/components/Loader';
+import { useAppContext } from '@/context/AppContext';
 
 const Login = () => {
-    // define a state for inputData of type object with the properties mentioned in CustomInputProps
-    const [inputData, setInputData] = React.useState({
+    const { signUpDetails, setSignUpDetails } = useAppContext();
+    const [phoneNumber, setPhoneNumber] = React.useState({
         id: 'phone',
         type: 'STRING',
         inputType: 'PHONE',
@@ -17,7 +19,6 @@ const Login = () => {
         isMandatory: true,
         errorMessage: 'Please enter 10 digits mobile number.',
     });
-    // define a state for otp of type string
     const [otp, setOtp] = React.useState({
         id: 'otp',
         type: 'STRING',
@@ -27,58 +28,116 @@ const Login = () => {
         isMandatory: true,
         errorMessage: 'Please enter 4 digits otp.',
     });
-    // define a state for confirm of type string with initial value as null
-    const [confirm, setConfirm] = React.useState<any>(null);
+    const [confirm, setConfirm] = React.useState<any>(false);
+
+    const [timer, setTimer] = React.useState<number>(30);
+    const [canResendOtp, setCanResendOtp] = React.useState<boolean>(false);
+    const [isOTPWrong, setIsOTPWrong] = React.useState<boolean>(false);
+    const [loader, setLoader] = React.useState<boolean>(false);
+
+    useEffect(() => {
+        if (timer === 0) {
+            setCanResendOtp(true);
+          return;
+        }
+    
+        setCanResendOtp(false);
+    
+        const timerId = setInterval(() => {
+          setTimer(timer-1);
+        }, 1000);
+    
+        return () => clearInterval(timerId);
+      }, [timer]);
 
     const handleChange = (value: string) => { 
-        setInputData({ ...inputData, value });
+        if (value?.length <= 10) {
+            setPhoneNumber({ ...phoneNumber, value });
+        }
+
     }
 
-    const handleOtpTrigger = (e: any) => {
-        console.log('OTP Triggered');
-        router.replace("/signup")
+    const handleOtpTrigger = () => {
+        setLoader(true);
+        setTimer(30);
+        setCanResendOtp(false);
         // signInWithPhoneNumber();
+        Toast.show({
+            type: 'success',  
+            text1: 'OTP triggered successfully.',
+            visibilityTime: 5000,
+          });
+        setConfirm(true);
+        setLoader(false);
     }
 
     const handleOTP = (value: string) => {
-        setOtp({ ...otp, value });
+        if(value?.length <= 6) {
+            setIsOTPWrong(false);
+            setOtp({ ...otp, value });
+        }
     }
 
     const signInWithPhoneNumber = async () => {
-        const phoneNumber = "+91" + inputData.value;
-        console.info('Phone Number', phoneNumber);
+        const completeNumber = "+91" + phoneNumber.value;
         try {
-            const confirmation = await auth().signInWithPhoneNumber(phoneNumber);
+            const confirmation = await auth().signInWithPhoneNumber(completeNumber);
             setConfirm(confirmation);
+            setLoader(false);
+            Toast.show({
+                type: 'success',  
+                text1: 'OTP triggered successfully.',
+                visibilityTime: 5000,
+              });
         } catch (error) {
-            console.log('Error sending code', error);
+            console.info(error);
+            setLoader(false);
+            Toast.show({
+                type: 'error',  
+                text1: 'Something went wrong! Please try again later.',
+                visibilityTime: 5000,
+            });
         }
     }
 
     const confirmCode = async () => { 
-        try {
-            const otpValue = otp.value;
-            const userCreds = await confirm.confirm(otpValue);
-            const user = userCreds.user;
-            console.log("user got with this id from collection" ,user, userCreds);
-
-            // check if user exists in firestore
-            const userRef = await firestore().collection('users').doc(user.uid).get();
-            // log for userRef
-            console.log("user got with this id from collection" ,userRef);
-            if (userRef.exists) {
-                console.log('User already exists');
-            } else {
-                console.log('New User');
-                // await firestore().collection('users').doc(user.uid).set({
-                //     phone: user.phoneNumber,
-                //     uid: user.uid,
-                //     createdAt: firestore.FieldValue.serverTimestamp(),
-                // });
-            }
-        } catch (error) {
-            console.log('Invalid code.', error);
+        const newSignUpDetails = { ...signUpDetails, phoneOTPDetails: {
+            phoneNumber: phoneNumber.value,
+            otp: otp.value,
+          },
         }
+        setSignUpDetails(newSignUpDetails)
+        router.replace({
+            pathname: '/signup',
+            params: {
+                currentStep: "PD"
+            }
+        })
+        // try {
+        //     setLoader(true);
+        //     const otpValue = otp.value;
+        //     const userCreds = await confirm.confirm(otpValue);
+        //     const user = userCreds.user;
+        //     console.log("user got with this id from collection" ,user, );
+        //     // check for db if phone number is present
+        //     // if present go to homepage
+        //     // router.replace({
+        //     //     pathname: '/doctorDashboard',
+        //     // })
+        //     // if not present go to signup
+               // const newSignUpDetails = { ...signUpDetails, phoneNumber: phoneNumber.value}
+               // setSignUpDetails(newSignUpDetails)
+        //     router.replace({
+        //         pathname: '/signup',
+        //         params: {
+        //             currentStep: "PD"
+        //         }
+        //     })
+        //     // loader false
+        // } catch (error) {
+        //     setLoader(false);
+        //     setIsOTPWrong(true);
+        // }
     }
 
     
@@ -87,20 +146,36 @@ const Login = () => {
         <View style={style.container} >
             {!confirm ? (
                 <View>
-                    <CustomInput data={inputData} onChange={handleChange} />
-                    <View>
-                        {/* <CustomButton title="Get OTP" onPress={(e) => handleOtpTrigger(e)} isDisabled={inputData?.value === "" || inputData?.value?.length !== 10 } /> */}
-                        <CustomButton title="Get OTP" onPress={(e) => handleOtpTrigger(e)} />
+                    <CustomInput data={phoneNumber} onChange={handleChange} />
+                    <View style={{ marginTop: 24 }} >
+                        <CustomButton title="Get OTP" onPress={() => handleOtpTrigger()} isDisabled={phoneNumber?.value === "" || phoneNumber?.value?.length !== 10 } />
                     </View>
                 </View>
             ) : (
                 <View style={{ marginTop: 20 }} >
-                    <CustomInput data={otp} onChange={handleOTP} />
-                    <View>
-                        <CustomButton title="Verify OTP" onPress={() => confirmCode} isDisabled={otp?.value === "" || inputData?.value?.length !== 4 } />
+                    <Text style={{ fontSize: 14, fontWeight: 400, lineHeight: 20, color: "#32383D" }} >
+                        Enter the <Text style={{ fontWeight: 600 }} >6 digit</Text> code from the sms we sent to <Text style={{ fontWeight: 600 }} >{phoneNumber?.value}</Text>
+                    </Text>
+                    <View style={{ marginTop: 40 }} >
+                        <CustomInput data={otp} onChange={handleOTP} />
+                        {isOTPWrong && <Text style={{ marginTop: 5, fontSize: 12, color: 'red' }}>Please enter correct otp.</Text>}
+                    </View>
+                    <View style={{ marginTop: 20, display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }} >
+                        <Text>
+                            Didn't receive OTP?
+                        </Text>
+                        <Pressable style={{ marginLeft: 4, borderBottomWidth: 1, borderBottomColor: "#1EA6D6" }} onPress={() => handleOtpTrigger()} >
+                            <Text style={{ color: "#1EA6D6"}} >
+                                {canResendOtp ? "Resend Code" : `Retry in ${timer}`}
+                            </Text>
+                        </Pressable>
+                    </View>
+                    <View style={{ marginTop: 24 }} >
+                        <CustomButton title="Verify OTP" onPress={() => confirmCode()} isDisabled={otp?.value === "" || otp?.value?.length !== 6 } />
                     </View>
                 </View>
             )}
+            {loader && <Loader />}
         </View>
     )
 }

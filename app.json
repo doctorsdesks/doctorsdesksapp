@@ -2,12 +2,13 @@
   "expo": {
     "name": "doctorsdesksapp",
     "slug": "doctorsdesksapp",
-    "plugins": ["@react-native-firebase/app", "@react-native-firebase/auth"],
+    "plugins": ["@react-native-firebase/app", "@react-native-firebase/auth", "@react-native-firebase/storage", "expo-router"],
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
+    "jsEngine": "jsc",
     "splash": {
       "image": "./assets/images/splash.png",
       "resizeMode": "contain",
@@ -22,7 +23,8 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.doctorsdesks.doctorsdesksapp"
+      "package": "com.doctorsdesks.doctorsdesksapp",
+      "permissions": ["CAMERA", "READ_EXTERNAL_STORAGE", "WRITE_EXTERNAL_STORAGE"]
     },
     "web": {
       "bundler": "metro",

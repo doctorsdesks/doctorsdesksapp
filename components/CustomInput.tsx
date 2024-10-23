@@ -43,13 +43,13 @@ const CustomInput: React.FC<CustomInputProps> = ({ data, onChange }) => {
     <View style={styles.container}>
       <View style={styles.inputWrapper}>
         {/* Label */}
-        <Text style={[styles.label, isLabelInside ? styles.labelInside : styles.labelTop, isFocused && styles.labelFocused]}>
+        <Text style={[styles.label, isLabelInside ? styles.labelInside : styles.labelTop, isFocused && styles.labelFocused, isError && styles.labelError]}>
           {label} {isMandatory && <Text style={styles.mandatory}>*</Text>}
         </Text>
 
         {/* Input */}
         <TextInput
-          style={[styles.input, isFocused && { borderColor: '#2DB9B0' }]}
+          style={[styles.input, isFocused && { borderColor: '#2DB9B0' }, isError && { borderColor: "red"} ]}
           value={value}
           onChangeText={onLocalChange}
           onBlur={handleBlur}
@@ -92,6 +92,9 @@ const styles = StyleSheet.create({
   labelFocused: {
     color: '#2DB9B0',
     zIndex: 1,
+  },
+  labelError: {
+    color: 'red',
   },
   mandatory: {
     color: 'red',

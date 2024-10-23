@@ -6,169 +6,38 @@ import CustomButton from '@/components/CustomButton';
 import CustomInput from '@/components/CustomInput';
 import CustomRadio from '@/components/CustomRadio';
 import IdProof from './IdProof';
-import { CardProps } from '@/constants/Enums';
+import { useLocalSearchParams } from 'expo-router';
 import { useAppContext } from '@/context/AppContext';
+import CustomInputBoxes from '@/components/CustomInputBoxes';
+import ImageUpload from './ImageUpload';
 const asd  =  require('../../assets/images/registration.png');
 
 
 const SignUp = () => {
-    const { idProofData, setIdProofData } = useAppContext();
+    const { currentStep } = useLocalSearchParams();
+    const { signUpHeaderData, setSignUpHeaderData, signUpDetails, setSignUpDetails } = useAppContext();
     const scrollViewRef = React.useRef(null);
-    const [ headerData, setHeaderData ] = React.useState([
-        {
-            label: "Personal Details",
-            status: "STARTED",
-        },
-        {
-            label: "Clinic Details",
-            status: "NOT_STARTED",
-        },
-        {
-            label: "ID Proof",
-            status: "NOT_STARTED",
-        }
-    ]);
 
-    const [step, setStep] = React.useState("IDP");
+    const [step, setStep] = React.useState(currentStep || "PD");
 
-    const [personalDetails, setPersonalDetails] = React.useState([
-        {
-            id: "fullName",
-            type: "STRING",
-            inputType: "TEXT",
-            value: "",
-            label: "Full Name",
-            isMandatory: true,
-            errorMessage: "Please provide your full name.",
-            placeholder: "Enter your full name",
-        },
-        {
-            id: "gender",
-            type: "STRING",
-            inputType: "RADIO",
-            value: "",
-            label: "Gender",
-            isMandatory: true,
-            errorMessage: "Please select your gender",
-            options: ["MALE", "FEMALE", "OTHER"],
-        },
-        {
-            id: "experience",
-            type: "STRING",
-            inputType: "NUMBER",
-            value: "",
-            label: "Experience (in years)",
-            isMandatory: true,
-            errorMessage: "Please provide your experience",
-            placeholder: "Enter your experience in years",
-        },
-        {
-            id: "specialisation",
-            type: "STRING",
-            inputType: "TEXT",
-            value: "",
-            label: "Specialisation",
-            isMandatory: true,
-            errorMessage: "Please provide your specialisation",
-            placeholder: "Enter your specialisation",
-        },
-        {
-            id: "qualification",
-            type: "STRING",
-            inputType: "TEXT",
-            value: "",
-            label: "Qualification",
-            isMandatory: true,
-            errorMessage: "Please provide your qualification",
-            placeholder: "Enter your qualification",
-        },
-    ]);
-
-    const [clinicDetails, setClinicDetails] = React.useState([
-        {
-            id: "clinicName",
-            type: "STRING",
-            inputType: "TEXT",
-            value: "",
-            label: "Clinic Name",
-            isMandatory: true,
-            errorMessage: "Please enter your clinic name",
-            placeholder: "Clinic Name",
-        },
-        {
-            id: "clinicAddress",
-            type: "STRING",
-            inputType: "TEXT",
-            value: "",
-            label: "Clinic Address",
-            isMandatory: true,
-            errorMessage: "Please enter your clinic address",
-            placeholder: "12, Street Name",
-        },
-        {
-            id: "landmark",
-            type: "STRING",
-            inputType: "TEXT",
-            value: "",
-            label: "Landmark",
-            isMandatory: false,
-            errorMessage: "",
-            placeholder: "Near Ganesh Temple",
-        },
-        {
-            id: "city",
-            type: "STRING",
-            inputType: "TEXT",
-            value: "",
-            label: "City",
-            isMandatory: true,
-            errorMessage: "Please enter your city",
-            placeholder: "Ambala",
-        },
-        {
-            id: "pincode",
-            type: "STRING",
-            inputType: "NUMBER",
-            value: "",
-            label: "Pincode",
-            isMandatory: true,
-            errorMessage: "Please enter your pincode",
-            placeholder: "133001",
-        },
-    ]);
+    const [personalDetails, setPersonalDetails] = React.useState<any>([]);
+    const [idProofData, setIdProofData] = React.useState<any>([]);
+    const [clinicDetails, setClinicDetails] = React.useState<any>([]);
 
     useEffect(() => {
-        setIdProofData([
-            {
-                id: "registration",
-                label: "Registration Card",
-                isUploaded: false,
-                value: "",
-                url: "",
-                docIcon: asd,
-            },
-            {
-                id: "aadharCard",
-                label: "Aadhar Card",
-                isUploaded: false,
-                value: "",
-                url: "",
-                docIcon: require('../../assets/images/address.png'),
-            },
-            {
-                id: "panCard",
-                label: "Pan Card",
-                isUploaded: false,
-                value: "",
-                url: "",
-                docIcon: require('../../assets/images/address.png'),
-            }
-        ]);
-    }, [])
+        if(signUpDetails){
+            const pD = signUpDetails?.personalDetails;
+            const cD = signUpDetails?.clinicDetails;
+            const iPD = signUpDetails?.idProofDetails;
+            setPersonalDetails(pD);
+            setClinicDetails(cD);
+            setIdProofData(iPD);
+        }
+    }, [signUpDetails]);
 
     const handleChange = (value: string, id: string, detailType: string) => {
         if (detailType === "PD") {
-            const pDUpdatedData = personalDetails.map((item) => {
+            const pDUpdatedData = personalDetails.map((item: any) => {
                 if (item.id === id) {
                     return { ...item, value }; 
                 }
@@ -176,7 +45,7 @@ const SignUp = () => {
             });
             setPersonalDetails(pDUpdatedData);
         } else if (detailType === "CD") {
-            const cDUpdatedData = clinicDetails.map((item) => {
+            const cDUpdatedData = clinicDetails.map((item: any) => {
                 if (item.id === id) {
                     return { ...item, value }; 
                 }
@@ -188,38 +57,103 @@ const SignUp = () => {
     }
 
     const handleButtonClick = () => {
-        step === "PD" ? setStep("CD") : setStep("IDP");
-        const updatedHeaderData = headerData.map((item, index) => {
-            if (step === "PD") {
-                if (index === 0) {
-                    return { ...item, status: "COMPLETED", };
+        if(step === "PD") {
+            setStep("CD");
+            const updatedHeaderDataPD = signUpHeaderData?.map((item) => {
+                if(item?.label === "Personal Details") {
+                    return { ...item, status: "COMPLETED"}
                 }
-                if (index === 1) {
-                    return { ...item, status: "STARTED" };
+                if(item?.label === "Clinic Details") {
+                    return { ...item, status: "STARTED"}
                 }
+                return { ...item };
+            })
+            setSignUpHeaderData(updatedHeaderDataPD);
+            const newSignUpDetails = { ...signUpDetails, personalDetails: personalDetails}
+            setSignUpDetails(newSignUpDetails);
+            if (scrollViewRef.current) {
+                (scrollViewRef.current as any).scrollTo({ x: 0, y: 0, animated: true });
             }
-            if (step === "CD") {
-                if (index === 1) {
-                    return { ...item, status: "COMPLETED" };
+        } else if(step === "CD"){
+            setStep("IDP");
+            const updatedHeaderDataCD = signUpHeaderData?.map((item) => {
+                if(item?.label === "Clinic Details") {
+                    return { ...item, status: "COMPLETED"}
                 }
-                if (index === 2) {
-                    return { ...item, status: "STARTED" };
+                if(item?.label === "ID Proof") {
+                    return { ...item, status: "STARTED"}
                 }
+                return { ...item };
+            })
+            setSignUpHeaderData(updatedHeaderDataCD);
+            const newSignUpDetails = { ...signUpDetails, clinicDetails: clinicDetails}
+            setSignUpDetails(newSignUpDetails);
+            if (scrollViewRef.current) {
+                (scrollViewRef.current as any).scrollTo({ x: 0, y: 0, animated: true });
             }
-            return item;
-        });
-        setHeaderData(updatedHeaderData);
-        if (scrollViewRef.current) {
-          (scrollViewRef.current as any).scrollTo({ x: 0, y: 0, animated: true });
+        } else if(step === "IDP"){
+            const getValueById = (object: Array<any>, id: string) => {
+                return object?.find((item: {id: string}) => item?.id === id)?.value;
+            }
+            const phoneOtp = signUpDetails?.phoneOTPDetails;
+            const registrationDetails = idProofData?.find((item: {id: string}) => item?.id === "registration");
+            const panDetails = idProofData?.find((item: {id: string}) => item?.id === "panCard");
+            const aadharDetails = idProofData?.find((item: {id: string}) => item?.id === "aadharCard");
+            const updateData = {
+                phone: phoneOtp.phoneNumber,
+                otp: phoneOtp.otp,
+                name: getValueById(personalDetails, "fullName"),
+                gender: getValueById(personalDetails, "gender"),
+                email:  getValueById(personalDetails, "email"),
+                experience:  getValueById(personalDetails, "experience"),
+                specilization:  getValueById(personalDetails, "specialisation"),
+                qualification: getValueById(personalDetails, "qualification"),
+                languages: getValueById(personalDetails, "languages"),
+                clinicAddress: {
+                    clinicName: getValueById(clinicDetails, "clinicName"),
+                    address: {
+                        addressLine: getValueById(clinicDetails, "clinicAddress"),
+                        landmark: getValueById(clinicDetails, "landmark"),
+                        city: getValueById(clinicDetails, "city"),
+                        state: getValueById(clinicDetails, "state"),
+                        pincode: getValueById(clinicDetails, "pincode"),
+                    }
+                },
+                registrationNumber: registrationDetails.value,
+                registrationFrontUrl: registrationDetails.frontUrl,
+                registrationBackUrl: registrationDetails.backUrl,
+                panNumber: panDetails.value,
+                panFrontUrl: panDetails.frontUrl,
+                panBackUrl: panDetails.backUrl,
+                aadharNumber: aadharDetails.value,
+                aadharFrontUrl: aadharDetails.frontUrl,
+                aadharBackUrl: aadharDetails.backUrl
+            }
         }
     }
 
     const handleDisable = () => {
         if (step === "PD") {
-            return personalDetails.some((item) => item.isMandatory && item.value === "");
+            if( personalDetails?.some((item: any) => item.isMandatory && item.value === "")) return true;
+            if (personalDetails?.find((item: any) => item?.id === "languages")?.value?.length === 0) return true;
+            const emailValue = personalDetails?.find((item: any) => item.id === "email")?.value;
+            if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(emailValue)) return true;
         } else if (step === "CD") {
-            return clinicDetails.some((item) => item.isMandatory && item.value === "");
+            return clinicDetails.some((item: any) => item.isMandatory && item.value === "");
+        } else if (step === "IDP" ) {
+            if (idProofData[0]?.isUploaded && (idProofData[1]?.isUploaded || idProofData[2]?.isUploaded) ) return false;
+            else return true;
         }
+    }
+
+    const handleChangeLanguage = (newValue: string, id: string) => {
+        const pDUpdatedData = personalDetails.map((item: any) => {
+            if (item.id === id) {
+                return { ...item, value: [ ...item?.value, newValue] }; 
+            }
+            return item;
+        });
+        setPersonalDetails(pDUpdatedData);
     }
 
     const renderInputType = (item: any, detailType: string) => {
@@ -239,11 +173,20 @@ const SignUp = () => {
                     <CustomInput2 data={item} onChange={(value, id) => handleChange(value, id, detailType)} />
                 )
                 break;
+            case "EMAIL":
+                return (
+                    <CustomInput2 data={item} onChange={(value, id) => handleChange(value, id, detailType)} />
+                )
+                break;
             case "RADIO":
                 return (
                     <CustomRadio data={item} onChange={(value, id) => handleChange(value, id, detailType)} />
                 )
                 break;
+            case "BOXES": 
+                return (
+                    <CustomInputBoxes data={item} onChange={(value, id) => handleChangeLanguage(value, id)} />
+                )
             default:
                 break;
         }
@@ -252,18 +195,18 @@ const SignUp = () => {
     const renderValue = () => {
         switch (step) {
             case "PD":
-                return (personalDetails.map((item) => {
+                return (personalDetails?.map((item: any) => {
                             return (
-                                <View key={item?.id} style={{ marginBottom: 24 }} >
+                                <View key={item?.id} style={{ marginBottom: 16 }} >
                                     {renderInputType(item, "PD")}
                                 </View>
                             )
                         }))
                 break;
             case "CD":
-                return (clinicDetails.map((item) => {
+                return (clinicDetails?.map((item: any) => {
                     return (
-                        <View key={item?.id} style={{ marginBottom: 24 }} >
+                        <View key={item?.id} style={{ marginBottom: 16 }} >
                             {renderInputType(item, "CD")}
                         </View>
                     )
@@ -271,7 +214,7 @@ const SignUp = () => {
                 break;
             case "IDP":
                 return (
-                    <IdProof data={idProofData} />
+                    <IdProof idProofData={idProofData} />
                 );
                 break;
             default:
@@ -281,7 +224,7 @@ const SignUp = () => {
 
     return (
         <View style={style.container} >
-            <SignUpHeader data={headerData} />
+            <SignUpHeader data={signUpHeaderData} />
             <ScrollView
                 ref={scrollViewRef}
                 style={{ 
@@ -290,7 +233,9 @@ const SignUp = () => {
                     borderRadius: 8,
                     borderColor: "#DDDDDD",
                     marginTop: 16,
-                    marginHorizontal: 12,
+                    borderWidth: 1,
+                    paddingHorizontal: 12,
+                    paddingVertical: 16,
                 }}
             >
                 {renderValue()}

@@ -2,15 +2,16 @@ import Header from '@/components/Header';
 import IdProofCard from '@/components/IdProofCard';
 import IdProofCardUpdate from '@/components/IdProofCardUpdate';
 import { CardProps } from '@/constants/Enums';
+import { useAppContext } from '@/context/AppContext';
 import { router } from 'expo-router';
 import React, { useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
 
 interface IdProofProps {
-    data: Array<CardProps>;
+    idProofData: any;
 }
 
-const IdProof: React.FC<IdProofProps> = ({ data }) => {
+const IdProof: React.FC<IdProofProps> = ({ idProofData }) => {
 
     return (
         <View 
@@ -22,16 +23,17 @@ const IdProof: React.FC<IdProofProps> = ({ data }) => {
                 <Header label="Upload Registration Card" />
                 <Pressable
                     onPress={() => {
+                        !idProofData[0]?.isUploaded &&
                         router.replace({
                             pathname: '/uploadCard',
                             params: {
                                 docType: "Registration",
-                                docId: data[0]?.id
+                                docId: idProofData[0]?.id
                             }
                         })
                     }}
                 >
-                    <IdProofCard data={data[0]} />
+                    <IdProofCard data={idProofData[0]} />
                 </Pressable>
             </View>
             <View style={{ marginTop: 32}} >
@@ -42,12 +44,12 @@ const IdProof: React.FC<IdProofProps> = ({ data }) => {
                             pathname: '/uploadCard',
                             params: {
                                 docType: "Aadhar",
-                                docId: data[1]?.id
+                                docId: idProofData[1]?.id
                             }
                         })
                     }}
                 >
-                    <IdProofCard data={data[1]} />
+                    <IdProofCard data={idProofData[1]} />
                 </Pressable>
                 <Pressable
                     onPress={() => {
@@ -55,12 +57,12 @@ const IdProof: React.FC<IdProofProps> = ({ data }) => {
                             pathname: '/uploadCard',
                             params: {
                                 docType: "Pan",
-                                docId: data[2]?.id
+                                docId: idProofData[2]?.id
                             }
                         })
                     }}
                 >
-                    <IdProofCard data={data[2]} />
+                    <IdProofCard data={idProofData[2]} />
                 </Pressable>
             </View>
             

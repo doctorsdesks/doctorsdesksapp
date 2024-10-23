@@ -9,8 +9,10 @@ export const InputType = {
 export interface CardProps {
     id: string;
     label: string;
+    documentType: string;
     value: string;
     isUploaded: boolean;
     docIcon: any;
-    url: string;
+    frontUrl: string;
+    backUrl: string;
 }
