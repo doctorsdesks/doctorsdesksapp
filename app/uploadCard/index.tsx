@@ -7,7 +7,6 @@ import IdProofUploadCard from './IdProofUploadCard';
 import CustomButton from '@/components/CustomButton';
 import Toast from 'react-native-toast-message';
 import Loader from '@/components/Loader';
-import storage from '@react-native-firebase/storage';
 import { uploadFile } from '@/components/Utils';
 
 const UploadCard = () => {
@@ -39,9 +38,10 @@ const UploadCard = () => {
         setLoader(true);
         const fileNameFront = frontUri?.fileName;
         const fileNameBack = backUri?.fileName;
-        const frontUrlObject = await uploadFile(frontUri, fileNameFront);
+        const phoneNumber = signUpDetails?.phoneOTPDetails?.phoneNumber;
+        const frontUrlObject = await uploadFile(frontUri, fileNameFront, phoneNumber);
         if (frontUrlObject.status === "SUCCESS"){
-            const backUrlObject = await uploadFile(backUri, fileNameBack);
+            const backUrlObject = await uploadFile(backUri, fileNameBack, phoneNumber);
             if(backUrlObject.status === "SUCCESS") {
                 const iPD = signUpDetails?.idProofDetails;
                 const newDocData = iPD?.map((item: {id: string}) => {

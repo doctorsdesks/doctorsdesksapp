@@ -57,7 +57,8 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ }) => {
     const handleUploadImage = async (file: any) => {
         setLoader(true);
         const fileName = file?.fileName;
-        const uploadedImageUrlObject = await uploadFile(file, fileName);
+        const phoneNumber = signUpDetails?.phoneOTPDetails?.phoneNumber;
+        const uploadedImageUrlObject = await uploadFile(file, fileName, phoneNumber);
         if (uploadedImageUrlObject.status === "SUCCESS"){
             Toast.show({
                 type: 'success',  

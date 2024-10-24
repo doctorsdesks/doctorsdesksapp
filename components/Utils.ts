@@ -1,10 +1,10 @@
 import storage from '@react-native-firebase/storage';
 import Toast from 'react-native-toast-message';
 
-export const uploadFile = async (fileUri: any, fileName: string) => {
+export const uploadFile = async (fileUri: any, fileName: string, phoneNumber: string) => {
     const fileExtension = fileUri.uri.split('.').pop();
     console.info("in process 1", fileExtension);
-    const storageRef = storage().ref(`uploads/${fileName}`);
+    const storageRef = storage().ref(`uploads/${phoneNumber}/${fileName}`);
     console.info("in process 2", storageRef.fullPath);
     try {
         const task = storageRef.putFile(fileUri.uri);
