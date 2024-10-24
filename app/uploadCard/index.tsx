@@ -8,6 +8,7 @@ import CustomButton from '@/components/CustomButton';
 import Toast from 'react-native-toast-message';
 import Loader from '@/components/Loader';
 import storage from '@react-native-firebase/storage';
+import { uploadFile } from '@/components/Utils';
 
 const UploadCard = () => {
     const { signUpDetails, setSignUpDetails } = useAppContext();
@@ -35,59 +36,75 @@ const UploadCard = () => {
     }
 
     const handleUploadImage = async () => {
-        console.info("uplaod start", frontUri);
-        const fileNameFront = frontUri?.fileName;
-        const fileNameBack = frontUri?.fileName;
-        const frontUrl = await uploadFile(frontUri, fileNameFront);
-        const backUrl = await uploadFile(backUri, fileNameBack);
-        const iPD = signUpDetails?.idProofDetails;
-        const newDocData = iPD?.map((item: {id: string}) => {
-            if (item?.id === docId) {
-                return { ...item, value: currentData?.value || "", frontUrl: frontUrl || "", backUrl: backUrl || "", isUploaded: true }
-            } else {
-                return { ...item }
-            }
-        })
-        const newSignUpDetails = { ...signUpDetails, idProofDetails: newDocData}
-        setSignUpDetails(newSignUpDetails);
-        router.replace({
-            pathname: '/signup',
-            params: {
-                currentStep: "IDP"
-            }
-        })
-    }
-
-    const uploadFile = async (fileUri: any, fileName: string) => {
         setLoader(true);
-        const fileExtension = fileUri.uri.split('.').pop();
-        console.info("in process 1", fileExtension);
-        const storageRef = storage().ref(`uploads/${fileName}`);
-        console.info("in process 2", storageRef.fullPath);
-        try {
-            const task = storageRef.putFile(fileUri.uri);
-            task.on('state_changed', taskSnapshot => {
-            console.log(`${taskSnapshot.bytesTransferred} transferred out of ${taskSnapshot.totalBytes}`);
-            });
-            await task;
-            const downloadUrl = await storageRef.getDownloadURL();
-            Toast.show({
-                type: 'success',  
-                text1: 'Image uploaded Successfully.',
-                visibilityTime: 5000,
-            });
-            return downloadUrl;
-        } catch (error) {
+        const fileNameFront = frontUri?.fileName;
+        const fileNameBack = backUri?.fileName;
+        const frontUrlObject = await uploadFile(frontUri, fileNameFront);
+        if (frontUrlObject.status === "SUCCESS"){
+            const backUrlObject = await uploadFile(backUri, fileNameBack);
+            if(backUrlObject.status === "SUCCESS") {
+                const iPD = signUpDetails?.idProofDetails;
+                const newDocData = iPD?.map((item: {id: string}) => {
+                    if (item?.id === docId) {
+                        return { ...item, value: currentData?.value || "", frontUrl: frontUrlObject.data || "", backUrl: backUrlObject.data || "", isUploaded: true }
+                    } else {
+                        return { ...item }
+                    }
+                })
+                const newSignUpDetails = { ...signUpDetails, idProofDetails: newDocData}
+                setSignUpDetails(newSignUpDetails);
+                router.replace({
+                    pathname: '/signup',
+                    params: {
+                        currentStep: "IDP"
+                    }
+                })
+            } else {
+                Toast.show({
+                    type: 'error',  
+                    text1: `Something went wrong, error: ${backUrlObject.data}`,
+                    visibilityTime: 5000,
+                });
+                setLoader(false);
+            }
+        } else {
             Toast.show({
                 type: 'error',  
-                text1: 'Something went wrong.',
+                text1: `Something went wrong, error: ${frontUrlObject.data}`,
                 visibilityTime: 5000,
             });
-            console.log("Error uploading file: ", error);
-        } finally {
             setLoader(false);
         }
-      };
+    }
+    //     setLoader(true);
+    //     const fileExtension = fileUri.uri.split('.').pop();
+    //     console.info("in process 1", fileExtension);
+    //     const storageRef = storage().ref(`uploads/${fileName}`);
+    //     console.info("in process 2", storageRef.fullPath);
+    //     try {
+    //         const task = storageRef.putFile(fileUri.uri);
+    //         task.on('state_changed', taskSnapshot => {
+    //         console.log(`${taskSnapshot.bytesTransferred} transferred out of ${taskSnapshot.totalBytes}`);
+    //         });
+    //         await task;
+    //         const downloadUrl = await storageRef.getDownloadURL();
+    //         Toast.show({
+    //             type: 'success',  
+    //             text1: 'Image uploaded Successfully.',
+    //             visibilityTime: 5000,
+    //         });
+    //         return downloadUrl;
+    //     } catch (error) {
+    //         Toast.show({
+    //             type: 'error',  
+    //             text1: 'Something went wrong.',
+    //             visibilityTime: 5000,
+    //         });
+    //         console.log("Error uploading file: ", error);
+    //     } finally {
+    //         setLoader(false);
+    //     }
+    //   };
 
     return (
         <View style={{ marginTop: 32, marginHorizontal: 16 }}>

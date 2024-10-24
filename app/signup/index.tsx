@@ -23,6 +23,7 @@ const SignUp = () => {
     const [personalDetails, setPersonalDetails] = React.useState<any>([]);
     const [idProofData, setIdProofData] = React.useState<any>([]);
     const [clinicDetails, setClinicDetails] = React.useState<any>([]);
+    const [showImage, setShowImage] = React.useState<boolean>(true);
 
     useEffect(() => {
         if(signUpDetails){
@@ -102,6 +103,7 @@ const SignUp = () => {
             const updateData = {
                 phone: phoneOtp.phoneNumber,
                 otp: phoneOtp.otp,
+                imageUrl: signUpDetails?.imageUrl,
                 name: getValueById(personalDetails, "fullName"),
                 gender: getValueById(personalDetails, "gender"),
                 email:  getValueById(personalDetails, "email"),
@@ -129,6 +131,7 @@ const SignUp = () => {
                 aadharFrontUrl: aadharDetails.frontUrl,
                 aadharBackUrl: aadharDetails.backUrl
             }
+            console.info("final object to save", updateData);
         }
     }
 
@@ -160,7 +163,7 @@ const SignUp = () => {
         switch (item.inputType) {
             case "TEXT":
                 return (
-                    <CustomInput2 data={item} onChange={(value, id) => handleChange(value, id, detailType)} />
+                    <CustomInput2 data={item} onChange={(value, id) => handleChange(value, id, detailType)} handleFocus={() => setShowImage(false)} />
                 )
                 break;
             case "NUMBER":
@@ -225,6 +228,7 @@ const SignUp = () => {
     return (
         <View style={style.container} >
             <SignUpHeader data={signUpHeaderData} />
+            {showImage && step === "PD" && <ImageUpload />}
             <ScrollView
                 ref={scrollViewRef}
                 style={{ 

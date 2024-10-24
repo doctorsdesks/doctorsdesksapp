@@ -1,15 +1,26 @@
-import React, { useState } from 'react';
-import { Pressable, Text, View } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { Image, Pressable, Text, View } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import Toast from 'react-native-toast-message';
+import Loader from '@/components/Loader';
+import { useAppContext } from '@/context/AppContext';
+import { uploadFile } from '@/components/Utils';
+import ViewImage from '@/components/ViewImage';
 
 interface ImageUploadProps {
-    imageUrl: string,
-    onChange: (value: string) => void;
 }
 
-const ImageUpload: React.FC<ImageUploadProps> = ({ imageUrl, onChange}) => {
-    const [image, setImage] = useState<any>();
+const ImageUpload: React.FC<ImageUploadProps> = ({ }) => {
+    const { signUpDetails, setSignUpDetails } = useAppContext();
+    const [loader, setLoader] = useState<boolean>(false);
+    const [imageUrl, setImageUrl] = useState<any>();
+
+    useEffect(() => {
+        if(signUpDetails){
+            const iUrl = signUpDetails?.imageUrl
+            setImageUrl(iUrl);
+        }
+    },[signUpDetails])
 
     const requestPermission = async () => {
         const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -35,15 +46,37 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ imageUrl, onChange}) => {
     
           if (!result.canceled) {
             const uriInfo = result.assets[0];
-
             
-            setImage(uriInfo)
+            handleUploadImage(uriInfo);
           }
         } catch (error) {
           console.log('Error picking image: ', error);
         }
     };
 
+    const handleUploadImage = async (file: any) => {
+        setLoader(true);
+        const fileName = file?.fileName;
+        const uploadedImageUrlObject = await uploadFile(file, fileName);
+        if (uploadedImageUrlObject.status === "SUCCESS"){
+            Toast.show({
+                type: 'success',  
+                text1: 'Image uploaded Successfully.',
+                visibilityTime: 5000,
+            });
+            setImageUrl(uploadedImageUrlObject.data);
+            const newSignUpDetails = { ...signUpDetails, imageUrl: uploadedImageUrlObject.data}
+            setSignUpDetails(newSignUpDetails);
+            setLoader(false);
+        } else {
+            Toast.show({
+                type: 'error',  
+                text1: `Something went wrong, error: ${uploadedImageUrlObject.data}`,
+                visibilityTime: 5000,
+            });
+        }
+        
+    }
 
     return (
         <View style={{display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: 24 }} >
@@ -52,13 +85,20 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ imageUrl, onChange}) => {
             </Text>
             <View style={{marginTop: 12, display: 'flex', alignItems: 'center' }} >
                 <Text style={{ color: "#32383D", fontSize: 12, lineHeight: 14, fontWeight: 600 }} >Your Profile Picture</Text>
-                <View style={{ marginTop: 8, height: 100, width: 100, borderColor: "#CFD8DC", backgroundColor: "#CFD8DC", borderRadius: 100 }}  ></View>
-                <Pressable onPress={pickImage} style={{ borderBottomWidth: 1, borderBottomColor: "#1EA6D6", marginTop: 12}}>
-                    <Text style={{ color: "#1EA6D6"}} >
-                        Upload Photo
-                    </Text>
-                </Pressable>
+                {imageUrl === "" ?
+                    <View style={{ marginTop: 8, height: 100, width: 100, borderColor: "#CFD8DC", backgroundColor: "#CFD8DC", borderRadius: 100 }}  />
+                :
+                    <Image source={{uri: imageUrl}} resizeMode='cover' height={100} width={100} style={{ marginTop: 8, height: 100, width: 100, borderColor: "#CFD8DC", borderRadius: 100 }} />
+                }
+                {imageUrl === "" && 
+                    <Pressable onPress={pickImage} style={{ borderBottomWidth: 1, borderBottomColor: "#1EA6D6", marginTop: 12}}>
+                        <Text style={{ color: "#1EA6D6"}} >
+                            Upload Photo
+                        </Text>
+                    </Pressable>
+                }
             </View>
+            {loader && <Loader />}
         </View>
     )
 }

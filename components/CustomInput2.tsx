@@ -13,20 +13,22 @@ interface CustomInput2Props {
     placeholder: string;
   };
   onChange: (value: string, id: string) => void;
+  handleFocus?: () => void;
 }
 
-const CustomInput2: React.FC<CustomInput2Props> = ({ data, onChange }) => {
+const CustomInput2: React.FC<CustomInput2Props> = ({ data, onChange, handleFocus }) => {
   const [isFocused, setIsFocused] = useState(false);
   const [isError, setIsError] = useState(false);
-  const { label, value, isMandatory, errorMessage, placeholder, inputType } = data;
+  const { label, value, isMandatory, errorMessage, placeholder, inputType, id } = data;
 
   const handleBlur = () => {
     setIsFocused(false);
     validateInput();
   };
 
-  const handleFocus = () => {
+  const handleFocusLocal = () => {
     setIsFocused(true);
+    handleFocus && handleFocus();
   };
 
   const validateInput = () => {
@@ -36,6 +38,11 @@ const CustomInput2: React.FC<CustomInput2Props> = ({ data, onChange }) => {
     }
 
     if (inputType === 'EMAIL' && !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(value)) {
+      setIsError(true);
+      return;
+    }
+
+    if(id === "pincode" && value?.length < 6){
       setIsError(true);
       return;
     }
@@ -70,7 +77,7 @@ const CustomInput2: React.FC<CustomInput2Props> = ({ data, onChange }) => {
           value={value}
           onChangeText={onLocalChange}
           onBlur={handleBlur}
-          onFocus={handleFocus}
+          onFocus={handleFocusLocal}
           placeholder={placeholder}
           keyboardType={
             inputType === 'NUMBER' || inputType === 'PHONE' || inputType === 'AMOUNT'

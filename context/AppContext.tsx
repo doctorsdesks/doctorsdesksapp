@@ -38,6 +38,7 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
       phoneNumber: "",
       otp: "",
     },
+    imageUrl: "",
     personalDetails: [
       {
           id: "fullName",
