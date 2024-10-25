@@ -62,14 +62,15 @@ const Login = () => {
         setLoader(true);
         setTimer(30);
         setCanResendOtp(false);
-        // signInWithPhoneNumber();
-        Toast.show({
-            type: 'success',  
-            text1: 'OTP triggered successfully.',
-            visibilityTime: 5000,
-          });
-        setConfirm(true);
-        setLoader(false);
+        signInWithPhoneNumber();
+
+        // Toast.show({
+        //     type: 'success',  
+        //     text1: 'OTP triggered successfully.',
+        //     visibilityTime: 5000,
+        //   });
+        // setConfirm(true);
+        // setLoader(false);
     }
 
     const handleOTP = (value: string) => {
