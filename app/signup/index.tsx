@@ -6,17 +6,18 @@ import CustomButton from '@/components/CustomButton';
 import CustomInput from '@/components/CustomInput';
 import CustomRadio from '@/components/CustomRadio';
 import IdProof from './IdProof';
-import { useLocalSearchParams } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import { useAppContext } from '@/context/AppContext';
 import CustomInputBoxes from '@/components/CustomInputBoxes';
 import ImageUpload from './ImageUpload';
 import axios from 'axios';
 import Toast from 'react-native-toast-message';
+import Loader from '@/components/Loader';
 
 
 const SignUp = () => {
     const { currentStep } = useLocalSearchParams();
-    const { signUpHeaderData, setSignUpHeaderData, signUpDetails, setSignUpDetails } = useAppContext();
+    const { signUpHeaderData, setSignUpHeaderData, signUpDetails, setSignUpDetails, setDoctorDetails } = useAppContext();
     const scrollViewRef = React.useRef(null);
 
     const [step, setStep] = React.useState(currentStep || "PD");
@@ -25,6 +26,7 @@ const SignUp = () => {
     const [idProofData, setIdProofData] = React.useState<any>([]);
     const [clinicDetails, setClinicDetails] = React.useState<any>([]);
     const [showImage, setShowImage] = React.useState<boolean>(true);
+    const [loader, setLoader] = React.useState<boolean>(false);
 
     useEffect(() => {
         if(signUpDetails){
@@ -94,6 +96,7 @@ const SignUp = () => {
                 (scrollViewRef.current as any).scrollTo({ x: 0, y: 0, animated: true });
             }
         } else if(step === "IDP"){
+            setLoader(true);
             const getValueById = (object: Array<any>, id: string) => {
                 return object?.find((item: {id: string}) => item?.id === id)?.value;
             }
@@ -160,6 +163,9 @@ const SignUp = () => {
                     visibilityTime: 5000,
                 });
             }
+            setLoader(false);
+            setDoctorDetails(updateData);
+            router.replace("/dashboard");
             console.info("success response", data, status);
         } catch (error: any) {
             if (error?.status === 409) {
@@ -175,6 +181,7 @@ const SignUp = () => {
                     visibilityTime: 5000,
                 });
             }
+            setLoader(false);
         }
     }
 

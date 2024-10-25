@@ -103,6 +103,17 @@ const Login = () => {
     }
 
     const confirmCode = async () => { 
+        console.info("clicked ")
+        setLoader(true);
+        try {
+            const responseOtp = await confirm.confirm(otp.value);
+            console.info("success otp", responseOtp);
+            Toast.show({
+                type: 'success',  
+                text1: `OTP confirmed`,
+                visibilityTime: 5000,
+            });
+            
         const url = "http://docter-api-service-lb-413222422.ap-south-1.elb.amazonaws.com/v1/doctor/" + phoneNumber?.value;
         // const url = "http://localhost:3000/v1/doctor/" + phoneNumber?.value;
         try {
@@ -123,6 +134,7 @@ const Login = () => {
                         },
                     }
                     setSignUpDetails(newSignUpDetails)
+                    setLoader(false);
                     router.replace({
                         pathname: '/signup',
                         params: {
@@ -133,6 +145,7 @@ const Login = () => {
                     // existing doctor
                     setSignUpDetails({});
                     setDoctorDetails({ ...data.data })
+                    setLoader(false);
                     Toast.show({
                         type: 'success',  
                         text1: `Welcome ${data.data.name}`,
@@ -141,7 +154,6 @@ const Login = () => {
                     router.replace("/dashboard");
                 }
             }
-            console.info("success response", response);
         } catch (error: any) {
             Toast.show({
                 type: 'error',  
@@ -149,6 +161,16 @@ const Login = () => {
                 visibilityTime: 5000,
             });
         }
+            setLoader(false);
+        } catch (error) {
+            Toast.show({
+                type: 'error',
+                text1: "Invalid OTP, Please try again.",
+                visibilityTime: 5000,
+            });
+            setLoader(false);
+        }
+        
         // const newSignUpDetails = { ...signUpDetails, phoneOTPDetails: {
         //     phoneNumber: phoneNumber.value,
         //     otp: otp.value,
