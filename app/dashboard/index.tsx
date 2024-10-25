@@ -18,9 +18,9 @@ const Dashboard = () => {
     }
 
     return (
-        <View style={{ marginHorizontal: 16, marginVertical: 20 }} >
+        <View style={{ marginHorizontal: 16, marginTop: 60, display: 'flex', alignItems: 'center', justifyContent: "center", height: 600 }} >
             <Text style={{ marginTop: 12, fontSize: 16, fontWeight: 700 }} >
-                Welcome Doctor {doctorDetails?.name}
+                Welcome Dr. {doctorDetails?.name}
             </Text>
             <Pressable onPress={handleLogout} style={{ marginTop: 24, borderWidth: 1, borderRadius: 8, borderColor: "#333", paddingVertical: 4, paddingHorizontal: 8, width: 100 }}>
                 <Text>

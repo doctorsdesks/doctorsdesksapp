@@ -60,7 +60,6 @@ const Login = () => {
 
     const handleOtpTrigger = () => {
         setLoader(true);
-        setTimer(30);
         setCanResendOtp(false);
         signInWithPhoneNumber();
 
@@ -90,7 +89,8 @@ const Login = () => {
                 type: 'success',  
                 text1: 'OTP triggered successfully.',
                 visibilityTime: 5000,
-              });
+            });
+            setTimer(30);
         } catch (error: any) {
             setLoader(false);
             Toast.show({
@@ -121,20 +121,6 @@ const Login = () => {
             });
             setLoader(false);
         }
-        
-        // const newSignUpDetails = { ...signUpDetails, phoneOTPDetails: {
-        //     phoneNumber: phoneNumber.value,
-        //     otp: otp.value,
-        //   },
-        // }
-        // setSignUpDetails(newSignUpDetails)
-        // router.replace({
-        //     pathname: '/signup',
-        //     params: {
-        //         currentStep: "PD"
-        //     }
-        // })
-
     }
 
     const CheckForUserExist = async () => {
@@ -142,49 +128,45 @@ const Login = () => {
         // const url = "http://localhost:3000/v1/doctor/" + phoneNumber?.value;
         try {
             const response = await axios.get(url,
-            {
-                headers: {
-                'X-Requested-With': 'doctorsdesks_web_app',
-                },
-            }
+                {
+                    headers: {
+                    'X-Requested-With': 'doctorsdesks_web_app',
+                    },
+                }
             );
             const { data, status } = response;
+            Toast.show({
+                type: 'success',  
+                text1: status + "status",
+                visibilityTime: 5000,
+            });
             console.info("log after user find api", data, status);
-            if (status === 200){
-                if( data?.data == null ){
-                    // new doctor 
-                    const newSignUpDetails = { ...signUpDetails, phoneOTPDetails: {
-                            phoneNumber: phoneNumber.value,
-                            otp: otp.value,
-                        },
-                    }
-                    setSignUpDetails(newSignUpDetails)
-                    setLoader(false);
-                    router.replace({
-                        pathname: '/signup',
-                        params: {
-                            currentStep: "PD"
-                        }
-                    })
-                } else if (data.data) {
-                    // existing doctor
-                    setSignUpDetails({});
-                    setDoctorDetails({ ...data.data })
-                    setLoader(false);
-                    Toast.show({
-                        type: 'success',  
-                        text1: `Welcome ${data.data.name}`,
-                        visibilityTime: 5000,
-                    });
-                    router.replace("/dashboard");
+            if( data?.data == null ){
+                // new doctor 
+                const newSignUpDetails = { ...signUpDetails, phoneOTPDetails: {
+                        phoneNumber: phoneNumber.value,
+                        otp: otp.value,
+                    },
                 }
-            } else {
+                setSignUpDetails(newSignUpDetails)
+                setLoader(false);
+                router.replace({
+                    pathname: '/signup',
+                    params: {
+                        currentStep: "PD"
+                    }
+                })
+            } else if (data.data) {
+                // existing doctor
+                setSignUpDetails({});
+                setDoctorDetails({ ...data.data })
+                setLoader(false);
                 Toast.show({
-                    type: 'error',  
-                    text1: "Error founding User",
+                    type: 'success',  
+                    text1: `Welcome ${data.data.name}`,
                     visibilityTime: 5000,
                 });
-                setLoader(false);
+                router.replace("/dashboard");
             }
         } catch (error: any) {
             Toast.show({
