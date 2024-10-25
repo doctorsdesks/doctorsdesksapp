@@ -7,9 +7,10 @@ import { router } from 'expo-router';
 import Toast from 'react-native-toast-message';
 import Loader from '@/components/Loader';
 import { useAppContext } from '@/context/AppContext';
+import axios from 'axios';
 
 const Login = () => {
-    const { signUpDetails, setSignUpDetails } = useAppContext();
+    const { signUpDetails, setSignUpDetails, setDoctorDetails } = useAppContext();
     const [phoneNumber, setPhoneNumber] = React.useState({
         id: 'phone',
         type: 'STRING',
@@ -101,43 +102,65 @@ const Login = () => {
     }
 
     const confirmCode = async () => { 
-        const newSignUpDetails = { ...signUpDetails, phoneOTPDetails: {
-            phoneNumber: phoneNumber.value,
-            otp: otp.value,
-          },
-        }
-        setSignUpDetails(newSignUpDetails)
-        router.replace({
-            pathname: '/signup',
-            params: {
-                currentStep: "PD"
+        const url = "http://docter-api-service-lb-413222422.ap-south-1.elb.amazonaws.com/v1/doctor/" + phoneNumber?.value;
+        // const url = "http://localhost:3000/v1/doctor/" + phoneNumber?.value;
+        try {
+            const response = await axios.get(url,
+              {
+                headers: {
+                  'X-Requested-With': 'doctorsdesks_web_app',
+                },
+              }
+            );
+            const { data, status } = response;
+            if (status === 200){
+                if( data?.data == null ){
+                    // new doctor 
+                    const newSignUpDetails = { ...signUpDetails, phoneOTPDetails: {
+                            phoneNumber: phoneNumber.value,
+                            otp: otp.value,
+                        },
+                    }
+                    setSignUpDetails(newSignUpDetails)
+                    router.replace({
+                        pathname: '/signup',
+                        params: {
+                            currentStep: "PD"
+                        }
+                    })
+                } else if (data.data) {
+                    // existing doctor
+                    setSignUpDetails({});
+                    setDoctorDetails({ ...data.data })
+                    Toast.show({
+                        type: 'success',  
+                        text1: `Welcome ${data.data.name}`,
+                        visibilityTime: 5000,
+                    });
+                    router.replace("/dashboard");
+                }
             }
-        })
-        // try {
-        //     setLoader(true);
-        //     const otpValue = otp.value;
-        //     const userCreds = await confirm.confirm(otpValue);
-        //     const user = userCreds.user;
-        //     console.log("user got with this id from collection" ,user, );
-        //     // check for db if phone number is present
-        //     // if present go to homepage
-        //     // router.replace({
-        //     //     pathname: '/doctorDashboard',
-        //     // })
-        //     // if not present go to signup
-               // const newSignUpDetails = { ...signUpDetails, phoneNumber: phoneNumber.value}
-               // setSignUpDetails(newSignUpDetails)
-        //     router.replace({
-        //         pathname: '/signup',
-        //         params: {
-        //             currentStep: "PD"
-        //         }
-        //     })
-        //     // loader false
-        // } catch (error) {
-        //     setLoader(false);
-        //     setIsOTPWrong(true);
+            console.info("success response", response);
+        } catch (error: any) {
+            Toast.show({
+                type: 'error',  
+                text1: error.response.data.message,
+                visibilityTime: 5000,
+            });
+        }
+        // const newSignUpDetails = { ...signUpDetails, phoneOTPDetails: {
+        //     phoneNumber: phoneNumber.value,
+        //     otp: otp.value,
+        //   },
         // }
+        // setSignUpDetails(newSignUpDetails)
+        // router.replace({
+        //     pathname: '/signup',
+        //     params: {
+        //         currentStep: "PD"
+        //     }
+        // })
+
     }
 
     

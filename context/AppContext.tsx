@@ -7,6 +7,8 @@ interface AppContextType {
   setSignUpHeaderData: (finalData: Array<{ label: string, status: string}>) => void;
   signUpDetails: any;
   setSignUpDetails: (finalData: any) => void;
+  doctorDetails: any;
+  setDoctorDetails: (data: any) => void;
 
   // user: { name: string; age: number };
   // setUser: (user: { name: string; age: number }) => void;
@@ -66,7 +68,7 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
         inputType: "EMAIL",
         value: "",
         label: "Email",
-        isMandatory: true,
+        isMandatory: false,
         errorMessage: "Please enter a valid email Id",
       },
       {
@@ -206,6 +208,8 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
     ]
   });
 
+  const [doctorDetails, setDoctorDetails] = React.useState({});
+
   // const [user, setUser] = useState({ name: 'John', age: 30 });
 
   // const logout = () => {
@@ -213,7 +217,7 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
   // };
 
   return (
-    <AppContext.Provider value={{ setSignUpHeaderData, signUpHeaderData, signUpDetails, setSignUpDetails  }}>
+    <AppContext.Provider value={{ setSignUpHeaderData, signUpHeaderData, signUpDetails, setSignUpDetails, doctorDetails, setDoctorDetails  }}>
       {children}
     </AppContext.Provider>
   );

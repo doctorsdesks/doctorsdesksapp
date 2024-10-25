@@ -10,7 +10,8 @@ import { useLocalSearchParams } from 'expo-router';
 import { useAppContext } from '@/context/AppContext';
 import CustomInputBoxes from '@/components/CustomInputBoxes';
 import ImageUpload from './ImageUpload';
-const asd  =  require('../../assets/images/registration.png');
+import axios from 'axios';
+import Toast from 'react-native-toast-message';
 
 
 const SignUp = () => {
@@ -102,13 +103,12 @@ const SignUp = () => {
             const aadharDetails = idProofData?.find((item: {id: string}) => item?.id === "aadharCard");
             const updateData = {
                 phone: phoneOtp.phoneNumber,
-                otp: phoneOtp.otp,
                 imageUrl: signUpDetails?.imageUrl,
                 name: getValueById(personalDetails, "fullName"),
                 gender: getValueById(personalDetails, "gender"),
                 email:  getValueById(personalDetails, "email"),
                 experience:  getValueById(personalDetails, "experience"),
-                specilization:  getValueById(personalDetails, "specialisation"),
+                specialisation:  getValueById(personalDetails, "specialisation"),
                 qualification: getValueById(personalDetails, "qualification"),
                 languages: getValueById(personalDetails, "languages"),
                 clinicAddress: {
@@ -121,17 +121,60 @@ const SignUp = () => {
                         pincode: getValueById(clinicDetails, "pincode"),
                     }
                 },
-                registrationNumber: registrationDetails.value,
-                registrationFrontUrl: registrationDetails.frontUrl,
-                registrationBackUrl: registrationDetails.backUrl,
-                panNumber: panDetails.value,
-                panFrontUrl: panDetails.frontUrl,
-                panBackUrl: panDetails.backUrl,
-                aadharNumber: aadharDetails.value,
-                aadharFrontUrl: aadharDetails.frontUrl,
-                aadharBackUrl: aadharDetails.backUrl
+                registrationInfo: {
+                    number: registrationDetails.value,
+                    frontUrl: registrationDetails.frontUrl,
+                    backUrl: registrationDetails.backUrl,
+                },
+                panInfo: {
+                    number: panDetails.value,
+                    frontUrl: panDetails.frontUrl,
+                    backUrl: panDetails.backUrl,
+                },
+                aadharInfo: {
+                    number: aadharDetails.value,
+                    frontUrl: aadharDetails.frontUrl,
+                    backUrl: aadharDetails.backUrl
+                }
             }
+            createDoctor(updateData);
             console.info("final object to save", updateData);
+        }
+    }
+
+    const createDoctor = async (updateData: any) => {
+        const url = "http://docter-api-service-lb-413222422.ap-south-1.elb.amazonaws.com/v1/signup/doctor";
+        try {
+            const response = await axios.post(url, updateData,
+              {
+                headers: {
+                  'X-Requested-With': 'doctorsdesks_web_app',
+                },
+              }
+            );
+            const { data, status } = response;
+            if (status === 201){
+                Toast.show({
+                    type: 'success',  
+                    text1: data.data,
+                    visibilityTime: 5000,
+                });
+            }
+            console.info("success response", data, status);
+        } catch (error: any) {
+            if (error?.status === 409) {
+                Toast.show({
+                    type: 'error',  
+                    text1: error.response.data.message,
+                    visibilityTime: 5000,
+                });
+            } else {
+                Toast.show({
+                    type: 'error',  
+                    text1: error.response.data.message,
+                    visibilityTime: 5000,
+                });
+            }
         }
     }
 
