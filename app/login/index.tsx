@@ -91,19 +91,17 @@ const Login = () => {
                 text1: 'OTP triggered successfully.',
                 visibilityTime: 5000,
               });
-        } catch (error) {
-            console.info(error);
+        } catch (error: any) {
             setLoader(false);
             Toast.show({
                 type: 'error',  
-                text1: 'Something went wrong! Please try again later.',
+                text1: error?.message || "Something went wrong!. Please try again later",
                 visibilityTime: 5000,
             });
         }
     }
 
     const confirmCode = async () => { 
-        console.info("clicked ")
         setLoader(true);
         try {
             const responseOtp = await confirm.confirm(otp.value);
@@ -113,18 +111,45 @@ const Login = () => {
                 text1: `OTP confirmed`,
                 visibilityTime: 5000,
             });
-            
+
+            CheckForUserExist();
+        } catch (error: any) {
+            Toast.show({
+                type: 'error',
+                text1: error?.message || "Something went wrong!. Please try again later",
+                visibilityTime: 5000,
+            });
+            setLoader(false);
+        }
+        
+        // const newSignUpDetails = { ...signUpDetails, phoneOTPDetails: {
+        //     phoneNumber: phoneNumber.value,
+        //     otp: otp.value,
+        //   },
+        // }
+        // setSignUpDetails(newSignUpDetails)
+        // router.replace({
+        //     pathname: '/signup',
+        //     params: {
+        //         currentStep: "PD"
+        //     }
+        // })
+
+    }
+
+    const CheckForUserExist = async () => {
         const url = "http://docter-api-service-lb-413222422.ap-south-1.elb.amazonaws.com/v1/doctor/" + phoneNumber?.value;
         // const url = "http://localhost:3000/v1/doctor/" + phoneNumber?.value;
         try {
             const response = await axios.get(url,
-              {
+            {
                 headers: {
-                  'X-Requested-With': 'doctorsdesks_web_app',
+                'X-Requested-With': 'doctorsdesks_web_app',
                 },
-              }
+            }
             );
             const { data, status } = response;
+            console.info("log after user find api", data, status);
             if (status === 200){
                 if( data?.data == null ){
                     // new doctor 
@@ -153,6 +178,13 @@ const Login = () => {
                     });
                     router.replace("/dashboard");
                 }
+            } else {
+                Toast.show({
+                    type: 'error',  
+                    text1: "Error founding User",
+                    visibilityTime: 5000,
+                });
+                setLoader(false);
             }
         } catch (error: any) {
             Toast.show({
@@ -160,30 +192,8 @@ const Login = () => {
                 text1: error.response.data.message,
                 visibilityTime: 5000,
             });
-        }
-            setLoader(false);
-        } catch (error) {
-            Toast.show({
-                type: 'error',
-                text1: "Invalid OTP, Please try again.",
-                visibilityTime: 5000,
-            });
             setLoader(false);
         }
-        
-        // const newSignUpDetails = { ...signUpDetails, phoneOTPDetails: {
-        //     phoneNumber: phoneNumber.value,
-        //     otp: otp.value,
-        //   },
-        // }
-        // setSignUpDetails(newSignUpDetails)
-        // router.replace({
-        //     pathname: '/signup',
-        //     params: {
-        //         currentStep: "PD"
-        //     }
-        // })
-
     }
 
     
