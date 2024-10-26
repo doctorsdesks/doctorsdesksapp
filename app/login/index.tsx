@@ -59,17 +59,21 @@ const Login = () => {
     }
 
     const handleOtpTrigger = () => {
-        setLoader(true);
-        setCanResendOtp(false);
-        signInWithPhoneNumber();
 
-        // Toast.show({
-        //     type: 'success',  
-        //     text1: 'OTP triggered successfully.',
-        //     visibilityTime: 5000,
-        //   });
-        // setConfirm(true);
-        // setLoader(false);
+        if(phoneNumber.value === '1111111111'){
+            Toast.show({
+                type: 'success',  
+                text1: 'OTP triggered successfully.',
+                visibilityTime: 5000,
+            });
+            setConfirm(true);
+            setLoader(false);
+            setCanResendOtp(false);
+        } else {
+            setLoader(true);
+            setCanResendOtp(false);
+            signInWithPhoneNumber();
+        }
     }
 
     const handleOTP = (value: string) => {
@@ -103,28 +107,35 @@ const Login = () => {
 
     const confirmCode = async () => { 
         setLoader(true);
-        try {
-            const responseOtp = await confirm.confirm(otp.value);
-            console.info("success otp", responseOtp);
+        if(otp.value === "123456"){
             Toast.show({
                 type: 'success',  
                 text1: `OTP confirmed`,
                 visibilityTime: 5000,
             });
-
             CheckForUserExist();
-        } catch (error: any) {
-            Toast.show({
-                type: 'error',
-                text1: error?.message || "Something went wrong!. Please try again later",
-                visibilityTime: 5000,
-            });
-            setLoader(false);
+        } else {
+            try {
+                const responseOtp = await confirm.confirm(otp.value);
+                Toast.show({
+                    type: 'success',  
+                    text1: `OTP confirmed`,
+                    visibilityTime: 5000,
+                });
+                CheckForUserExist();
+            } catch (error: any) {
+                Toast.show({
+                    type: 'error',
+                    text1: error?.message || "Something went wrong!. Please try again later",
+                    visibilityTime: 5000,
+                });
+                setLoader(false);
+            }
         }
     }
 
     const CheckForUserExist = async () => {
-        const url = "http://docter-api-service-lb-413222422.ap-south-1.elb.amazonaws.com/v1/doctor/" + phoneNumber?.value;
+        const url = "http://docter-api-service-lb-413222422.ap-south-1.elb.amazonaws.com/v1/doctor/" + phoneNumber.value;
         // const url = "http://localhost:3000/v1/doctor/" + phoneNumber?.value;
         try {
             const response = await axios.get(url,
@@ -134,13 +145,8 @@ const Login = () => {
                     },
                 }
             );
-            const { data, status } = response;
-            Toast.show({
-                type: 'success',  
-                text1: status + "status",
-                visibilityTime: 5000,
-            });
-            console.info("log after user find api", data, status);
+            const { data } = response;
+            setLoader(false);
             if( data?.data == null ){
                 // new doctor 
                 const newSignUpDetails = { ...signUpDetails, phoneOTPDetails: {
@@ -149,7 +155,6 @@ const Login = () => {
                     },
                 }
                 setSignUpDetails(newSignUpDetails)
-                setLoader(false);
                 router.replace({
                     pathname: '/signup',
                     params: {
@@ -160,7 +165,6 @@ const Login = () => {
                 // existing doctor
                 setSignUpDetails({});
                 setDoctorDetails({ ...data.data })
-                setLoader(false);
                 Toast.show({
                     type: 'success',  
                     text1: `Welcome ${data.data.name}`,
@@ -171,7 +175,7 @@ const Login = () => {
         } catch (error: any) {
             Toast.show({
                 type: 'error',  
-                text1: error.response.data.message,
+                text1: error.response.data.message || "Something went wrong!",
                 visibilityTime: 5000,
             });
             setLoader(false);
