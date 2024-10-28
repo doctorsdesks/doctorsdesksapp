@@ -15,6 +15,7 @@ import Toast from 'react-native-toast-message';
 import Loader from '@/components/Loader';
 import SearchSelect from '@/components/SearchSelect';
 import { saveSecureKey } from '@/components/Utils';
+import { signUpDetailsInitial, signUpHeaderDataInitial } from '@/context/InitialState';
 
 
 const SignUp = () => {
@@ -43,21 +44,8 @@ const SignUp = () => {
 
     useEffect(() => {
         const backAction = () => {
-            setSignUpDetails({});
-            setSignUpHeaderData([
-                {
-                    label: "Personal Info",
-                    status: "STARTED",
-                },
-                {
-                    label: "Clinic Info",
-                    status: "NOT_STARTED",
-                },
-                {
-                    label: "ID Proof",
-                    status: "NOT_STARTED",
-                }
-            ]);
+            setSignUpDetails(signUpDetailsInitial);
+            setSignUpHeaderData(signUpHeaderDataInitial);
             router.replace("/login");
             return true;
         };
