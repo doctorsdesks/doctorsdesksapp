@@ -14,14 +14,16 @@ interface CustomInput2Props {
   };
   onChange: (value: string, id: string) => void;
   handleFocus?: () => void;
+  handleBlur?: (value: string) => void;
 }
 
-const CustomInput2: React.FC<CustomInput2Props> = ({ data, onChange, handleFocus }) => {
+const CustomInput2: React.FC<CustomInput2Props> = ({ data, onChange, handleFocus, handleBlur }) => {
   const [isFocused, setIsFocused] = useState(false);
   const [isError, setIsError] = useState(false);
   const { label, value, isMandatory, errorMessage, placeholder, inputType, id } = data;
 
-  const handleBlur = () => {
+  const handleBlurLocal = () => {
+    handleBlur && handleBlur(data?.value);
     setIsFocused(false);
     validateInput();
   };
@@ -37,7 +39,7 @@ const CustomInput2: React.FC<CustomInput2Props> = ({ data, onChange, handleFocus
       return;
     }
 
-    if (inputType === 'EMAIL' && !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(value)) {
+    if (inputType === 'EMAIL' && value !== "" && !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(value)) {
       setIsError(true);
       return;
     }
@@ -73,10 +75,11 @@ const CustomInput2: React.FC<CustomInput2Props> = ({ data, onChange, handleFocus
           {label} {isMandatory && <Text style={styles.mandatory}>*</Text>}
         </Text>
         <TextInput
+          placeholderTextColor={'#D9D9D9'}
           style={[styles.input, isFocused && styles.inputFocused, isError && styles.inputError]}
           value={value}
           onChangeText={onLocalChange}
-          onBlur={handleBlur}
+          onBlur={handleBlurLocal}
           onFocus={handleFocusLocal}
           placeholder={placeholder}
           keyboardType={

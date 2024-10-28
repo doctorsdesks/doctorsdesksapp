@@ -1,5 +1,7 @@
 import storage from '@react-native-firebase/storage';
 import Toast from 'react-native-toast-message';
+import * as SecureStore from 'expo-secure-store';
+
 
 export const uploadFile = async (fileUri: any, fileName: string, phoneNumber: string) => {
     const fileExtension = fileUri.uri.split('.').pop();
@@ -29,3 +31,12 @@ export const uploadFile = async (fileUri: any, fileName: string, phoneNumber: st
         }
     }
   };
+
+  export async function saveSecureKey(key: string, value: string) {
+    await SecureStore.setItemAsync(key, value);
+  }
+
+  export async function getSecureKey(key: string) {
+    const value = await SecureStore.getItemAsync(key);
+    return value;
+  }

@@ -16,3 +16,15 @@ export interface CardProps {
     frontUrl: string;
     backUrl: string;
 }
+
+export interface StringObject {
+    id: string;
+    type: string;
+    inputType: string;
+    value: string;
+    label: string;
+    isMandatory?: boolean;
+    errorMessage?: string;
+    placeholder?: string;
+    options?: Array<string>;
+}

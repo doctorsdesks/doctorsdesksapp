@@ -25,7 +25,7 @@ const CustomRadio: React.FC<CustomRadioProps> = ({ data, onChange }) => {
   };
 
   return (
-    <View style={styles.container}>
+    <View>
       <Text style={[styles.label]}>
         {label} {isMandatory && <Text style={styles.mandatory}>*</Text>}
       </Text>
@@ -67,9 +67,6 @@ const CustomRadio: React.FC<CustomRadioProps> = ({ data, onChange }) => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    marginVertical: 10,
-  },
   label: {
     fontSize: 14,
     color: '#8C8C8C',
