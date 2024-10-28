@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import { View, StyleSheet, ScrollView, BackHandler } from 'react-native';
 import SignUpHeader from './SignupHeader';
 import CustomInput2 from '@/components/CustomInput2';
 import CustomButton from '@/components/CustomButton';
@@ -13,6 +13,8 @@ import ImageUpload from './ImageUpload';
 import axios from 'axios';
 import Toast from 'react-native-toast-message';
 import Loader from '@/components/Loader';
+import SearchSelect from '@/components/SearchSelect';
+import { saveSecureKey } from '@/components/Utils';
 
 
 const SignUp = () => {
@@ -38,6 +40,32 @@ const SignUp = () => {
             setIdProofData(iPD);
         }
     }, [signUpDetails]);
+
+    useEffect(() => {
+        const backAction = () => {
+            setSignUpDetails({});
+            setSignUpHeaderData([
+                {
+                    label: "Personal Info",
+                    status: "STARTED",
+                },
+                {
+                    label: "Clinic Info",
+                    status: "NOT_STARTED",
+                },
+                {
+                    label: "ID Proof",
+                    status: "NOT_STARTED",
+                }
+            ]);
+            router.replace("/login");
+            return true;
+        };
+
+        const backHandler = BackHandler.addEventListener("hardwareBackPress", backAction);
+
+        return () => backHandler.remove();
+    }, []);
 
     const handleChange = (value: string, id: string, detailType: string) => {
         if (detailType === "PD") {
@@ -165,6 +193,8 @@ const SignUp = () => {
             }
             setLoader(false);
             setDoctorDetails(updateData);
+            saveSecureKey("isUserOnBoarded", "true");
+            saveSecureKey("isUserLoggedIn", "true");
             router.replace("/dashboard");
             console.info("success response", data, status);
         } catch (error: any) {
@@ -190,6 +220,7 @@ const SignUp = () => {
             if( personalDetails?.some((item: any) => item.isMandatory && item.value === "")) return true;
             if (personalDetails?.find((item: any) => item?.id === "languages")?.value?.length === 0) return true;
             const emailValue = personalDetails?.find((item: any) => item.id === "email")?.value;
+
             if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(emailValue)) return true;
         } else if (step === "CD") {
             return clinicDetails.some((item: any) => item.isMandatory && item.value === "");
@@ -209,11 +240,17 @@ const SignUp = () => {
         setPersonalDetails(pDUpdatedData);
     }
 
+    const handleNameBlue = (value: string) => {
+        if(value === ""){
+            setShowImage(true);
+        }
+    };
+
     const renderInputType = (item: any, detailType: string) => {
         switch (item.inputType) {
             case "TEXT":
                 return (
-                    <CustomInput2 data={item} onChange={(value, id) => handleChange(value, id, detailType)} handleFocus={() => setShowImage(false)} />
+                    <CustomInput2 data={item} onChange={(value, id) => handleChange(value, id, detailType)} handleFocus={() => setShowImage(false)} handleBlur={handleNameBlue} />
                 )
                 break;
             case "NUMBER":
@@ -236,6 +273,10 @@ const SignUp = () => {
                     <CustomRadio data={item} onChange={(value, id) => handleChange(value, id, detailType)} />
                 )
                 break;
+            case "SEARCHSELECT":
+                return (
+                    <SearchSelect data={item} onChange={(value, id) => handleChange(value, id, detailType)} />
+                )
             case "BOXES": 
                 return (
                     <CustomInputBoxes data={item} onChange={(value, id) => handleChangeLanguage(value, id)} />
@@ -250,7 +291,7 @@ const SignUp = () => {
             case "PD":
                 return (personalDetails?.map((item: any) => {
                             return (
-                                <View key={item?.id} style={{ marginBottom: 16, paddingBottom: 16 }} >
+                                <View key={item?.id} style={{ marginBottom: 16 }} >
                                     {renderInputType(item, "PD")}
                                 </View>
                             )

@@ -22,11 +22,11 @@ const AppContext = createContext<AppContextType | null>(null);
 export const AppProvider = ({ children }: { children: ReactNode }) => {
   const [ signUpHeaderData, setSignUpHeaderData ] = React.useState([
     {
-        label: "Personal Details",
+        label: "Personal Info",
         status: "STARTED",
     },
     {
-        label: "Clinic Details",
+        label: "Clinic Info",
         status: "NOT_STARTED",
     },
     {
@@ -88,18 +88,18 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
           value: "",
           label: "Specialisation",
           isMandatory: true,
-          errorMessage: "Please provide your specialisation",
-          placeholder: "Enter your specialisation",
+          errorMessage: "Please enter a valid specialisation",
+          placeholder: "Enter specialisation",
       },
       {
-          id: "qualification",
+          id: "otherQualification",
           type: "STRING",
           inputType: "TEXT",
           value: "",
-          label: "Qualification",
-          isMandatory: true,
-          errorMessage: "Please provide your qualification",
-          placeholder: "Enter your qualification",
+          label: "Other Qualification",
+          isMandatory: false,
+          errorMessage: "",
+          placeholder: "Enter your qualifications",
       },
       {
         id: "languages",

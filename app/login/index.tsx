@@ -1,13 +1,14 @@
 import CustomButton from '@/components/CustomButton';
 import CustomInput from '@/components/CustomInput';
 import React, { useEffect } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { BackHandler, Pressable, StyleSheet, Text, View } from 'react-native';
 import auth from '@react-native-firebase/auth';
 import { router } from 'expo-router';
 import Toast from 'react-native-toast-message';
 import Loader from '@/components/Loader';
 import { useAppContext } from '@/context/AppContext';
 import axios from 'axios';
+import { saveSecureKey } from '@/components/Utils';
 
 const Login = () => {
     const { signUpDetails, setSignUpDetails, setDoctorDetails } = useAppContext();
@@ -35,6 +36,18 @@ const Login = () => {
     const [canResendOtp, setCanResendOtp] = React.useState<boolean>(false);
     const [isOTPWrong, setIsOTPWrong] = React.useState<boolean>(false);
     const [loader, setLoader] = React.useState<boolean>(false);
+
+    useEffect(() => {
+        const backAction = () => {
+            setSignUpDetails({});
+            BackHandler.exitApp()
+            return true;
+        };
+
+        const backHandler = BackHandler.addEventListener("hardwareBackPress", backAction);
+
+        return () => backHandler.remove();
+    }, []);
 
     useEffect(() => {
         if (timer === 0) {
@@ -170,6 +183,7 @@ const Login = () => {
                     text1: `Welcome ${data.data.name}`,
                     visibilityTime: 5000,
                 });
+                saveSecureKey("isUserLoggedIn", "true");
                 router.replace("/dashboard");
             }
         } catch (error: any) {
