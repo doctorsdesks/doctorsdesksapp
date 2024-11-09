@@ -80,10 +80,10 @@ const SignUp = () => {
         if(step === "PD") {
             setStep("CD");
             const updatedHeaderDataPD = signUpHeaderData?.map((item) => {
-                if(item?.label === "Personal Details") {
+                if(item?.label === "Personal Info") {
                     return { ...item, status: "COMPLETED"}
                 }
-                if(item?.label === "Clinic Details") {
+                if(item?.label === "Clinic Info") {
                     return { ...item, status: "STARTED"}
                 }
                 return { ...item };
@@ -97,7 +97,7 @@ const SignUp = () => {
         } else if(step === "CD"){
             setStep("IDP");
             const updatedHeaderDataCD = signUpHeaderData?.map((item) => {
-                if(item?.label === "Clinic Details") {
+                if(item?.label === "Clinic Info") {
                     return { ...item, status: "COMPLETED"}
                 }
                 if(item?.label === "ID Proof") {
@@ -128,7 +128,7 @@ const SignUp = () => {
                 email:  getValueById(personalDetails, "email"),
                 experience:  getValueById(personalDetails, "experience"),
                 specialisation:  getValueById(personalDetails, "specialisation"),
-                qualification: getValueById(personalDetails, "qualification"),
+                otherQualification: getValueById(personalDetails, "otherQualification"),
                 languages: getValueById(personalDetails, "languages"),
                 clinicAddress: {
                     clinicName: getValueById(clinicDetails, "clinicName"),
@@ -157,7 +157,6 @@ const SignUp = () => {
                 }
             }
             createDoctor(updateData);
-            console.info("final object to save", updateData);
         }
     }
 
@@ -181,10 +180,10 @@ const SignUp = () => {
             }
             setLoader(false);
             setDoctorDetails(updateData);
+            setSignUpDetails(signUpDetailsInitial);
             saveSecureKey("isUserOnBoarded", "true");
             saveSecureKey("isUserLoggedIn", "true");
-            router.replace("/dashboard");
-            console.info("success response", data, status);
+            router.replace("/successSignUp");
         } catch (error: any) {
             if (error?.status === 409) {
                 Toast.show({
@@ -203,6 +202,10 @@ const SignUp = () => {
         }
     }
 
+    const handleGoToHome = () => {
+        router.replace("/dashboard");
+    }
+
     const handleDisable = () => {
         if (step === "PD") {
             if( personalDetails?.some((item: any) => item.isMandatory && item.value === "")) return true;
@@ -218,13 +221,28 @@ const SignUp = () => {
         }
     }
 
-    const handleChangeLanguage = (newValue: string, id: string) => {
-        const pDUpdatedData = personalDetails.map((item: any) => {
-            if (item.id === id) {
-                return { ...item, value: [ ...item?.value, newValue] }; 
-            }
-            return item;
-        });
+    const handleChangeLanguage = (newValue: string, id: string, type: string) => {
+        let pDUpdatedData = [...personalDetails];
+        if(type === "ADD"){
+            pDUpdatedData = pDUpdatedData.map((item: any) => {
+                if (item.id === id) {
+                    return { ...item, value: [ ...item?.value, newValue] }; 
+                }
+                return item;
+            });
+        } else if(type === "REMOVE"){
+            pDUpdatedData = pDUpdatedData.map((item: any) => {
+                if (item.id === id) {
+                    const newValues = [...item.value];
+                    const index = newValues.findIndex((language: string) => language === newValue);
+                    if(index !== -1) {
+                        newValues.splice(index, 1);
+                    }
+                    return { ...item, value: [ ...newValues] }; 
+                }
+                return item;
+            });
+        }
         setPersonalDetails(pDUpdatedData);
     }
 
@@ -267,7 +285,7 @@ const SignUp = () => {
                 )
             case "BOXES": 
                 return (
-                    <CustomInputBoxes data={item} onChange={(value, id) => handleChangeLanguage(value, id)} />
+                    <CustomInputBoxes data={item} onChange={(value, id, type) => handleChangeLanguage(value, id, type)} />
                 )
             default:
                 break;

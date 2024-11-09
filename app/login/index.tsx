@@ -9,6 +9,7 @@ import Loader from '@/components/Loader';
 import { useAppContext } from '@/context/AppContext';
 import axios from 'axios';
 import { saveSecureKey } from '@/components/Utils';
+import { signUpDetailsInitial } from '@/context/InitialState';
 
 const Login = () => {
     const { signUpDetails, setSignUpDetails, setDoctorDetails } = useAppContext();
@@ -32,14 +33,14 @@ const Login = () => {
     });
     const [confirm, setConfirm] = React.useState<any>(false);
 
-    const [timer, setTimer] = React.useState<number>(30);
+    const [timer, setTimer] = React.useState<number>(0);
     const [canResendOtp, setCanResendOtp] = React.useState<boolean>(false);
     const [isOTPWrong, setIsOTPWrong] = React.useState<boolean>(false);
     const [loader, setLoader] = React.useState<boolean>(false);
 
     useEffect(() => {
         const backAction = () => {
-            setSignUpDetails({});
+            setSignUpDetails(signUpDetailsInitial);
             BackHandler.exitApp()
             return true;
         };
@@ -48,6 +49,12 @@ const Login = () => {
 
         return () => backHandler.remove();
     }, []);
+
+    useEffect(() => {
+        if (signUpDetails) {
+            setConfirm(signUpDetails?.phoneOTPDetails?.otpTriggered);
+        }
+    }, [signUpDetails]);
 
     useEffect(() => {
         if (timer === 0) {
@@ -77,9 +84,16 @@ const Login = () => {
             Toast.show({
                 type: 'success',  
                 text1: 'OTP triggered successfully.',
-                visibilityTime: 5000,
+                visibilityTime: 3000,
             });
-            setConfirm(true);
+            const newSignUpDetails = { ...signUpDetails, phoneOTPDetails: {
+                    phoneNumber: phoneNumber.value,
+                    otp: otp.value,
+                    otpTriggered: true
+                },
+            }
+            setSignUpDetails(newSignUpDetails)
+            setTimer(30);
             setLoader(false);
             setCanResendOtp(false);
         } else {
@@ -100,20 +114,26 @@ const Login = () => {
         const completeNumber = "+91" + phoneNumber.value;
         try {
             const confirmation = await auth().signInWithPhoneNumber(completeNumber);
-            setConfirm(confirmation);
             setLoader(false);
             Toast.show({
                 type: 'success',  
                 text1: 'OTP triggered successfully.',
-                visibilityTime: 5000,
+                visibilityTime: 3000,
             });
+            const newSignUpDetails = { ...signUpDetails, phoneOTPDetails: {
+                    phoneNumber: phoneNumber.value,
+                    otp: otp.value,
+                    otpTriggered: true
+                },
+            }
+            setSignUpDetails(newSignUpDetails)
             setTimer(30);
         } catch (error: any) {
             setLoader(false);
             Toast.show({
                 type: 'error',  
                 text1: error?.message || "Something went wrong!. Please try again later",
-                visibilityTime: 5000,
+                visibilityTime: 3000,
             });
         }
     }
@@ -124,7 +144,7 @@ const Login = () => {
             Toast.show({
                 type: 'success',  
                 text1: `OTP confirmed`,
-                visibilityTime: 5000,
+                visibilityTime: 3000,
             });
             CheckForUserExist();
         } else {
@@ -133,14 +153,14 @@ const Login = () => {
                 Toast.show({
                     type: 'success',  
                     text1: `OTP confirmed`,
-                    visibilityTime: 5000,
+                    visibilityTime: 3000,
                 });
                 CheckForUserExist();
             } catch (error: any) {
                 Toast.show({
                     type: 'error',
                     text1: error?.message || "Something went wrong!. Please try again later",
-                    visibilityTime: 5000,
+                    visibilityTime: 3000,
                 });
                 setLoader(false);
             }
@@ -176,12 +196,12 @@ const Login = () => {
                 })
             } else if (data.data) {
                 // existing doctor
-                setSignUpDetails({});
+                setSignUpDetails(signUpDetailsInitial);
                 setDoctorDetails({ ...data.data })
                 Toast.show({
                     type: 'success',  
                     text1: `Welcome ${data.data.name}`,
-                    visibilityTime: 5000,
+                    visibilityTime: 3000,
                 });
                 saveSecureKey("isUserLoggedIn", "true");
                 router.replace("/dashboard");
@@ -190,7 +210,7 @@ const Login = () => {
             Toast.show({
                 type: 'error',  
                 text1: error.response.data.message || "Something went wrong!",
-                visibilityTime: 5000,
+                visibilityTime: 3000,
             });
             setLoader(false);
         }
