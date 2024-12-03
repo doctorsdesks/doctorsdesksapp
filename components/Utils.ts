@@ -5,13 +5,11 @@ import * as SecureStore from 'expo-secure-store';
 
 export const uploadFile = async (fileUri: any, fileName: string, phoneNumber: string) => {
     const fileExtension = fileUri.uri.split('.').pop();
-    console.info("in process 1", fileExtension);
     const storageRef = storage().ref(`uploads/${phoneNumber}/${fileName}`);
-    console.info("in process 2", storageRef.fullPath);
     try {
         const task = storageRef.putFile(fileUri.uri);
         task.on('state_changed', taskSnapshot => {
-        console.log(`${taskSnapshot.bytesTransferred} transferred out of ${taskSnapshot.totalBytes}`);
+        // console.log(`${taskSnapshot.bytesTransferred} transferred out of ${taskSnapshot.totalBytes}`);
         });
         await task;
         const downloadUrl = await storageRef.getDownloadURL();

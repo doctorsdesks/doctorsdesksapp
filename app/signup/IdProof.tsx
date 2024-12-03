@@ -20,7 +20,7 @@ const IdProof: React.FC<IdProofProps> = ({ idProofData }) => {
             }} 
         >
             <View style={{ marginTop: 16}}>
-                <Header label="Upload Registration Card" />
+                <Header label="Upload Registration Certificate" />
                 <Pressable
                     onPress={() => {
                         !idProofData[0]?.isUploaded &&

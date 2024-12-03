@@ -75,7 +75,7 @@ const CustomInput2: React.FC<CustomInput2Props> = ({ data, onChange, handleFocus
           {label} {isMandatory && <Text style={styles.mandatory}>*</Text>}
         </Text>
         <TextInput
-          placeholderTextColor={'#D9D9D9'}
+          placeholderTextColor={'#8C8C8C'}
           style={[styles.input, isFocused && styles.inputFocused, isError && styles.inputError]}
           value={value}
           onChangeText={onLocalChange}

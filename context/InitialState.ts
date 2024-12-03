@@ -16,6 +16,7 @@ export const signUpHeaderDataInitial = [
 export const signUpDetailsInitial = {
     phoneOTPDetails: {
       phoneNumber: "",
+      otpTriggered: false,
       otp: "",
     },
     imageUrl: "",

@@ -12,7 +12,7 @@ interface CustomInputBoxesProps {
         errorMessage: string;
         placeholder: string;
     };
-    onChange: (value: string, id: string ) => void;
+    onChange: (value: string, id: string, type: string ) => void;
 }
 
 const CustomInputBoxes: React.FC<CustomInputBoxesProps> = ({ data, onChange }) => {
@@ -43,7 +43,12 @@ const CustomInputBoxes: React.FC<CustomInputBoxesProps> = ({ data, onChange }) =
                                 marginRight: 8,
                                 backgroundColor: data?.value?.find((item) => item === language) ? "#2DB9B0" : "#fff"
                             }} 
-                            onPress={() => onChange(language, data?.id)}
+                            onPress={() => {
+                              data?.value?.find((item) => item === language) ?
+                                  onChange(language, data?.id, "REMOVE")
+                              :
+                                onChange(language, data?.id, "ADD")
+                            }}
                         >
                             <Text style={{ color: data?.value?.find((item) => item === language) ? "#fff" : "#2DB9B0"}} >{language}</Text>
                         </Pressable>

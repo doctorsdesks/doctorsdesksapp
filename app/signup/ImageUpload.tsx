@@ -89,7 +89,8 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ }) => {
                 {imageUrl === "" ?
                     <View style={{ marginTop: 8, height: 100, width: 100, borderColor: "#CFD8DC", backgroundColor: "#CFD8DC", borderRadius: 100 }}  />
                 :
-                    <Image source={{uri: imageUrl}} resizeMode='cover' height={100} width={100} style={{ marginTop: 8, height: 100, width: 100, borderColor: "#CFD8DC", borderRadius: 100 }} />
+                // <View style={{ marginTop: 8, height: 100, width: 100, borderColor: "#CFD8DC", backgroundColor: "#CFD8DC", borderRadius: 100 }}  />
+                    imageUrl !== "" && <Image source={{uri: imageUrl}} resizeMode='cover' height={100} width={100} style={{ marginTop: 8, height: 100, width: 100, borderColor: "#CFD8DC", borderRadius: 100 }} />
                 }
                 {imageUrl === "" && 
                     <Pressable onPress={pickImage} style={{ borderBottomWidth: 1, borderBottomColor: "#1EA6D6", marginTop: 12}}>
