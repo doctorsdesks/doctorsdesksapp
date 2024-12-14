@@ -30,6 +30,7 @@ export const signUpDetailsInitial = {
           isMandatory: true,
           errorMessage: "Please provide your full name.",
           placeholder: "Enter your full name",
+          isDisabled: false,
       },
       {
           id: "gender",
@@ -40,6 +41,7 @@ export const signUpDetailsInitial = {
           isMandatory: true,
           errorMessage: "Please select your gender",
           options: ["MALE", "FEMALE", "OTHER"],
+          isDisabled: false,
       },
       {
         id: "email",
@@ -49,6 +51,7 @@ export const signUpDetailsInitial = {
         label: "Email",
         isMandatory: false,
         errorMessage: "Please enter a valid email Id",
+        isDisabled: false,
       },
       {
           id: "experience",
@@ -59,6 +62,7 @@ export const signUpDetailsInitial = {
           isMandatory: true,
           errorMessage: "Please provide your experience",
           placeholder: "Enter your experience in years",
+          isDisabled: false,
       },
       {
           id: "specialisation",
@@ -69,6 +73,7 @@ export const signUpDetailsInitial = {
           isMandatory: true,
           errorMessage: "Please enter a valid specialisation",
           placeholder: "Enter specialisation",
+          isDisabled: false,
       },
       {
           id: "otherQualification",
@@ -79,6 +84,7 @@ export const signUpDetailsInitial = {
           isMandatory: false,
           errorMessage: "",
           placeholder: "Enter your qualifications",
+          isDisabled: false,
       },
       {
         id: "languages",
@@ -89,6 +95,7 @@ export const signUpDetailsInitial = {
         isMandatory: true,
         errorMessage: "Please select atleast 1 language",
         placeholder: "Select maximum 3 languages",
+        isDisabled: false,
       }
     ],
     clinicDetails: [
@@ -101,6 +108,7 @@ export const signUpDetailsInitial = {
           isMandatory: true,
           errorMessage: "Please enter your clinic name",
           placeholder: "Clinic Name",
+          isDisabled: false,
       },
       {
           id: "clinicAddress",
@@ -111,6 +119,7 @@ export const signUpDetailsInitial = {
           isMandatory: true,
           errorMessage: "Please enter your clinic address",
           placeholder: "12, Street Name",
+          isDisabled: false,
       },
       {
           id: "landmark",
@@ -121,6 +130,7 @@ export const signUpDetailsInitial = {
           isMandatory: false,
           errorMessage: "",
           placeholder: "Near Ganesh Temple",
+          isDisabled: false,
       },
       {
           id: "city",
@@ -131,6 +141,7 @@ export const signUpDetailsInitial = {
           isMandatory: true,
           errorMessage: "Please enter your city",
           placeholder: "Ambala",
+          isDisabled: false,
       },
       {
         id: "state",
@@ -141,6 +152,7 @@ export const signUpDetailsInitial = {
         isMandatory: true,
         errorMessage: "Please enter your state",
         placeholder: "Haryana",
+        isDisabled: false,
     },
       {
           id: "pincode",
@@ -151,6 +163,7 @@ export const signUpDetailsInitial = {
           isMandatory: true,
           errorMessage: "Please enter your pincode",
           placeholder: "133001",
+          isDisabled: false,
       },
     ],
     idProofDetails: [
