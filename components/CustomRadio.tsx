@@ -11,7 +11,6 @@ interface CustomRadioProps {
     isMandatory: boolean;
     errorMessage?: string;
     options: Array<'MALE' | 'FEMALE' | 'OTHER'>;
-    isDisabled?: boolean;
   };
   onChange: (value: string, id: string) => void;
 }
@@ -48,9 +47,9 @@ const CustomRadio: React.FC<CustomRadioProps> = ({ data, onChange }) => {
                     justifyContent: 'center',
                     marginRight: 10,
                 }}
-                onPress={() => !data?.isDisabled && handleSelect(option)}
+                onPress={() => handleSelect(option)}
             />
-            <Pressable onPress={() => !data?.isDisabled && handleSelect(option)}>
+            <Pressable onPress={() => handleSelect(option)}>
               <Text
                 style={[
                   styles.optionText,

@@ -3,25 +3,25 @@ import { View, StyleSheet, ScrollView, BackHandler } from 'react-native';
 import SignUpHeader from './SignupHeader';
 import CustomInput2 from '@/components/CustomInput2';
 import CustomButton from '@/components/CustomButton';
+import CustomInput from '@/components/CustomInput';
 import CustomRadio from '@/components/CustomRadio';
 import IdProof from './IdProof';
-import { router, useLocalSearchParams, usePathname } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import { useAppContext } from '@/context/AppContext';
 import CustomInputBoxes from '@/components/CustomInputBoxes';
 import ImageUpload from './ImageUpload';
 import axios from 'axios';
 import Toast from 'react-native-toast-message';
+import Loader from '@/components/Loader';
 import SearchSelect from '@/components/SearchSelect';
 import { saveSecureKey } from '@/components/Utils';
 import { signUpDetailsInitial, signUpHeaderDataInitial } from '@/context/InitialState';
-import Loader from '@/components/Loader';
 
 
 const SignUp = () => {
     const { currentStep } = useLocalSearchParams();
     const { signUpHeaderData, setSignUpHeaderData, signUpDetails, setSignUpDetails, setDoctorDetails } = useAppContext();
     const scrollViewRef = React.useRef(null);
-    const currentPath = usePathname();
 
     const [step, setStep] = React.useState(currentStep || "PD");
 
@@ -344,7 +344,6 @@ const SignUp = () => {
             <View style={{ display: "flex", alignItems: "center", marginTop: 24 }} >
                 <CustomButton width='FULL' title="Continue" onPress={handleButtonClick} isDisabled={handleDisable()} />
             </View>
-            {loader && <Loader />}
         </View>
     );
 }

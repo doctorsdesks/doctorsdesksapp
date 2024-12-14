@@ -74,7 +74,6 @@ const IdProofUploadCard: React.FC<IdProofUploadCardProps> = ({ data, onChange, h
                         isMandatory: true,
                         errorMessage: `Please enter valid ${data?.label} number.`,
                         placeholder: `${data?.label} Number`,
-                        isDisabled: false
                     }} 
                     onChange={onChange}  
                 />

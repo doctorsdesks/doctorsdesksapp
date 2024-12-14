@@ -1,6 +1,6 @@
 import CustomButton from '@/components/CustomButton';
 import CustomInput from '@/components/CustomInput';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { BackHandler, Pressable, StyleSheet, Text, View } from 'react-native';
 import auth from '@react-native-firebase/auth';
 import { router } from 'expo-router';
@@ -8,11 +8,11 @@ import Toast from 'react-native-toast-message';
 import Loader from '@/components/Loader';
 import { useAppContext } from '@/context/AppContext';
 import axios from 'axios';
-import { getTranslations, saveSecureKey } from '@/components/Utils';
+import { saveSecureKey } from '@/components/Utils';
 import { signUpDetailsInitial } from '@/context/InitialState';
 
 const Login = () => {
-    const { signUpDetails, setSignUpDetails, setDoctorDetails, setTranslations } = useAppContext();
+    const { signUpDetails, setSignUpDetails, setDoctorDetails } = useAppContext();
     const [phoneNumber, setPhoneNumber] = React.useState({
         id: 'phone',
         type: 'STRING',
@@ -37,7 +37,6 @@ const Login = () => {
     const [canResendOtp, setCanResendOtp] = React.useState<boolean>(false);
     const [isOTPWrong, setIsOTPWrong] = React.useState<boolean>(false);
     const [loader, setLoader] = React.useState<boolean>(false);
-    const [testNumber] = useState<string>("1111111111, 1111111119");
 
     useEffect(() => {
         const backAction = () => {
@@ -47,22 +46,6 @@ const Login = () => {
         };
 
         const backHandler = BackHandler.addEventListener("hardwareBackPress", backAction);
-
-        const getLanguages = async () => {
-            const response = await getTranslations();
-            if (response?.status === "SUCCESS") {
-                setTranslations(response?.data || {})
-                saveSecureKey("language", "English");
-            } else {
-                Toast.show({
-                    type: 'error',  
-                    text1: response?.data,
-                    visibilityTime: 3000,
-                });
-            }
-        }
-
-        getLanguages();
 
         return () => backHandler.remove();
     }, []);
@@ -97,7 +80,7 @@ const Login = () => {
 
     const handleOtpTrigger = () => {
 
-        if(testNumber.includes(phoneNumber.value)){
+        if(phoneNumber.value === '1111111111'){
             Toast.show({
                 type: 'success',  
                 text1: 'OTP triggered successfully.',
@@ -146,7 +129,6 @@ const Login = () => {
             setSignUpDetails(newSignUpDetails)
             setTimer(30);
         } catch (error: any) {
-            debugger;
             setLoader(false);
             Toast.show({
                 type: 'error',  
@@ -187,6 +169,7 @@ const Login = () => {
 
     const CheckForUserExist = async () => {
         const url = "http://docter-api-service-lb-413222422.ap-south-1.elb.amazonaws.com/v1/doctor/" + phoneNumber.value;
+        // const url = "http://localhost:3000/v1/doctor/" + phoneNumber?.value;
         try {
             const response = await axios.get(url,
                 {
@@ -224,28 +207,12 @@ const Login = () => {
                 router.replace("/dashboard");
             }
         } catch (error: any) {
-            if (error?.response?.statusText === "Not Found") {
-                    const newSignUpDetails = { ...signUpDetails, phoneOTPDetails: {
-                        phoneNumber: phoneNumber.value,
-                        otp: otp.value,
-                    },
-                }
-                setSignUpDetails(newSignUpDetails)
-                setLoader(false);
-                router.replace({
-                    pathname: '/signup',
-                    params: {
-                        currentStep: "PD"
-                    }
-                })
-            } else {
-                Toast.show({
-                    type: 'error',  
-                    text1: error.response.data.message || "Something went wrong!",
-                    visibilityTime: 3000,
-                });
-                setLoader(false);
-            }
+            Toast.show({
+                type: 'error',  
+                text1: error.response.data.message || "Something went wrong!",
+                visibilityTime: 3000,
+            });
+            setLoader(false);
         }
     }
 

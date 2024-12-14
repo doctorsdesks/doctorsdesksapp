@@ -8,10 +8,9 @@ interface CustomInputBoxesProps {
         inputType: string;
         value: Array<string>,
         label: string;
-        isMandatory?: boolean;
-        errorMessage?: string;
-        placeholder?: string;
-        isDisabled?: boolean;
+        isMandatory: boolean;
+        errorMessage: string;
+        placeholder: string;
     };
     onChange: (value: string, id: string, type: string ) => void;
 }
@@ -45,15 +44,13 @@ const CustomInputBoxes: React.FC<CustomInputBoxesProps> = ({ data, onChange }) =
                                 backgroundColor: data?.value?.find((item) => item === language) ? "#2DB9B0" : "#fff"
                             }} 
                             onPress={() => {
-                              if (!data?.isDisabled) {
-                                data?.value?.find((item) => item === language) ?
-                                    onChange(language, data?.id, "REMOVE")
-                                :
-                                  onChange(language, data?.id, "ADD")
-                              }
+                              data?.value?.find((item) => item === language) ?
+                                  onChange(language, data?.id, "REMOVE")
+                              :
+                                onChange(language, data?.id, "ADD")
                             }}
                         >
-                            <Text style={{ color: data?.value?.find((item) => item === language) ? "#fff" : "#2DB9B0", fontSize: 14, lineHeight: 20, fontWeight: 600 }} >{language}</Text>
+                            <Text style={{ color: data?.value?.find((item) => item === language) ? "#fff" : "#2DB9B0"}} >{language}</Text>
                         </Pressable>
                     )
                 })}
