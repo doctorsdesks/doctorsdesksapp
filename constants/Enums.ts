@@ -27,29 +27,4 @@ export interface StringObject {
     errorMessage?: string;
     placeholder?: string;
     options?: Array<string>;
-    isDisabled?: boolean;
-}
-
-export const DocStatusType = {
-    NOT_VERIFIED: "NOT_VERIFIED",
-    VERIFIED: "VERIFIED"
-}
-
-export interface DaysForSlot {
-    day: string;
-    label: string;
-    isSelected: boolean;
-    timings: { [key: string]: string; }[]
-}
-
-export const AppointmentStatus = {
-    PENDING: 'PENDING',
-    ACCEPTED: 'ACCEPTED',
-    COMPLETED: 'COMPLETED',
-    CANCELLED: 'CANCELLED',
-}
-
-export const AppointmentType = {
-    OPD: "OPD",
-    EMERGENCY: 'EMERGENCY'
 }

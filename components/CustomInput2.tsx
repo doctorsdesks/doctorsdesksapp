@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, StyleSheet } from 'react-native';
-import Icon from './Icon';
 
 interface CustomInput2Props {
   data: {
@@ -9,10 +8,9 @@ interface CustomInput2Props {
     inputType: string;
     value: string;
     label: string;
-    isMandatory?: boolean;
+    isMandatory: boolean;
     errorMessage?: string;
-    placeholder?: string;
-    isDisabled?: boolean;
+    placeholder: string;
   };
   onChange: (value: string, id: string) => void;
   handleFocus?: () => void;
@@ -73,40 +71,23 @@ const CustomInput2: React.FC<CustomInput2Props> = ({ data, onChange, handleFocus
 
   return (
     <View>
-        <Text style={[styles.label, isFocused && styles.labelFocused, isError && styles.labelError ]}>
+        <Text style={[styles.label, isFocused && styles.labelFocused, isError && styles.labelError]}>
           {label} {isMandatory && <Text style={styles.mandatory}>*</Text>}
         </Text>
-        {data?.isDisabled ? 
-          <View
-            style={[styles.input, styles.disabled]}
-          >
-            <Text>
-              {value}
-            </Text>
-          </View>
-        :
-          <View style={{ position: 'relative' }} >
-            <TextInput
-              placeholderTextColor={'#8C8C8C'}
-              style={[styles.input, isFocused && styles.inputFocused, isError && styles.inputError, { paddingLeft: data?.inputType === "AMOUNT" ? 44 : 0 }]}
-              value={value}
-              onChangeText={onLocalChange}
-              onBlur={handleBlurLocal}
-              onFocus={handleFocusLocal}
-              placeholder={placeholder}
-              keyboardType={
-                inputType === 'NUMBER' || inputType === 'PHONE' || inputType === 'AMOUNT'
-                  ? 'numeric'
-                  : 'default'
-              }
-            />
-            {data?.inputType === "AMOUNT" && 
-              <View style={{ height: "100%", backgroundColor: "#A9A9AB", zIndex: 2, width: 40, position: 'absolute', display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', borderBottomLeftRadius: 6, borderTopLeftRadius: 6  }} >
-                <Icon iconType='rupeeTwoIcon' />
-              </View>
-            }
-          </View>
-        }
+        <TextInput
+          placeholderTextColor={'#8C8C8C'}
+          style={[styles.input, isFocused && styles.inputFocused, isError && styles.inputError]}
+          value={value}
+          onChangeText={onLocalChange}
+          onBlur={handleBlurLocal}
+          onFocus={handleFocusLocal}
+          placeholder={placeholder}
+          keyboardType={
+            inputType === 'NUMBER' || inputType === 'PHONE' || inputType === 'AMOUNT'
+              ? 'numeric'
+              : 'default'
+          }
+        />
       {isError && errorMessage && <Text style={styles.error}>{errorMessage}</Text>}
     </View>
   );
@@ -147,9 +128,6 @@ const styles = StyleSheet.create({
     fontSize: 12,
     marginTop: 5,
   },
-  disabled: {
-    backgroundColor: "#CFD8DC"
-  }
 });
 
 export default CustomInput2;
