@@ -10,6 +10,12 @@ interface AppContextType {
   setSignUpDetails: (finalData: any) => void;
   doctorDetails: any;
   setDoctorDetails: (data: any) => void;
+  clinicTimings: string;
+  setClinicTimings: (data: any) => void;
+  slotDuration: string;
+  setSlotDuration: (data: string) => void;
+  translations: any;
+  setTranslations: (data: any) => void;
 }
 
 // Create the context with a default value (can be null)
@@ -18,10 +24,11 @@ const AppContext = createContext<AppContextType | null>(null);
 // Define the provider component
 export const AppProvider = ({ children }: { children: ReactNode }) => {
   const [ signUpHeaderData, setSignUpHeaderData ] = React.useState(signUpHeaderDataInitial);
-
   const [signUpDetails, setSignUpDetails] = React.useState(signUpDetailsInitial);
-
   const [doctorDetails, setDoctorDetails] = React.useState({});
+  const [clinicTimings, setClinicTimings] = React.useState("");
+  const [slotDuration, setSlotDuration] = React.useState<string>("");
+  const [translations, setTranslations] = React.useState<any>({});
 
   // const [user, setUser] = useState({ name: 'John', age: 30 });
 
@@ -30,7 +37,22 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
   // };
 
   return (
-    <AppContext.Provider value={{ setSignUpHeaderData, signUpHeaderData, signUpDetails, setSignUpDetails, doctorDetails, setDoctorDetails  }}>
+    <AppContext.Provider 
+      value={{ 
+          setSignUpHeaderData,
+          signUpHeaderData,
+          signUpDetails,
+          setSignUpDetails,
+          doctorDetails,
+          setDoctorDetails,
+          clinicTimings,
+          setClinicTimings,
+          slotDuration,
+          setSlotDuration,
+          translations,
+          setTranslations
+        }}
+      >
       {children}
     </AppContext.Provider>
   );

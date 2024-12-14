@@ -1,5 +1,6 @@
 import React from 'react';
-import { Text, StyleSheet, GestureResponderEvent, Pressable } from 'react-native';
+import { Text, StyleSheet, GestureResponderEvent, Pressable, View } from 'react-native';
+import Icon from './Icon';
 
 // Define the prop types for the CustomButton
 interface CustomButtonProps {
@@ -9,22 +10,30 @@ interface CustomButtonProps {
   containerStyle?: object;
   isDisabled?: boolean;
   width?: string;
+  iconType?: string;
 }
 
 // Functional component definition using the props interface
-const CustomButton: React.FC<CustomButtonProps> = ({ title, onPress, textColor = '#FFFFFF', containerStyle, isDisabled = false, width = "AUTO" }) => {
+const CustomButton: React.FC<CustomButtonProps> = ({ title, onPress, textColor = '#FFFFFF', containerStyle, isDisabled = false, width = "AUTO", iconType }) => {
   return (
     <Pressable
       style={[
         styles.button,
         { backgroundColor: isDisabled ? '#99E4DF' : '#009688' },
         containerStyle,
-        { width: width === "FULL" ? '100%' : 'auto' }
+        { width: width === "FULL" ? '100%' : width === "HALF" ? "40%" : 'auto' }
       ]}
       onPress={(e) => onPress(e)}
       disabled={isDisabled}
     >
-      <Text style={[styles.buttonText, { color: textColor }]}>{title}</Text>
+      <View style={{ display: 'flex', alignItems: 'center', flexDirection: 'row' }}>
+        <Text style={[styles.buttonText, { color: textColor }]}>{title}</Text>
+        {iconType && 
+          <View style={{ marginLeft: 8 }}>
+            <Icon iconType={iconType} />
+          </View>
+        }
+      </View>
     </Pressable>
   );
 };
