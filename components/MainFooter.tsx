@@ -23,7 +23,7 @@ const MainFooter: React.FC<MainFooterProps> = ({ selectedNav }) => {
                 router.replace("/dashboard/appointments");
                 break;
             case "profile":
-                router.replace("/dashboard");
+                router.replace("/dashboard/profile");
             default:
                 break;
         }

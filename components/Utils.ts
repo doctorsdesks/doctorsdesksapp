@@ -181,3 +181,7 @@ export const uploadFile = async (fileUri: any, fileName: string, phoneNumber: st
   export const  formatDateToYYYYMMDD = (date: Date) => {
     return `${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()}` 
   }
+
+  export const getValueById = (data: Array<any>, id: string) => {
+    return data?.find((item: {id: string}) => item?.id === id)?.value;
+  }

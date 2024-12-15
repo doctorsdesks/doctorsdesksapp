@@ -21,6 +21,7 @@ const Navbar: React.FC<NavbarProps> = ({ data, onClick }) => {
             {data?.map((item: NavbarObject) => {
                 return (
                     <Pressable 
+                        key={item?.label}
                         id={item?.label} 
                         onPress={() => onClick(item?.label)}
                         style={{ width: (width-32)/data?.length, display: 'flex', alignItems: 'center', borderBottomColor: item?.isActive ? "#2DB9B0" : "#A9A9AB", borderBottomWidth: item?.isActive ? 2 : 1, paddingVertical: 12, paddingHorizontal: 16 }} 

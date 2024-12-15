@@ -2,6 +2,7 @@ import AppointmentCard from '@/components/AppointmentCard';
 import CustomText from '@/components/CustomText';
 import Loader from '@/components/Loader';
 import MainFooter from '@/components/MainFooter';
+import MainHeader from '@/components/MainHeader';
 import { getAppointments, getDoctorDetails, getSecureKey, getTranslations, saveSecureKey } from '@/components/Utils';
 import { AppointmentStatus } from '@/constants/Enums';
 import { URLS } from '@/constants/Urls';
@@ -136,6 +137,7 @@ const Home = () => {
 
     return (
         <View style={{ marginHorizontal: 16, marginTop: 52, position: 'relative', height }} >
+            <MainHeader selectedNav="home" />
             <View style={{ width: width - 32, borderRadius: 80, backgroundColor: "#F6F5FA", borderColor: isFocused ? "#2DB9B0" : "#F6F5FA", borderWidth: 1, paddingHorizontal: 20, paddingVertical: 12, display: 'flex', flexDirection: 'row', alignItems: 'center', position: 'relative' }} >
                 <View style={{ position: 'absolute', zIndex: 2, left: 0, top: 0, height: "100%", display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', width: 40 }} >
                     <Ionicons name='search-circle-outline' size={20} />
@@ -173,7 +175,7 @@ const Home = () => {
                             style={{ marginTop: 20 }}>
                             {appointments?.map((appointment: any) => {
                                 return (
-                                    <AppointmentCard appointment={appointment} width={width} handleStatusUpdate={handleStatusUpdate} />
+                                    <AppointmentCard key={appointment?._id} appointment={appointment} width={width} handleStatusUpdate={handleStatusUpdate} />
                                 );
                             })}
                         </ScrollView>

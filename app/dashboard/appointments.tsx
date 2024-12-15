@@ -2,6 +2,7 @@ import AppointmentCardTwo from '@/components/AppointmentCardTwo';
 import AppointmentDateSelector from '@/components/AppointmentDateSelector';
 import Loader from '@/components/Loader';
 import MainFooter from '@/components/MainFooter';
+import MainHeader from '@/components/MainHeader';
 import Navbar, { NavbarObject } from '@/components/Navbar';
 import { formatDateToYYYYMMDD, getAppointments } from '@/components/Utils';
 import { AppointmentStatus, AppointmentType } from '@/constants/Enums';
@@ -143,6 +144,7 @@ const Appointments = () => {
 
     return (
         <View style={{ marginHorizontal: 16, marginTop: 52, position: 'relative', height }} >
+            <MainHeader selectedNav="appointment" />
             <Navbar data={navData} onClick={handleNavClick} />
             <View style={{ marginTop: 24 }} >
                 <AppointmentDateSelector handleDateChange={handleDateChange} />
@@ -153,7 +155,7 @@ const Appointments = () => {
                     style={{ marginTop: 20 }}>
                     {filteredAppointments?.map((appointment: any, index: number) => {
                         return (
-                            <AppointmentCardTwo lastAppointment={index === filteredAppointments?.length - 1} firstAppointment={index === 0} status={appointment?.status} name={appointment?.doctorName} number={appointment?.patientId} startTime={appointment?.startTime} handleStatusUpdate={(status: string) => handleStatusUpdate(status, appointment?._id)} />
+                            <AppointmentCardTwo key={appointment?._id} lastAppointment={index === filteredAppointments?.length - 1} firstAppointment={index === 0} status={appointment?.status} name={appointment?.doctorName} number={appointment?.patientId} startTime={appointment?.startTime} handleStatusUpdate={(status: string) => handleStatusUpdate(status, appointment?._id)} />
                         );
                     })}
                 </ScrollView>

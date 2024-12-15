@@ -40,3 +40,8 @@ export const AppointmentType = {
     OPD: "OPD",
     EMERGENCY: 'EMERGENCY'
 }
+
+export const DocStatusType = {
+    NOT_VERIFIED: "NOT_VERIFIED",
+    VERIFIED: "VERIFIED"
+}

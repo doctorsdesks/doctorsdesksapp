@@ -53,7 +53,7 @@ const AppointmentCardTwo: React.FC<AppointmentCardTwoProps> = ({ lastAppointment
                     zIndex: 3,
                 }}
             >
-                {status === AppointmentStatus.COMPLETED && <Ionicons name='checkmark-circle-outline' color={"#2DB9B0"} size={20} />}
+                {status === AppointmentStatus.COMPLETED && <Ionicons name='checkmark-outline' color={"#2DB9B0"} size={20} />}
             </View>
             <View 
                 style={{

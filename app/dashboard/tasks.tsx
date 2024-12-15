@@ -2,6 +2,7 @@ import AppointmentCard from '@/components/AppointmentCard';
 import CustomText from '@/components/CustomText';
 import Loader from '@/components/Loader';
 import MainFooter from '@/components/MainFooter';
+import MainHeader from '@/components/MainHeader';
 import Navbar, { NavbarObject } from '@/components/Navbar';
 import { getAppointments } from '@/components/Utils';
 import { AppointmentStatus } from '@/constants/Enums';
@@ -135,6 +136,7 @@ const Tasks = () => {
 
     return (
         <View style={{ marginHorizontal: 16, marginTop: 52, position: 'relative', height }} >
+            <MainHeader selectedNav="task" />
             <Navbar data={navData} onClick={handleNavClick} />
             <View style={{ height: height - 160 }} >
                 <ScrollView
@@ -147,7 +149,7 @@ const Tasks = () => {
                     :
                         filteredAppointments?.map((appointment: any) => {
                             return (
-                                <AppointmentCard appointment={appointment} width={width} handleStatusUpdate={handleStatusUpdate} />
+                                <AppointmentCard key={appointment?._id} appointment={appointment} width={width} handleStatusUpdate={handleStatusUpdate} />
                             );
                         })}
                 </ScrollView>
