@@ -23,6 +23,22 @@ const MainHeader: React.FC<MainHeaderProps> = ({ selectedNav }) => {
                 break;
             case 'personalDetails':
                 router.replace("/dashboard/profile");
+                break;
+            case "clinicDetails":
+                router.replace("/dashboard/profile");
+                break;
+            case "manageSlotAndTiming":
+                router.replace("/dashboard/profile");
+                break;
+            case "manageSlotTiming":
+                router.replace("/clinicDetail/manageSlotAndTiming");
+                break;
+            case "consultationFee":
+                router.replace("/dashboard/profile");
+                break;
+            case "appLanguage":
+                router.replace("/dashboard/profile");
+                break;
             default:
                 break;
         }
@@ -45,6 +61,21 @@ const MainHeader: React.FC<MainHeaderProps> = ({ selectedNav }) => {
                 break;
             case "personalDetails":
                 text = "Personal Details";
+                break;
+            case "clinicDetails":
+                text = "Clinic Details";
+                break;
+            case "manageSlotAndTiming":
+                text = "Manage Slot";
+                break;
+            case "manageSlotTiming":
+                text = "Slot Timing";
+                break;
+            case "consultationFee":
+                text = "Consultation Fee";
+                break;
+            case "appLanguage":
+                text = "App Language";
                 break;
             default:
                 break;

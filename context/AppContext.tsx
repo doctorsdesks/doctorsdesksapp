@@ -12,6 +12,10 @@ interface AppContextType {
   setDoctorDetails: (data: any) => void;
   translations: any;
   setTranslations: (data: any) => void;
+  clinicTimings: string;
+  setClinicTimings: (data: any) => void;
+  slotDuration: string;
+  setSlotDuration: (data: string) => void;
 }
 
 // Create the context with a default value (can be null)
@@ -25,6 +29,8 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
 
   const [doctorDetails, setDoctorDetails] = React.useState({});
   const [translations, setTranslations] = React.useState<any>({});
+  const [clinicTimings, setClinicTimings] = React.useState("");
+  const [slotDuration, setSlotDuration] = React.useState<string>("");
 
   // const [user, setUser] = useState({ name: 'John', age: 30 });
 
@@ -33,7 +39,20 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
   // };
 
   return (
-    <AppContext.Provider value={{ setSignUpHeaderData, signUpHeaderData, signUpDetails, setSignUpDetails, doctorDetails, setDoctorDetails, translations, setTranslations  }}>
+    <AppContext.Provider value={{ 
+        setSignUpHeaderData,
+        signUpHeaderData,
+        signUpDetails,
+        setSignUpDetails,
+        doctorDetails,
+        setDoctorDetails,
+        translations,
+        setTranslations,
+        clinicTimings,
+        setClinicTimings,
+        slotDuration,
+        setSlotDuration
+      }}>
       {children}
     </AppContext.Provider>
   );

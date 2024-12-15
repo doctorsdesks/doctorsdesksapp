@@ -27,6 +27,7 @@ export interface StringObject {
     errorMessage?: string;
     placeholder?: string;
     options?: Array<string>;
+    isDisabled?: boolean;
 }
 
 export const AppointmentStatus = {
@@ -44,4 +45,11 @@ export const AppointmentType = {
 export const DocStatusType = {
     NOT_VERIFIED: "NOT_VERIFIED",
     VERIFIED: "VERIFIED"
+}
+
+export interface DaysForSlot {
+    day: string;
+    label: string;
+    isSelected: boolean;
+    timings: { [key: string]: string; }[]
 }

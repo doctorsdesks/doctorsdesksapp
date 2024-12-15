@@ -103,7 +103,7 @@ export const uploadFile = async (fileUri: any, fileName: string, phoneNumber: st
     } catch (error: any) {
         return {
           status: "FAILURE",
-          error: error.response.data.message
+          error: error?.response?.data?.message
         }
     }
   }
@@ -138,7 +138,7 @@ export const uploadFile = async (fileUri: any, fileName: string, phoneNumber: st
     } catch (error: any) {
       return {
         status: "FAILURE",
-        error: error.response.data.message
+        error: error?.response?.data?.message
       }
     }
   }
@@ -173,7 +173,7 @@ export const uploadFile = async (fileUri: any, fileName: string, phoneNumber: st
     } catch (error: any) {
         return {
           status: "FAILURE",
-          error: error.response.data.message
+          error: error?.response?.data?.message
         }
     }
   }
@@ -184,4 +184,39 @@ export const uploadFile = async (fileUri: any, fileName: string, phoneNumber: st
 
   export const getValueById = (data: Array<any>, id: string) => {
     return data?.find((item: {id: string}) => item?.id === id)?.value;
+  }
+
+  export const getClinics = async (phone: string) => {
+    const url = URLS.BASE + URLS.GET_CLINICS + "/" + phone;
+    try {
+        const response = await axios.get(url,
+            {
+              headers: {
+                'X-Requested-With': 'doctorsdesks_web_app',
+              },
+            }
+          );
+        const { data, status } = response;
+        if (status === 200){
+            Toast.show({
+                type: 'success',  
+                text1: data.message,
+                visibilityTime: 5000,
+            });
+            return {
+              status: "SUCCESS",
+              data: data.data[0],
+            }
+        } else {
+          return {
+            status: "FAILURE",
+            error: "Something wrong. Please try again.",
+          }
+        }
+    } catch (error: any) {
+        return {
+          status: "FAILURE",
+          error: error?.response?.data?.message
+        }
+    }
   }

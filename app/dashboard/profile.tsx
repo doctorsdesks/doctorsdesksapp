@@ -56,9 +56,9 @@ const Profile = () => {
                         <CustomText textStyle={{ marginLeft: 8, fontSize: 15, lineHeight: 24, fontWeight: 500, color: "#0F1828" }} multiLingual={true} text="Clinic Details" />
                     </View>
                     <Pressable
-                        // onPress={() => {
-                        //     router.replace("/personalDetails");
-                        // }}
+                        onPress={() => {
+                            router.replace("/clinicDetail");
+                        }}
                     >
                         <Ionicons size={24} color={"#0F1828"} name='chevron-forward' />
                     </Pressable>
@@ -71,9 +71,9 @@ const Profile = () => {
                         <CustomText textStyle={{ marginLeft: 8, fontSize: 15, lineHeight: 24, fontWeight: 500, color: "#0F1828" }} multiLingual={true} text="Manage Slots" />
                     </View>
                     <Pressable
-                        // onPress={() => {
-                        //     router.replace("/personalDetails");
-                        // }}
+                        onPress={() => {
+                            router.replace("/clinicDetail/manageSlotAndTiming");
+                        }}
                     >
                         <Ionicons size={24} color={"#0F1828"} name='chevron-forward' />
                     </Pressable>
@@ -84,9 +84,9 @@ const Profile = () => {
                         <CustomText textStyle={{ marginLeft: 8, fontSize: 15, lineHeight: 24, fontWeight: 500, color: "#0F1828" }} multiLingual={true} text="Consultation Fees" />
                     </View>
                     <Pressable
-                        // onPress={() => {
-                        //     router.replace("/personalDetails");
-                        // }}
+                        onPress={() => {
+                            router.replace("/clinicDetail/consultationFee");
+                        }}
                     >
                         <Ionicons size={24} color={"#0F1828"} name='chevron-forward' />
                     </Pressable>
@@ -99,9 +99,9 @@ const Profile = () => {
                         <CustomText textStyle={{ marginLeft: 8, fontSize: 15, lineHeight: 24, fontWeight: 500, color: "#0F1828" }} multiLingual={true} text="App Language" />
                     </View>
                     <Pressable
-                        // onPress={() => {
-                        //     router.replace("/personalDetails");
-                        // }}
+                        onPress={() => {
+                            router.replace("/clinicDetail/appLanguage");
+                        }}
                     >
                         <Ionicons size={24} color={"#0F1828"} name='chevron-forward' />
                     </Pressable>
