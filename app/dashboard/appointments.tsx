@@ -1,10 +1,10 @@
-import AppointmentCard from '@/components/AppointmentCard';
-import CustomText from '@/components/CustomText';
+import AppointmentCardTwo from '@/components/AppointmentCardTwo';
+import AppointmentDateSelector from '@/components/AppointmentDateSelector';
 import Loader from '@/components/Loader';
 import MainFooter from '@/components/MainFooter';
 import Navbar, { NavbarObject } from '@/components/Navbar';
-import { getAppointments } from '@/components/Utils';
-import { AppointmentStatus } from '@/constants/Enums';
+import { formatDateToYYYYMMDD, getAppointments } from '@/components/Utils';
+import { AppointmentStatus, AppointmentType } from '@/constants/Enums';
 import { URLS } from '@/constants/Urls';
 import { useAppContext } from '@/context/AppContext';
 import axios from 'axios';
@@ -13,21 +13,18 @@ import React, { useEffect, useState } from 'react';
 import { BackHandler, Dimensions, ScrollView, View } from 'react-native';
 import Toast from 'react-native-toast-message';
 
-const Tasks = () => {
-    const { height, width } = Dimensions.get('window');
+const Appointments = () => {
+    const { height } = Dimensions.get('window');
     const scrollViewRef = React.useRef(null);
     const { doctorDetails } = useAppContext();
+    const [selectedDay, setSelectedDay] = useState<Date>(new Date());
     const [navData, setNavData] = useState<Array<NavbarObject>>([
         {
-            label: "Pending",
+            label: "Normal",
             isActive: true,
         },
         {
-            label: "Completed",
-            isActive: false,
-        },
-        {
-            label: "Cancelled",
+            label: "Emergency",
             isActive: false,
         }
     ]);
@@ -47,20 +44,29 @@ const Tasks = () => {
     }, []);
 
     useEffect(() => {
-        if (doctorDetails) {
-            const today = new Date();
-            const formattedDate = today.toISOString().split('T')[0];
+        if (doctorDetails && selectedDay) {
+            const formattedDate = formatDateToYYYYMMDD(selectedDay)
             getAllAppointments(formattedDate)
         }
-    }, [doctorDetails])
+    }, [doctorDetails, selectedDay])
 
     const getAllAppointments = async (date: string) => {
         const respnose = await getAppointments(doctorDetails?.phone, date);
         if (respnose.status === "SUCCESS") {
-            const appointments = respnose.data;
-            setAppointments(appointments);
-            const filterApp = appointments?.filter((item: any) => item?.status === AppointmentStatus.ACCEPTED);
-            setFilteredAppointments(filterApp || []);
+            const appointmentsCurrent = respnose.data;
+            const completeOrAcceptedAppointments = appointmentsCurrent?.filter((item: any) => item?.status === AppointmentStatus.ACCEPTED || item?.status === AppointmentStatus.COMPLETED);
+            setAppointments(completeOrAcceptedAppointments);
+            const normalAppointment = completeOrAcceptedAppointments?.filter((item: any) => item?.appointmentType === AppointmentType.OPD);
+            const emergencyAppointment = completeOrAcceptedAppointments?.filter((item: any) => item?.appointmentType === AppointmentType.EMERGENCY);
+            const newNavData = navData?.map((item: NavbarObject) => {
+                if (item?.label?.split(" ")[0] === "Normal") {
+                    return { ...item, label: `Normal (${normalAppointment?.length})`, isActive: true }
+                } else {
+                    return { ...item, label: `Emergency (${emergencyAppointment?.length})`, isActive: false }
+                }
+            });
+            setNavData(newNavData);
+            setFilteredAppointments(normalAppointment || []);
             setLoader(false);
         } else {
             Toast.show({
@@ -76,15 +82,13 @@ const Tasks = () => {
         const newNavData = navData?.map((item: NavbarObject) => ({ ...item, isActive: item?.label === value ? true : false }));
         setNavData(newNavData);
         let filterApp: any = [];
-        switch (value) {
-            case "Pending":
-                filterApp = appointments?.filter((item: any) => item?.status === AppointmentStatus.PENDING);
+        const [navValue] = value?.split(" ");
+        switch (navValue) {
+            case "Normal":
+                filterApp = appointments?.filter((item: any) => item?.appointmentType === AppointmentType.OPD);
                 break;
-            case "Completed":
-                filterApp = appointments?.filter((item: any) => item?.status === AppointmentStatus.COMPLETED);
-                break;
-            case "Cancelled":
-                filterApp = appointments?.filter((item: any) => item?.status === AppointmentStatus.CANCELLED);
+            case "Emergency":
+                filterApp = appointments?.filter((item: any) => item?.appointmentType === AppointmentType.EMERGENCY);
                 break;
             default:
                 break;
@@ -133,29 +137,31 @@ const Tasks = () => {
         }
     }
 
+    const handleDateChange = (date: Date) => {
+        setSelectedDay(date);
+    }
+
     return (
         <View style={{ marginHorizontal: 16, marginTop: 52, position: 'relative', height }} >
             <Navbar data={navData} onClick={handleNavClick} />
-            <View style={{ height: height - 160 }} >
+            <View style={{ marginTop: 24 }} >
+                <AppointmentDateSelector handleDateChange={handleDateChange} />
+            </View>
+            <View style={{ height: height - 320 }} >
                 <ScrollView
                     ref={scrollViewRef} 
                     style={{ marginTop: 20 }}>
-                    {filteredAppointments?.length === 0 ?
-                        <View>
-                            <CustomText textStyle={{ fontSize: 16, fontWeight: 600, color: "#32383D" }} text="No Appointment" />
-                        </View>
-                    :
-                        filteredAppointments?.map((appointment: any) => {
-                            return (
-                                <AppointmentCard appointment={appointment} width={width} handleStatusUpdate={handleStatusUpdate} />
-                            );
-                        })}
+                    {filteredAppointments?.map((appointment: any, index: number) => {
+                        return (
+                            <AppointmentCardTwo lastAppointment={index === filteredAppointments?.length - 1} firstAppointment={index === 0} status={appointment?.status} name={appointment?.doctorName} number={appointment?.patientId} startTime={appointment?.startTime} handleStatusUpdate={(status: string) => handleStatusUpdate(status, appointment?._id)} />
+                        );
+                    })}
                 </ScrollView>
             </View>
-            <MainFooter selectedNav='task' />
+            <MainFooter selectedNav='appointment' />
             {loader && <Loader />}
         </View>
     );
 };
 
-export default Tasks;
+export default Appointments;

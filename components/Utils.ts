@@ -177,3 +177,7 @@ export const uploadFile = async (fileUri: any, fileName: string, phoneNumber: st
         }
     }
   }
+
+  export const  formatDateToYYYYMMDD = (date: Date) => {
+    return `${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()}` 
+  }
