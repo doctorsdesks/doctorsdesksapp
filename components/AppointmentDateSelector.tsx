@@ -16,6 +16,7 @@ const AppointmentDateSelector: React.FC<AppointmentDateSelectorProps> = ({ handl
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [daysToRender, setDaysToRender] = useState<Array<Date>>([]);
   const [selectedDay, setSelectedDay] = useState<Date>(new Date());
+  const [loader, setLoader] = useState<boolean>(false);
   const flatListRef = useRef<FlatList>(null);
   
   useEffect(() => {
@@ -85,11 +86,14 @@ const AppointmentDateSelector: React.FC<AppointmentDateSelectorProps> = ({ handl
   const formatDate = (date: Date) => date.getDate();
 
   const handleDaySelect = (day: Date) => {
+    setLoader(!loader);
     setSelectedDay(day);
     handleDateChange(day);
   }
 
-  const isDaySelected = (day: Date) => formatDay(day) === formatDay(selectedDay) && formatDate(day).toString() === formatDate(selectedDay).toString();
+  const isDaySelected = (day: Date) => {
+    return formatDay(day) == formatDay(selectedDay) && formatDate(day).toString() == formatDate(selectedDay).toString()
+  };
 
 
   return (

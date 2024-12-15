@@ -45,12 +45,12 @@ const AppLanguage = () => {
     return (
         <View style={{ marginHorizontal: 16, marginTop: 52, position: 'relative', height }} >
             <MainHeader selectedNav='appLanguage' />
-            <CustomText text="Select Language" textStyle={{ fontSize: 16, lineHeight: 20, fontWeight: 600, color: "#32383D" }} multiLingual={true} />
+            <CustomText text="Select Language" textStyle={{ fontSize: 16, marginTop: 32, lineHeight: 20, fontWeight: 600, color: "#32383D" }} multiLingual={true} />
             <View style={{ 
                     display: 'flex',
                     flex: 1,
                     flexDirection: 'row',
-                    marginTop: 12
+                    marginTop: 28
                 }}>
                 {languages?.map((language: string) => {
                     return (

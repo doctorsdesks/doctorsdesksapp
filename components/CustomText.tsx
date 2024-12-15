@@ -9,8 +9,8 @@ interface CustomTextProps {
     multiLingual?: boolean;
 }
 
-const CustomText: React.FC<CustomTextProps> = ({ text, textStyle, multiLingual = false }) => {
-    // const { translations } = useAppContext();
+const CustomText: React.FC<CustomTextProps> = ({ text, textStyle }) => {
+    const { translations } = useAppContext();
     const [selectedLanguage, setSelectedValue] = useState<string>("Hindi");
 
     useEffect(() => {
@@ -18,11 +18,19 @@ const CustomText: React.FC<CustomTextProps> = ({ text, textStyle, multiLingual =
             const value: any = await getSecureKey("language");
             setSelectedValue(value);
         }
-        // checkForLanguage();
+        checkForLanguage();
     },[])
 
+    const finalText = (text: string) => {
+        if (translations && translations[selectedLanguage] && translations[selectedLanguage][text]) {
+            return translations[selectedLanguage][text];
+        } else {
+            return text;
+        }
+    }
+
     return (
-        <Text style={textStyle} >{text}</Text>
+        <Text style={textStyle} >{finalText(text)}</Text>
     );
 };
 

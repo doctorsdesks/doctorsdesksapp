@@ -1,5 +1,6 @@
 import AppointmentCardTwo from '@/components/AppointmentCardTwo';
 import AppointmentDateSelector from '@/components/AppointmentDateSelector';
+import CustomText from '@/components/CustomText';
 import Loader from '@/components/Loader';
 import MainFooter from '@/components/MainFooter';
 import MainHeader from '@/components/MainHeader';
@@ -153,7 +154,10 @@ const Appointments = () => {
                 <ScrollView
                     ref={scrollViewRef} 
                     style={{ marginTop: 20 }}>
-                    {filteredAppointments?.map((appointment: any, index: number) => {
+                    {filteredAppointments?.length === 0 ?
+                        <CustomText textStyle={{ fontSize: 16, lineHeight: 20, fontWeight: 600, color: "#32383D" }} text="No Appointment" />
+                    : 
+                        filteredAppointments?.map((appointment: any, index: number) => {
                         return (
                             <AppointmentCardTwo key={appointment?._id} lastAppointment={index === filteredAppointments?.length - 1} firstAppointment={index === 0} status={appointment?.status} name={appointment?.doctorName} number={appointment?.patientId} startTime={appointment?.startTime} handleStatusUpdate={(status: string) => handleStatusUpdate(status, appointment?._id)} />
                         );
