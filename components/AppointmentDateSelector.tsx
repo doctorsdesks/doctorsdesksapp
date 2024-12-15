@@ -9,13 +9,13 @@ import CustomText from './CustomText';
 import { Ionicons } from '@expo/vector-icons';
 
 interface AppointmentDateSelectorProps {
-    handleDateChange: (date: Date) => void;
+    handleDateChange: (date: string) => void;
 }
 
 const AppointmentDateSelector: React.FC<AppointmentDateSelectorProps> = ({ handleDateChange }) => {
   const [currentMonth, setCurrentMonth] = useState(new Date());
-  const [daysToRender, setDaysToRender] = useState<Array<Date>>([]);
-  const [selectedDay, setSelectedDay] = useState<Date>(new Date());
+  const [daysToRender, setDaysToRender] = useState<Array<string>>([]);
+  const [selectedDay, setSelectedDay] = useState<string>("");
   const [loader, setLoader] = useState<boolean>(false);
   const flatListRef = useRef<FlatList>(null);
   
@@ -23,19 +23,45 @@ const AppointmentDateSelector: React.FC<AppointmentDateSelectorProps> = ({ handl
     if (currentMonth) {
         const days = getDaysInMonth(currentMonth);
         setDaysToRender(days);
-        setSelectedDay(new Date(currentMonth.getFullYear(), currentMonth.getMonth(), formatDate(selectedDay)));
-        handleDateChange(new Date(currentMonth.getFullYear(), currentMonth.getMonth(), formatDate(selectedDay)));
+        let finalDate;
+      
+        if (selectedDay === "") {
+          const today = new Date();
+          const day = formatDay(today);
+          const date = formatDate(today);
+          if (date < 10) {
+            finalDate = "0"+date;
+          }
+          setSelectedDay(`${day} ${date}`);
+        } else {
+          const [day, date] = selectedDay?.split(" ");
+          if (parseInt(date) < 10) {
+            finalDate = "0"+date;
+          }
+        }
+        const year = currentMonth.getFullYear();
+        let month: any = currentMonth.getMonth()+1;
+        if (month < 10) {
+          month = "0" + month;
+        }
+        const newDate = `${year}-${month}-${finalDate}`;
+        handleDateChange(newDate);
     }
     
   },[currentMonth])
 
   useEffect(() => {
+    const today = new Date();
+    const day = formatDay(today);
+    const date = formatDate(today);
+    setSelectedDay(`${day} ${date}`);
+  },[])
+
+  useEffect(() => {
     if (flatListRef.current && daysToRender.length > 0) {
       const index = daysToRender.findIndex(
         (day) =>
-          day.getDate() === selectedDay.getDate() &&
-          day.getMonth() === selectedDay.getMonth() &&
-          day.getFullYear() === selectedDay.getFullYear()
+          day === selectedDay
       );
       if (index !== -1) {
         setTimeout(() => {
@@ -55,7 +81,10 @@ const AppointmentDateSelector: React.FC<AppointmentDateSelectorProps> = ({ handl
 
     let currentDay = new Date(startOfMonth);
     while (currentDay <= endOfMonth) {
-      days.push(new Date(currentDay));
+      const dayToPush = new Date(currentDay);
+      const day = formatDay(dayToPush);
+      const date = formatDate(dayToPush)
+      days.push(`${day} ${date}`);
       currentDay.setDate(currentDay.getDate() + 1);
     }
 
@@ -85,15 +114,25 @@ const AppointmentDateSelector: React.FC<AppointmentDateSelectorProps> = ({ handl
 
   const formatDate = (date: Date) => date.getDate();
 
-  const handleDaySelect = (day: Date) => {
+  const handleDaySelect = (day: string) => {
     setLoader(!loader);
+    let [currentDay, date] = day?.split(" ");
     setSelectedDay(day);
-    handleDateChange(day);
+    const year = currentMonth.getFullYear();
+    let month: any = currentMonth.getMonth()+1;
+    if (month < 10) {
+      month = "0" + month;
+    }
+    if (parseInt(date) < 10) {
+      date = "0"+date
+    }
+    const newDate = `${year}-${month}-${date}`;
+    handleDateChange(newDate);
   }
 
-  const isDaySelected = (day: Date) => {
-    return formatDay(day) == formatDay(selectedDay) && formatDate(day).toString() == formatDate(selectedDay).toString()
-  };
+  // const isDaySelected = (day: Date) => {
+  //   return formatDay(day) == formatDay(selectedDay) && formatDate(day).toString() == formatDate(selectedDay).toString()
+  // };
 
 
   return (
@@ -121,7 +160,7 @@ const AppointmentDateSelector: React.FC<AppointmentDateSelectorProps> = ({ handl
             ref={flatListRef}
             data={daysToRender}
             horizontal
-            keyExtractor={(item) => item.toISOString()}
+            keyExtractor={(item) => item}
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={styles.daySelector}
             initialScrollIndex={daysToRender.indexOf(selectedDay)}
@@ -129,9 +168,9 @@ const AppointmentDateSelector: React.FC<AppointmentDateSelectorProps> = ({ handl
                 <Pressable 
                     style={{ 
                         borderRadius: 8,
-                        backgroundColor: isDaySelected(item) ? '#1EA6D6' : "",
+                        backgroundColor: item == selectedDay ? '#1EA6D6' : "",
                         borderWidth: 1,
-                        borderColor: isDaySelected(item) ? '#1EA6D6' : "#D9D9D9",
+                        borderColor: item == selectedDay ? '#1EA6D6' : "#D9D9D9",
                         display: 'flex',
                         flexDirection: 'row',
                         justifyContent: 'center',
@@ -148,19 +187,19 @@ const AppointmentDateSelector: React.FC<AppointmentDateSelectorProps> = ({ handl
                             fontSize: 12,
                             lineHeight: 12,
                             fontWeight: '600',
-                            color: isDaySelected(item) ? '#FCFCFC' : "#32383D",
+                            color: item == selectedDay ? '#FCFCFC' : "#32383D",
                             }}
-                            text={formatDay(item)}
+                            text={item.split(" ")[0]}
                         />
                         <CustomText
                             textStyle={{
                             fontSize: 12,
                             lineHeight: 12,
                             fontWeight: '600',
-                            color: isDaySelected(item) ? '#FCFCFC' : "#32383D",
+                            color: item == selectedDay ? '#FCFCFC' : "#32383D",
                             marginTop: 4,
                             }}
-                            text={formatDate(item).toString()}
+                            text={item.split(" ")[1]}
                         />
                     </View>
                 </Pressable>

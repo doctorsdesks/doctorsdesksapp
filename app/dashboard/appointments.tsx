@@ -19,7 +19,7 @@ const Appointments = () => {
     const { height } = Dimensions.get('window');
     const scrollViewRef = React.useRef(null);
     const { doctorDetails } = useAppContext();
-    const [selectedDay, setSelectedDay] = useState<Date>(new Date());
+    const [selectedDay, setSelectedDay] = useState<string>("");
     const [navData, setNavData] = useState<Array<NavbarObject>>([
         {
             label: "Normal",
@@ -41,14 +41,15 @@ const Appointments = () => {
         };
 
         const backHandler = BackHandler.addEventListener("hardwareBackPress", backAction);
-
+        const today = new Date();
+        const formattedDate = formatDateToYYYYMMDD(today)
+        setSelectedDay(formattedDate);
         return () => backHandler.remove();
     }, []);
 
     useEffect(() => {
-        if (doctorDetails && selectedDay) {
-            const formattedDate = formatDateToYYYYMMDD(selectedDay)
-            getAllAppointments(formattedDate)
+        if (doctorDetails && selectedDay !== "") {
+            getAllAppointments(selectedDay)
         }
     }, [doctorDetails, selectedDay])
 
@@ -139,7 +140,7 @@ const Appointments = () => {
         }
     }
 
-    const handleDateChange = (date: Date) => {
+    const handleDateChange = (date: string) => {
         setSelectedDay(date);
     }
 

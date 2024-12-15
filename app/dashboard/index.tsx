@@ -138,7 +138,7 @@ const Home = () => {
     return (
         <View style={{ marginHorizontal: 16, marginTop: 52, position: 'relative', height }} >
             <MainHeader selectedNav="home" />
-            <View style={{ width: width - 32, borderRadius: 80, backgroundColor: "#F6F5FA", borderColor: isFocused ? "#2DB9B0" : "#F6F5FA", borderWidth: 1, paddingHorizontal: 20, paddingVertical: 12, display: 'flex', flexDirection: 'row', alignItems: 'center', position: 'relative' }} >
+            {/* <View style={{ width: width - 32, borderRadius: 80, backgroundColor: "#F6F5FA", borderColor: isFocused ? "#2DB9B0" : "#F6F5FA", borderWidth: 1, paddingHorizontal: 20, paddingVertical: 12, display: 'flex', flexDirection: 'row', alignItems: 'center', position: 'relative' }} >
                 <View style={{ position: 'absolute', zIndex: 2, left: 0, top: 0, height: "100%", display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', width: 40 }} >
                     <Ionicons name='search-circle-outline' size={20} />
                 </View>
@@ -158,7 +158,7 @@ const Home = () => {
                 >
                     <Ionicons name='search-circle-outline' size={20} />
                 </Pressable>
-            </View>
+            </View> */}
             <View style={{ marginTop: 20 }} >
                 <View style={{ borderRadius: 8, borderLeftWidth: 8, borderColor: "#0A867E", backgroundColor: "#2DB9B0", paddingLeft: 16, paddingRight: 32, paddingVertical: 12, width: width - 32, display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
                     <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }} >
