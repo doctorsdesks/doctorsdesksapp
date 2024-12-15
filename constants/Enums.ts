@@ -28,3 +28,15 @@ export interface StringObject {
     placeholder?: string;
     options?: Array<string>;
 }
+
+export const AppointmentStatus = {
+    PENDING: 'PENDING',
+    ACCEPTED: 'ACCEPTED',
+    COMPLETED: 'COMPLETED',
+    CANCELLED: 'CANCELLED',
+}
+
+export const AppointmentType = {
+    OPD: "OPD",
+    EMERGENCY: 'EMERGENCY'
+}

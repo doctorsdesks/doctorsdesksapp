@@ -19,7 +19,7 @@ const CustomButton: React.FC<CustomButtonProps> = ({ title, onPress, textColor =
         styles.button,
         { backgroundColor: isDisabled ? '#99E4DF' : '#009688' },
         containerStyle,
-        { width: width === "FULL" ? '100%' : 'auto' }
+        { width: width === "FULL" ? '100%' : width === "HALF" ? "40%" : 'auto' }
       ]}
       onPress={(e) => onPress(e)}
       disabled={isDisabled}

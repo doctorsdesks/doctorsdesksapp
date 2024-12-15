@@ -1,13 +1,18 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View } from 'react-native';
 import Onboarding from '../components/Onboarding';
 import { getSecureKey } from '@/components/Utils';
 import { router } from 'expo-router';
 
-const onboarding = () => { 
+const OnboardingScreen = () => { 
+    const [isReady, setIsReady] = useState<boolean>(false); 
 
     useEffect(() => {
-        checkForLogin();
+        const initialize = async () => {
+            setIsReady(true);
+            await checkForLogin();
+        };
+        initialize();
     },[])
 
     const checkForOnBoarding = async () => {
@@ -25,6 +30,11 @@ const onboarding = () => {
             checkForOnBoarding();
         }
     }
+
+    if (!isReady) {
+        return null; 
+    }
+
     return (
         <View>
             <Onboarding />
@@ -32,4 +42,4 @@ const onboarding = () => {
     );
 };
 
-export default onboarding;
+export default OnboardingScreen;

@@ -38,6 +38,8 @@ const Login = () => {
     const [isOTPWrong, setIsOTPWrong] = React.useState<boolean>(false);
     const [loader, setLoader] = React.useState<boolean>(false);
 
+    const [testingNumbers] = React.useState<string>("1111111111, 1111111112, 1111111113, 1111111119");
+
     useEffect(() => {
         const backAction = () => {
             setSignUpDetails(signUpDetailsInitial);
@@ -80,7 +82,7 @@ const Login = () => {
 
     const handleOtpTrigger = () => {
 
-        if(phoneNumber.value === '1111111111'){
+        if(testingNumbers.includes(phoneNumber.value)){
             Toast.show({
                 type: 'success',  
                 text1: 'OTP triggered successfully.',
@@ -179,7 +181,6 @@ const Login = () => {
                 }
             );
             const { data } = response;
-            setLoader(false);
             if( data?.data == null ){
                 // new doctor 
                 const newSignUpDetails = { ...signUpDetails, phoneOTPDetails: {
@@ -188,6 +189,7 @@ const Login = () => {
                     },
                 }
                 setSignUpDetails(newSignUpDetails)
+                setLoader(false);
                 router.replace({
                     pathname: '/signup',
                     params: {
@@ -203,7 +205,9 @@ const Login = () => {
                     text1: `Welcome ${data.data.name}`,
                     visibilityTime: 3000,
                 });
+                saveSecureKey("doctorId", data.data.phone);
                 saveSecureKey("isUserLoggedIn", "true");
+                setLoader(false);
                 router.replace("/dashboard");
             }
         } catch (error: any) {
