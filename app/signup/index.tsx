@@ -14,7 +14,7 @@ import axios from 'axios';
 import Toast from 'react-native-toast-message';
 import Loader from '@/components/Loader';
 import SearchSelect from '@/components/SearchSelect';
-import { saveSecureKey } from '@/components/Utils';
+import { getValueById, saveSecureKey } from '@/components/Utils';
 import { signUpDetailsInitial, signUpHeaderDataInitial } from '@/context/InitialState';
 
 
@@ -113,9 +113,6 @@ const SignUp = () => {
             }
         } else if(step === "IDP"){
             setLoader(true);
-            const getValueById = (object: Array<any>, id: string) => {
-                return object?.find((item: {id: string}) => item?.id === id)?.value;
-            }
             const phoneOtp = signUpDetails?.phoneOTPDetails;
             const registrationDetails = idProofData?.find((item: {id: string}) => item?.id === "registration");
             const panDetails = idProofData?.find((item: {id: string}) => item?.id === "panCard");
@@ -127,7 +124,12 @@ const SignUp = () => {
                 gender: getValueById(personalDetails, "gender"),
                 email:  getValueById(personalDetails, "email"),
                 experience:  getValueById(personalDetails, "experience"),
+                graduation: getValueById(personalDetails, "graduation"),
+                graduationCollege: getValueById(personalDetails, "graduationCollege"),
+                graduationYear: getValueById(personalDetails, "graduationYear"),
                 specialisation:  getValueById(personalDetails, "specialisation"),
+                specialisationCollege: getValueById(personalDetails, "graduationCollege"),
+                specialisationYear: getValueById(personalDetails, "graduationYear"),
                 otherQualification: getValueById(personalDetails, "otherQualification"),
                 languages: getValueById(personalDetails, "languages"),
                 clinicAddress: {

@@ -4,6 +4,7 @@ import {
   StyleSheet,
   FlatList,
   Pressable,
+  useColorScheme,
 } from 'react-native';
 import CustomText from './CustomText';
 import { Ionicons } from '@expo/vector-icons';
@@ -18,6 +19,7 @@ const AppointmentDateSelector: React.FC<AppointmentDateSelectorProps> = ({ handl
   const [selectedDay, setSelectedDay] = useState<string>("");
   const [loader, setLoader] = useState<boolean>(false);
   const flatListRef = useRef<FlatList>(null);
+  const colorSchema = useColorScheme();
   
   useEffect(() => {
     if (currentMonth) {
@@ -168,9 +170,6 @@ const AppointmentDateSelector: React.FC<AppointmentDateSelectorProps> = ({ handl
                 <Pressable 
                     style={{ 
                         borderRadius: 8,
-                        backgroundColor: item == selectedDay ? '#1EA6D6' : "",
-                        borderWidth: 1,
-                        borderColor: item == selectedDay ? '#1EA6D6' : "#D9D9D9",
                         display: 'flex',
                         flexDirection: 'row',
                         justifyContent: 'center',
@@ -178,16 +177,23 @@ const AppointmentDateSelector: React.FC<AppointmentDateSelectorProps> = ({ handl
                         width: 62,
                         alignItems: 'center',
                         marginHorizontal: 5,
+                        backgroundColor: item === selectedDay ? '#1EA6D6' : "#fff",
+                        borderWidth: 1,
+                        borderColor: item === selectedDay ? '#1EA6D6' : "#D9D9D9", 
                     }} 
                     onPress={() => handleDaySelect(item)} 
                 >
-                    <View style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                    <View style={{ 
+                        display: 'flex', 
+                        flexDirection: 'column', 
+                        alignItems: 'center',
+                    }}>
                         <CustomText
                             textStyle={{
                             fontSize: 12,
                             lineHeight: 12,
                             fontWeight: '600',
-                            color: item == selectedDay ? '#FCFCFC' : "#32383D",
+                            color: item === selectedDay ? '#FCFCFC' : "#32383D",
                             }}
                             text={item.split(" ")[0]}
                         />
@@ -196,7 +202,7 @@ const AppointmentDateSelector: React.FC<AppointmentDateSelectorProps> = ({ handl
                             fontSize: 12,
                             lineHeight: 12,
                             fontWeight: '600',
-                            color: item == selectedDay ? '#FCFCFC' : "#32383D",
+                            color: item === selectedDay ? '#FCFCFC' : "#32383D",
                             marginTop: 4,
                             }}
                             text={item.split(" ")[1]}

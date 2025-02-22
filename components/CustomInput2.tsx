@@ -88,7 +88,7 @@ const CustomInput2: React.FC<CustomInput2Props> = ({ data, onChange, handleFocus
           <View style={{ position: 'relative' }} >
             <TextInput
               placeholderTextColor={'#8C8C8C'}
-              style={[styles.input, isFocused && styles.inputFocused, isError && styles.inputError, { paddingLeft: data?.inputType === "AMOUNT" ? 44 : 0 }]}
+              style={[styles.input, isFocused && styles.inputFocused, isError && styles.inputError, { paddingLeft: data?.inputType === "AMOUNT" ? 44 : 8 }]}
               value={value}
               onChangeText={onLocalChange}
               onBlur={handleBlurLocal}

@@ -61,7 +61,12 @@ const PersonalDetailsSetting = () => {
                     if (item?.id === "gender") return { ...item, value: doctorDetails?.gender, isDisabled: true };
                     if (item?.id === "email") return { ...item, value: doctorDetails?.email, isDisabled: true };
                     if (item?.id === "experience") return { ...item, value: doctorDetails?.experience, isDisabled: true };
+                    if (item?.id === "graduation") return { ...item, value: doctorDetails?.graduation, isDisabled: true };
+                    if (item?.id === "graduationCollege") return { ...item, value: doctorDetails?.graduationCollege, isDisabled: true };
+                    if (item?.id === "graduationYear") return { ...item, value: doctorDetails?.graduationYear, isDisabled: true };
                     if (item?.id === "specialisation") return { ...item, value: doctorDetails?.specialisation, isDisabled: true };
+                    if (item?.id === "specialisationCollege") return { ...item, value: doctorDetails?.specialisationYear, isDisabled: true };
+                    if (item?.id === "specialisationYear") return { ...item, value: doctorDetails?.specialisation, isDisabled: true };
                     if (item?.id === "otherQualification") return { ...item, value: doctorDetails?.otherQualification, isDisabled: true };
                     if (item?.id === "languages") return { ...item, value: doctorDetails?.languages, isDisabled: true };
                 }),
@@ -90,7 +95,12 @@ const PersonalDetailsSetting = () => {
                 if (item?.id === "gender") return { ...item, value: doctorDetails?.gender, isDisabled: true };
                 if (item?.id === "email") return { ...item, value: doctorDetails?.email, isDisabled: false };
                 if (item?.id === "experience") return { ...item, value: doctorDetails?.experience, isDisabled: false };
+                if (item?.id === "graduation") return { ...item, value: doctorDetails?.graduation, isDisabled: true };
+                if (item?.id === "graduationCollege") return { ...item, value: doctorDetails?.graduationCollege, isDisabled: true };
+                if (item?.id === "graduationYear") return { ...item, value: doctorDetails?.graduationYear, isDisabled: true };
                 if (item?.id === "specialisation") return { ...item, value: doctorDetails?.specialisation, isDisabled: false };
+                if (item?.id === "specialisationCollege") return { ...item, value: doctorDetails?.specialisationYear, isDisabled: false };
+                if (item?.id === "specialisationYear") return { ...item, value: doctorDetails?.specialisation, isDisabled: false };
                 if (item?.id === "otherQualification") return { ...item, value: doctorDetails?.otherQualification, isDisabled: false };
                 if (item?.id === "languages") return { ...item, value: doctorDetails?.languages, isDisabled: false };
             }),
@@ -111,6 +121,8 @@ const PersonalDetailsSetting = () => {
         const updateData = {
             experience: getValueById(doctorData?.personalData, "experience"),
             specialisation: getValueById(doctorData?.personalData, "specialisation"),
+            specialisationCollege: getValueById(doctorData?.personalData, "specialisationCollege"),
+            specialisationYear: getValueById(doctorData?.personalData, "specialisationYear"),
             otherQualification: getValueById(doctorData?.personalData, "otherQualification"),
             languages: getValueById(doctorData?.personalData, "languages"),
             imageUrl: doctorData?.imageUrl || "",
@@ -258,7 +270,7 @@ const PersonalDetailsSetting = () => {
     }
 
     const renderInputType = (item: any) => {
-        switch (item.inputType) {
+        switch (item?.inputType) {
             case "TEXT":
                 return (
                     <CustomInput2 data={item} onChange={(value, id) => handleChange(value, id)} />
