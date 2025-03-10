@@ -9,7 +9,7 @@ interface MainFooterProps {
 }
 
 const MainFooter: React.FC<MainFooterProps> = ({ selectedNav }) => {
-    const { width } = Dimensions.get('screen');
+    const { width, height } = Dimensions.get('window');
 
     const handleClick = (value: string) => {
         switch (value) {
@@ -30,7 +30,15 @@ const MainFooter: React.FC<MainFooterProps> = ({ selectedNav }) => {
     }
 
     return (
-        <View style={{ width: width - 32, position: 'absolute', bottom: 42, display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }} >
+        <View style={{ 
+            width: width - 32,
+            position: 'absolute', 
+            bottom: 12,
+            display: 'flex', 
+            flexDirection: 'row', 
+            justifyContent: 'space-between',
+            backgroundColor: '#fff'
+        }} >
             <Pressable onPress={() => handleClick("home")} style={{ width: 60, paddingVertical: 10, borderTopWidth: selectedNav === "home" ? 3 : 3, borderColor: selectedNav === "home" ? "#5257E9" : "#A9A9AB", display: 'flex', flexDirection: 'column', alignItems: 'center' }} >
                 <Ionicons name='home' size={24} color={selectedNav === "home" ? "#5257E9" : "#A9A9AB" } />
                 <CustomText text="Home" textStyle={{ fontSize: 10, lineHeight: 14, fontWeight: 600, color: selectedNav === "home" ? "#5257E9" : "#A9A9AB", marginTop: 4 }} />

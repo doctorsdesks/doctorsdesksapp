@@ -178,6 +178,41 @@ export const uploadFile = async (fileUri: any, fileName: string, phoneNumber: st
     }
   }
 
+  export const getPatientList = async (searchString: string) => {
+    const url = URLS.BASE + URLS.GET_PATIENT_LIST + "/" + searchString;
+    try {
+        const response = await axios.get(url,
+            {
+              headers: {
+                'X-Requested-With': 'doctorsdesks_web_app',
+              },
+            }
+          );
+        const { data, status } = response;
+        if (status === 200){
+            Toast.show({
+                type: 'success',  
+                text1: data.message,
+                visibilityTime: 5000,
+            });
+            return {
+              status: "SUCCESS",
+              data: data.data,
+            }
+        } else {
+          return {
+            status: "FAILURE",
+            error: "Something wrong. Please try again.",
+          }
+        }
+    } catch (error: any) {
+        return {
+          status: "FAILURE",
+          error: error?.response?.data?.message
+        }
+    }
+  }
+
   export const  formatDateToYYYYMMDD = (date: Date) => {
     return `${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()}` 
   }

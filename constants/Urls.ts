@@ -7,4 +7,6 @@ export const URLS = {
     GET_APPOINTMENTS: "/v1/appointment",
     LOCAL_BASE: "http://localhost:3000",
     GET_TRANSLATIONS: "/v1/translations",
+    GET_PATIENT: "/v1/patient",
+    GET_PATIENT_LIST: "/v1/patient/search"
 }

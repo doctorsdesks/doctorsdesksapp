@@ -3,8 +3,10 @@ import CustomText from '@/components/CustomText';
 import Loader from '@/components/Loader';
 import MainFooter from '@/components/MainFooter';
 import MainHeader from '@/components/MainHeader';
-import { getAppointments, getDoctorDetails, getSecureKey, getTranslations, saveSecureKey } from '@/components/Utils';
-import { AppointmentStatus } from '@/constants/Enums';
+import PatientList from '@/components/PatientList';
+import SearchBar from '@/components/SearchBar';
+import { getAppointments, getDoctorDetails, getPatientList, getSecureKey, getTranslations, saveSecureKey } from '@/components/Utils';
+import { AppointmentStatus, PatientListProps } from '@/constants/Enums';
 import { URLS } from '@/constants/Urls';
 import { useAppContext } from '@/context/AppContext';
 import { Ionicons } from '@expo/vector-icons';
@@ -19,11 +21,11 @@ const Home = () => {
     const scrollViewRef = React.useRef(null);
     const { width, height } = Dimensions.get('window');
     const [isFocused, setIsFocused] = useState<boolean>(false);
-    const [searchValue, setSearchValue] = useState<string>("");
     const [loader, setLoader] = useState<boolean>(false);
     const [appointments, setAppointments] = useState<Array<any>>([]);
     const [patientCount, setPatientCount] = useState<string>('0');
     const [doctorId, setDoctorId] = useState<string>("");
+    const [patientList, setPatientList] = useState<PatientListProps[]>([]);
 
     useEffect(() => {
         const getLanguages = async () => {
@@ -60,15 +62,15 @@ const Home = () => {
 
     const findDoctor = async (docNumber: string) => {
         setLoader(true);
-        const respnose = await getDoctorDetails(docNumber);
-        if (respnose.status === "SUCCESS") {
-            const docDetails = respnose.data;
+        const response = await getDoctorDetails(docNumber);
+        if (response.status === "SUCCESS") {
+            const docDetails = response.data;
             setDoctorDetails(docDetails);
             setLoader(false);
         } else {
             Toast.show({
                 type: 'error',  
-                text1: respnose.error,
+                text1: response.error,
                 visibilityTime: 5000,
             });
             setLoader(false);
@@ -77,9 +79,9 @@ const Home = () => {
 
     const getAllAppointments = async (docNumber: string, date: string) => {
         setLoader(true);
-        const respnose = await getAppointments(docNumber, date);
-        if (respnose.status === "SUCCESS") {
-            const appointments = respnose.data;
+        const response = await getAppointments(docNumber, date);
+        if (response.status === "SUCCESS") {
+            const appointments = response.data;
             const finalAppointments = appointments?.filter((item: any) => item?.status === AppointmentStatus.ACCEPTED);
             setPatientCount(finalAppointments?.length || "0");
             setAppointments(appointments);
@@ -87,7 +89,7 @@ const Home = () => {
         } else {
             Toast.show({
                 type: 'error',  
-                text1: respnose.error,
+                text1: response.error,
                 visibilityTime: 5000,
             });
             setLoader(false);
@@ -135,35 +137,104 @@ const Home = () => {
         }
     }
 
-    return (
-        <View style={{ marginHorizontal: 16, marginTop: 52, position: 'relative', height }} >
-            <MainHeader selectedNav="home" />
-            {/* <View style={{ width: width - 32, borderRadius: 80, backgroundColor: "#F6F5FA", borderColor: isFocused ? "#2DB9B0" : "#F6F5FA", borderWidth: 1, paddingHorizontal: 20, paddingVertical: 12, display: 'flex', flexDirection: 'row', alignItems: 'center', position: 'relative' }} >
-                <View style={{ position: 'absolute', zIndex: 2, left: 0, top: 0, height: "100%", display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', width: 40 }} >
-                    <Ionicons name='search-circle-outline' size={20} />
-                </View>
-                <TextInput
-                    placeholderTextColor={'#8C8C8C'}
-                    style={[styles.input, { marginLeft: 12}]}
-                    value={searchValue}
-                    onChangeText={(value) => setSearchValue(value)}
-                    onBlur={() => setIsFocused(false)}
-                    onFocus={() => setIsFocused(true)}
-                    placeholder="Search by patient name or number"
-                    keyboardType={'default'}
-                />
-                <Pressable 
+    const searchPatients = async (searchText: string) => {
+        setPatientList([
+            {
+                name: "Patient One",
+                phone: "7239749238",
+                age: "12",
+            },
+            {
+                name: "Patient One",
+                phone: "7239749248",
+                age: "12",
+            },
+            {
+                name: "Patient One",
+                phone: "7239749258",
+                age: "12",
+            },
+            {
+                name: "Patient One",
+                phone: "7239749268",
+                age: "12",
+            },
+            {
+                name: "Patient One",
+                phone: "7239749278",
+                age: "12",
+            },
+            {
+                name: "Patient One",
+                phone: "7239749288",
+                age: "12",
+            },
+            {
+                name: "Patient One",
+                phone: "7239749298",
+                age: "12",
+            },
+            {
+                name: "Patient One",
+                phone: "7339749268",
+                age: "12",
+            },
+            {
+                name: "Patient One",
+                phone: "7439749278",
+                age: "12",
+            },
+            {
+                name: "Patient One",
+                phone: "7539749288",
+                age: "12",
+            }
+        ])
+        // setLoader(true);
+        // const response = await getPatientList(searchText);
+        // if (response.status === "SUCCESS") {
+        //     setPatientList(response?.data || []);
+        //     setLoader(false);
+        // } else {
+        //     Toast.show({
+        //         type: 'error',  
+        //         text1: response.error,
+        //         visibilityTime: 5000,
+        //     });
+        //     setLoader(false);
+        // }
+    };
 
-                    style={{ position: 'absolute', right: 0, top: 0, borderTopRightRadius: 80, borderBottomRightRadius: 80, backgroundColor: "#2DB9B0", width: 80, display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'row', height: '100%' }}
-                >
-                    <Ionicons name='search-circle-outline' size={20} />
-                </Pressable>
-            </View> */}
+    const handleFocusChange = (focused: boolean) => {
+        setIsFocused(focused);
+        if (!focused) {
+            setPatientList([]);
+        }
+    };
+
+    return (
+        <View style={{ marginHorizontal: 16, marginTop: 52, height }} >
+            {/* <MainHeader selectedNav="home" /> */}
+            <View style={{
+                borderWidth: 1,
+                borderColor: patientList.length > 0 || isFocused ? "#2DB9B0" : "#F6F5FA",
+                borderTopLeftRadius: 34,
+                borderTopRightRadius: 34,
+                borderBottomLeftRadius: patientList?.length > 0 ? 0 : 34,
+                borderBottomRightRadius: patientList?.length > 0 ? 0 : 34,
+                display: 'flex',
+                flexDirection: 'row',
+                alignItems: 'center',
+                marginTop: 28,
+            }}>
+                <SearchBar searchPatients={searchPatients} isFocused={isFocused} setIsFocused={handleFocusChange} listOpened={patientList?.length > 0} />
+            </View>
+            {patientList?.length > 0 && <PatientList patientList={patientList} />}
             <View style={{ marginTop: 20 }} >
                 <View style={{ borderRadius: 8, borderLeftWidth: 8, borderColor: "#0A867E", backgroundColor: "#2DB9B0", paddingLeft: 16, paddingRight: 32, paddingVertical: 12, width: width - 32, display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
                     <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }} >
-                        <Ionicons name='person-circle' size={20} />
-                        <CustomText textStyle={{ fontSize: 12, lineHeight: 16, fontWeight: 600, color: "#FFFFFF", marginLeft: 8 }} text="Total number of patient today:"/>
+                        <Ionicons name='person-circle' size={40} />
+                        <CustomText textStyle={{ fontSize: 16, lineHeight: 16, fontWeight: 600, color: "#FFFFFF", marginLeft: 8 }} text="Total number of patient today:"/>
                     </View>
                     <CustomText textStyle={{ fontSize: 24, lineHeight: 30, fontWeight: 600, color: "#FFFFFF" }} text={patientCount} />
                 </View>

@@ -39,6 +39,9 @@ const MainHeader: React.FC<MainHeaderProps> = ({ selectedNav }) => {
             case "appLanguage":
                 router.replace("/dashboard/profile");
                 break;
+            case "patientProfile":
+                router.replace("/dashboard");
+                break;
             default:
                 break;
         }
