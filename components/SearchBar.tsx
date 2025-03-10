@@ -1,6 +1,8 @@
 import { Dimensions, Pressable, StyleSheet, TextInput, View } from "react-native";
 import { Ionicons } from '@expo/vector-icons';
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
+import { useAppContext } from "@/context/AppContext";
+import { getSecureKey } from "./Utils";
 
 interface SearchBarProps {
     searchPatients: (value: string) => void;
@@ -11,8 +13,17 @@ interface SearchBarProps {
 
 const SearchBar: React.FC<SearchBarProps> = ({ searchPatients, setIsFocused, isFocused, listOpened }) => {
     const [searchValue, setSearchValue] = useState<string>("");
-    const { width } = Dimensions.get('window');
     const [timeoutId, setTimeoutId] = useState<NodeJS.Timeout | null>(null); 
+    const { translations } = useAppContext();
+    const [selectedLanguage, setSelectedValue] = useState<string>("English");
+
+    useEffect(() => {
+        const checkForLanguage = async () => {
+            const value: any = await getSecureKey("language");
+            setSelectedValue(value);
+        }
+        checkForLanguage();
+    },[])
 
     const debounce = (func: Function, delay: number) => {
         return (...args: any[]) => {
@@ -38,6 +49,14 @@ const SearchBar: React.FC<SearchBarProps> = ({ searchPatients, setIsFocused, isF
         }
     };
 
+    const finalText = (text: string) => {
+        if (translations && translations[selectedLanguage] && translations[selectedLanguage][text]) {
+            return translations[selectedLanguage][text];
+        } else {
+            return text;
+        }
+    }
+
     return (
         <View style={{ width: "100%", borderRadius: listOpened ? 34 : 80, borderBottomRightRadius: listOpened ? 0 : 80, borderBottomLeftRadius: listOpened ? 0 : 80, backgroundColor: "#F6F5FA", paddingHorizontal: 20, paddingVertical: 12, display: 'flex', flexDirection: 'row', alignItems: 'center', position: 'relative' }} >
             <View style={{ width: 28 }} >
@@ -50,7 +69,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ searchPatients, setIsFocused, isF
                 onChangeText={handleChange}
                 onBlur={() => setIsFocused(false)}
                 onFocus={() => setIsFocused(true)}
-                placeholder="Search by patient name or number"
+                placeholder={finalText("Search by patient name or number")}
                 keyboardType={'default'}
             />
         </View>

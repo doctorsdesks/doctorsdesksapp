@@ -2,7 +2,6 @@ import AppointmentCard from '@/components/AppointmentCard';
 import CustomText from '@/components/CustomText';
 import Loader from '@/components/Loader';
 import MainFooter from '@/components/MainFooter';
-import MainHeader from '@/components/MainHeader';
 import PatientList from '@/components/PatientList';
 import SearchBar from '@/components/SearchBar';
 import { getAppointments, getDoctorDetails, getPatientList, getSecureKey, getTranslations, saveSecureKey } from '@/components/Utils';
@@ -12,7 +11,7 @@ import { useAppContext } from '@/context/AppContext';
 import { Ionicons } from '@expo/vector-icons';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { Dimensions, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Dimensions, ScrollView, StyleSheet, View } from 'react-native';
 import Toast from 'react-native-toast-message';
 
 
@@ -141,11 +140,11 @@ const Home = () => {
         setPatientList([
             {
                 name: "Patient One",
-                phone: "7239749238",
+                phone: "8618280755",
                 age: "12",
             },
             {
-                name: "Patient One",
+                name: "Patient two",
                 phone: "7239749248",
                 age: "12",
             },
@@ -214,7 +213,6 @@ const Home = () => {
 
     return (
         <View style={{ marginHorizontal: 16, marginTop: 52, height }} >
-            {/* <MainHeader selectedNav="home" /> */}
             <View style={{
                 borderWidth: 1,
                 borderColor: patientList.length > 0 || isFocused ? "#2DB9B0" : "#F6F5FA",

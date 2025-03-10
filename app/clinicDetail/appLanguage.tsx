@@ -10,7 +10,7 @@ const AppLanguage = () => {
     const { translations } = useAppContext();
     const { height } = Dimensions.get('window');
     const [languages, setLanguages] = useState<Array<any>>([]);
-    const [selectedValue, setSelectedValue] = useState<any>("English");
+    const [selectedValue, setSelectedValue] = useState<any>("");
 
     useEffect(() => {
         const checkForLanguage = async () => {

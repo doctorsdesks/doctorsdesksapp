@@ -11,7 +11,7 @@ interface CustomTextProps {
 
 const CustomText: React.FC<CustomTextProps> = ({ text, textStyle }) => {
     const { translations } = useAppContext();
-    const [selectedLanguage, setSelectedValue] = useState<string>("Hindi");
+    const [selectedLanguage, setSelectedValue] = useState<string>("English");
 
     useEffect(() => {
         const checkForLanguage = async () => {

@@ -1,5 +1,5 @@
 import React from "react";
-import { View, ScrollView, Text, StyleSheet, Pressable } from "react-native";
+import { View, ScrollView, StyleSheet, Pressable } from "react-native";
 import CustomText from "./CustomText";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
@@ -14,11 +14,11 @@ const PatientList = (props: any) => {
             nestedScrollEnabled={true}
             style={styles.scrollView}>
             {props?.patientList?.map((patient: any, i: number) => (
-                <Pressable onPress={() => router.replace("/patientProfile")} style={[styles.card, { borderBottomWidth: i === props?.patientList?.length - 1 ? 0 : 1 }]} key={patient?.phone}>
+                <Pressable onPress={() => router.replace(`/patientProfile/${patient?.phone}`)} style={[styles.card, { borderBottomWidth: i === props?.patientList?.length - 1 ? 0 : 1 }]} key={patient?.phone}>
                     <View style={styles.cardSection}>
                         <CustomText textStyle={{ fontSize: 14, lineHeight: 16, fontWeight: 600, color: "#000" }} text={patient?.name}/>
                         <View style={{ display: "flex", flexDirection: "row" }}  >
-                            <Ionicons name='phone-portrait-sharp' size={14} />
+                            <Ionicons name='call' size={14} />
                             <CustomText textStyle={{ fontSize: 14, lineHeight: 16, fontWeight: 600, color: "#000", marginLeft: 4 }} text={patient?.phone}/>
                         </View>
                     </View>
