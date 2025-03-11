@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, FlatList, StyleSheet, Dimensions, ImageBackground } from 'react-native';
 import CustomButton from './CustomButton';
+import CustomText from './CustomText';
 
 const { width } = Dimensions.get('window');
 
@@ -65,9 +66,7 @@ const TimePicker: React.FC<TimePickerProps> = ({ handleTimeSelection, title, tim
 
   return (
     <View style={{ }} >
-        <Text style={{ fontSize: 16, lineHeight: 20, fontWeight: 600, color: "#32383D" }} >
-            {title}
-        </Text>
+        <CustomText multiLingual={true} textStyle={{ fontSize: 16, lineHeight: 20, fontWeight: 600, color: "#32383D" }} text={title} />
         <View style={{ display: 'flex', flexDirection: 'row', marginTop: 16 }}>
             <View style={{ height: 180 }} >
                 <FlatList
@@ -131,8 +130,8 @@ const TimePicker: React.FC<TimePickerProps> = ({ handleTimeSelection, title, tim
             </View>
         </View>
         <View style={{ display: "flex", flexDirection: 'row', alignItems: "center", justifyContent: 'space-between', marginTop: 32 }} >
-            <CustomButton width='HALF' title="Cancel" onPress={closeLoserPanel} textColor="#009688" containerStyle={{ backgroundColor: "#fff", borderWidth: 1, borderColor: "#009688" }} />
-            <CustomButton width='HALF' title="Done" onPress={handleDone} />
+            <CustomButton multiLingual={true} width='HALF' title="Cancel" onPress={closeLoserPanel} textColor="#009688" containerStyle={{ backgroundColor: "#fff", borderWidth: 1, borderColor: "#009688" }} />
+            <CustomButton multiLingual={true} width='HALF' title="Done" onPress={handleDone} />
         </View>
     </View>
   );

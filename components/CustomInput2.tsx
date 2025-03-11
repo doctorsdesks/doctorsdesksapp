@@ -1,6 +1,8 @@
+import { useAppContext } from '@/context/AppContext';
 import { Ionicons } from '@expo/vector-icons';
 import React, { useState } from 'react';
 import { View, Text, TextInput, StyleSheet, Image } from 'react-native';
+import { finalText } from './Utils';
 
 interface CustomInput2Props {
   data: {
@@ -20,6 +22,7 @@ interface CustomInput2Props {
 }
 
 const CustomInput2: React.FC<CustomInput2Props> = ({ data, onChange, handleFocus, handleBlur }) => {
+  const { translations, selectedLanguage } = useAppContext();
   const [isFocused, setIsFocused] = useState(false);
   const [isError, setIsError] = useState(false);
   const { label, value, isMandatory, errorMessage, placeholder, inputType, id } = data;
@@ -74,7 +77,7 @@ const CustomInput2: React.FC<CustomInput2Props> = ({ data, onChange, handleFocus
   return (
     <View>
         <Text style={[styles.label, isFocused && styles.labelFocused, isError && styles.labelError]}>
-          {label} {isMandatory && <Text style={styles.mandatory}>*</Text>}
+          {finalText(label, translations, selectedLanguage)} {isMandatory && <Text style={styles.mandatory}>*</Text>}
         </Text>
         {data?.isDisabled ? 
           <View

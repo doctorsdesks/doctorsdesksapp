@@ -184,7 +184,7 @@ const ManageSlotTiming = () => {
                 <View style={{ borderWidth: 1, borderColor: "#DDDDDDDD", borderRadius: 8, backgroundColor: "#F9F9F9", padding: 16 }} >
                     <View>
                         <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }} >
-                            <CustomText textStyle={{ fontSize: 16, fontWeight: 600, color: "#32383D" }} text="Select Week Days" />
+                            <CustomText multiLingual={true} textStyle={{ fontSize: 16, fontWeight: 600, color: "#32383D" }} text="Select Week Days" />
                             <CustomSwitch isDisabled={eachDayChange ? true : false} isActive={allDaysSelected} onClick={handleAllDays} />
                         </View>
                         <View style={{ display: 'flex', flexDirection: "row", alignItems: 'center', justifyContent: 'space-between', marginTop: 24 }} >
@@ -195,20 +195,23 @@ const ManageSlotTiming = () => {
                                         style={{ height: 32, width: 32, display: 'flex', alignItems: "center", justifyContent: 'center', borderColor: "#2DB9B0", borderWidth: 1, borderRadius: 32, backgroundColor: day?.isSelected ? "#2DB9B0" : "#F9F9F9" }}
                                         onPress={() => !eachDayChange && handleDaySelect(day?.day)}
                                     >
-                                        <Text style={{ fontSize: 14, lineHeight: 19, fontWeight: day?.isSelected ? 700 : 600, color: day?.isSelected ? "#FFFFFF" : "#32383D" }} >{day?.label}</Text>
+                                        <CustomText multiLingual={true} textStyle={{ fontSize: 14, lineHeight: 19, fontWeight: day?.isSelected ? 700 : 600, color: day?.isSelected ? "#FFFFFF" : "#32383D" }} text={day?.label} />
                                     </Pressable>
                                 )
                             })}
                         </View>
                     </View>
                     <View style={{ marginTop: 24 }} >
-                        <CustomText textStyle={{ fontSize: 16, fontWeight: 600, color: "#32383D" }} text="Sessions" />
+                        <CustomText multiLingual={true} textStyle={{ fontSize: 16, fontWeight: 600, color: "#32383D" }} text="Sessions" />
                         <View style={{ marginTop: 16 }} >
                             {sessions?.map((session: {[key: string]: string}, index: number) => {
                                 return(
                                     <View key={session?.startTime} style={{ marginBottom: 12, display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}} >
                                         <View style={{ paddingHorizontal: 16, paddingVertical: 12, borderWidth: 1, borderRadius: 8, borderColor: "#D9D9D9", display: 'flex', flexDirection: 'row' }} >
-                                            <Text style={{ fontSize: 14, lineHeight: 20, fontWeight: 600, color: "#1EA6D6" }} >Session {index+1}</Text>
+                                            <View style={{ display:'flex', flexDirection: 'row' }} >
+                                                <CustomText multiLingual={true} textStyle={{ fontSize: 14, lineHeight: 20, fontWeight: 600, color: "#1EA6D6" }} text="Session" />
+                                                <Text style={{ marginLeft: 4, fontSize: 14, lineHeight: 20, fontWeight: 600, color: "#1EA6D6" }} >{index+1}</Text>
+                                            </View>
                                             <View  style={{ marginLeft: 16, marginRight: 12, height: 20, width: 2, backgroundColor: "#D9D9D9" }} />
                                             <Text style={{ fontSize: 14, lineHeight: 20, fontWeight: 400, color: "#32383D" }} >{session?.startTime} - {session?.endTime} </Text>
                                         </View>
@@ -221,28 +224,36 @@ const ManageSlotTiming = () => {
                         </View>
                         <View style={{ marginTop: 16, display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
                             <View style={{ display: 'flex', flexDirection: 'column' }}>
-                                <CustomText textStyle={{ fontSize: 11, lineHeight: 15, fontWeight: 600, color: "#32383D" }} text="Start Time" />
+                                <CustomText multiLingual={true} textStyle={{ fontSize: 11, lineHeight: 15, fontWeight: 600, color: "#32383D" }} text="Start Time" />
                                 <Pressable 
                                     style={{ borderWidth: 1, borderRadius: 8, borderColor: "#D9D9D9", backgroundColor: "#FFFFFF", paddingHorizontal: 14, paddingVertical: 12, display: 'flex', flexDirection: 'row', alignItems: 'center', marginTop: 8 }} 
                                     onPress={() => handleOpenTime("start")}
                                 >
-                                    <Text style={{ fontSize: 14, lineHeight: 19, fontWeight: 400, color: "#757575" }} >
-                                        {startTime === "" ? "Select Time" : startTime}
-                                    </Text>
+                                    {startTime === "" ? 
+                                        <CustomText multiLingual={true} textStyle={{ fontSize: 14, lineHeight: 19, fontWeight: 400, color: "#757575" }} text="Select Time" />
+                                    :
+                                        <Text style={{ fontSize: 14, lineHeight: 19, fontWeight: 400, color: "#757575" }} >
+                                            {startTime}
+                                        </Text>
+                                    }
                                     <View style={{ marginLeft: 8 }} >
                                         <Ionicons size={18} color={"#757575"} name='time-outline' />
                                     </View>
                                 </Pressable>
                             </View>
                             <View style={{ display: 'flex', flexDirection: 'column' }}>
-                                <CustomText textStyle={{ fontSize: 11, lineHeight: 15, fontWeight: 600, color: "#32383D" }} text="End Time" />
+                                <CustomText multiLingual={true} textStyle={{ fontSize: 11, lineHeight: 15, fontWeight: 600, color: "#32383D" }} text="End Time" />
                                 <Pressable 
                                     style={{ borderWidth: 1, borderRadius: 8, borderColor: "#D9D9D9", backgroundColor: "#FFFFFF", paddingHorizontal: 14, paddingVertical: 12, display: 'flex', flexDirection: 'row', alignItems: 'center', marginTop: 8 }}
                                     onPress={() => handleOpenTime("end")}
                                 >
-                                    <Text style={{ fontSize: 14, lineHeight: 19, fontWeight: 400, color: "#757575" }} >
-                                        {endTime === "" ? "Select Time" : endTime}
-                                    </Text>
+                                    {endTime === "" ? 
+                                        <CustomText multiLingual={true} textStyle={{ fontSize: 14, lineHeight: 19, fontWeight: 400, color: "#757575" }} text="Select Time" />
+                                    :
+                                        <Text style={{ fontSize: 14, lineHeight: 19, fontWeight: 400, color: "#757575" }} >
+                                            {endTime}
+                                        </Text>
+                                    }
                                     <View style={{ marginLeft: 8 }} >
                                         <Ionicons size={18} color={"#757575"} name='time-outline' />
                                     </View>
@@ -255,7 +266,7 @@ const ManageSlotTiming = () => {
                     </View>
                 </View>
                 <View style={{ display: "flex", alignItems: "center", marginTop: 24, position: 'absolute', bottom: 100, width: width - 32 }} >
-                        <CustomButton width='FULL' title="Add" onPress={handleAddFinal} />
+                        <CustomButton multiLingual={true} width='FULL' title="Add" onPress={handleAddFinal} />
                 </View>
             </View>
             {lowerPanel && <LowerPanel children={lowerPanelChild} closeLoserPanel={() => setLowerPanel(false)} />}

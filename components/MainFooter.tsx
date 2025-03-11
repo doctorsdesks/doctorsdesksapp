@@ -31,7 +31,9 @@ const MainFooter: React.FC<MainFooterProps> = ({ selectedNav }) => {
 
     return (
         <View style={{ 
-            width: width - 32,
+            width: width - 8,
+            marginLeft: -12,
+            marginRight: 4,
             position: 'absolute', 
             bottom: 12,
             display: 'flex', 

@@ -4,7 +4,7 @@ import Loader from '@/components/Loader';
 import MainFooter from '@/components/MainFooter';
 import PatientList from '@/components/PatientList';
 import SearchBar from '@/components/SearchBar';
-import { getAppointments, getDoctorDetails, getPatientList, getSecureKey, getTranslations, saveSecureKey } from '@/components/Utils';
+import { getAppointments, getDoctorDetails, getPatientList, getSecureKey, getTranslations } from '@/components/Utils';
 import { AppointmentStatus, PatientListProps } from '@/constants/Enums';
 import { URLS } from '@/constants/Urls';
 import { useAppContext } from '@/context/AppContext';
@@ -31,7 +31,6 @@ const Home = () => {
             const response = await getTranslations();
             if (response?.status === "SUCCESS") {
                 setTranslations(response?.data || {})
-                saveSecureKey("language", "English");
             } else {
                 Toast.show({
                     type: 'error',  
@@ -137,71 +136,19 @@ const Home = () => {
     }
 
     const searchPatients = async (searchText: string) => {
-        setPatientList([
-            {
-                name: "Patient One",
-                phone: "8618280755",
-                age: "12",
-            },
-            {
-                name: "Patient two",
-                phone: "7239749248",
-                age: "12",
-            },
-            {
-                name: "Patient One",
-                phone: "7239749258",
-                age: "12",
-            },
-            {
-                name: "Patient One",
-                phone: "7239749268",
-                age: "12",
-            },
-            {
-                name: "Patient One",
-                phone: "7239749278",
-                age: "12",
-            },
-            {
-                name: "Patient One",
-                phone: "7239749288",
-                age: "12",
-            },
-            {
-                name: "Patient One",
-                phone: "7239749298",
-                age: "12",
-            },
-            {
-                name: "Patient One",
-                phone: "7339749268",
-                age: "12",
-            },
-            {
-                name: "Patient One",
-                phone: "7439749278",
-                age: "12",
-            },
-            {
-                name: "Patient One",
-                phone: "7539749288",
-                age: "12",
-            }
-        ])
-        // setLoader(true);
-        // const response = await getPatientList(searchText);
-        // if (response.status === "SUCCESS") {
-        //     setPatientList(response?.data || []);
-        //     setLoader(false);
-        // } else {
-        //     Toast.show({
-        //         type: 'error',  
-        //         text1: response.error,
-        //         visibilityTime: 5000,
-        //     });
-        //     setLoader(false);
-        // }
+        setLoader(true);
+        const response = await getPatientList(searchText);
+        if (response.status === "SUCCESS") {
+            setPatientList(response?.data || []);
+            setLoader(false);
+        } else {
+            Toast.show({
+                type: 'error',  
+                text1: response.error,
+                visibilityTime: 5000,
+            });
+            setLoader(false);
+        }
     };
 
     const handleFocusChange = (focused: boolean) => {
@@ -232,12 +179,12 @@ const Home = () => {
                 <View style={{ borderRadius: 8, borderLeftWidth: 8, borderColor: "#0A867E", backgroundColor: "#2DB9B0", paddingLeft: 16, paddingRight: 32, paddingVertical: 12, width: width - 32, display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
                     <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }} >
                         <Ionicons name='person-circle' size={40} />
-                        <CustomText textStyle={{ fontSize: 16, lineHeight: 16, fontWeight: 600, color: "#FFFFFF", marginLeft: 8 }} text="Total number of patient today:"/>
+                        <CustomText multiLingual={true} textStyle={{ fontSize: 16, lineHeight: 16, fontWeight: 600, color: "#FFFFFF", marginLeft: 8 }} text="Total number of patient today:"/>
                     </View>
                     <CustomText textStyle={{ fontSize: 24, lineHeight: 30, fontWeight: 600, color: "#FFFFFF" }} text={patientCount} />
                 </View>
                 <View style={{ marginTop: 24 }} >
-                    <CustomText textStyle={{ fontSize: 16, lineHeight: 20, fontWeight: 600, color: "#32383D" }} text="Today's Appointment" />
+                    <CustomText multiLingual={true} textStyle={{ fontSize: 16, lineHeight: 20, fontWeight: 600, color: "#32383D" }} text="Today's Appointment" />
                     <View style={{ height: height - 360 }} >
                         <ScrollView
                             ref={scrollViewRef} 

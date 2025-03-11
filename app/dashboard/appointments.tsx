@@ -5,7 +5,7 @@ import Loader from '@/components/Loader';
 import MainFooter from '@/components/MainFooter';
 import MainHeader from '@/components/MainHeader';
 import Navbar, { NavbarObject } from '@/components/Navbar';
-import { formatDateToYYYYMMDD, getAppointments } from '@/components/Utils';
+import { finalText, formatDateToYYYYMMDD, getAppointments } from '@/components/Utils';
 import { AppointmentStatus, AppointmentType } from '@/constants/Enums';
 import { URLS } from '@/constants/Urls';
 import { useAppContext } from '@/context/AppContext';
@@ -18,7 +18,7 @@ import Toast from 'react-native-toast-message';
 const Appointments = () => {
     const { height } = Dimensions.get('window');
     const scrollViewRef = React.useRef(null);
-    const { doctorDetails } = useAppContext();
+    const { doctorDetails, translations, selectedLanguage } = useAppContext();
     const [selectedDay, setSelectedDay] = useState<string>("");
     const [navData, setNavData] = useState<Array<NavbarObject>>([
         {
@@ -63,9 +63,11 @@ const Appointments = () => {
             const emergencyAppointment = completeOrAcceptedAppointments?.filter((item: any) => item?.appointmentType === AppointmentType.EMERGENCY);
             const newNavData = navData?.map((item: NavbarObject) => {
                 if (item?.label?.split(" ")[0] === "Normal") {
-                    return { ...item, label: `Normal (${normalAppointment?.length})`, isActive: true }
+                    const languageText = finalText("Normal", translations, selectedLanguage)
+                    return { ...item, label: `${languageText} (${normalAppointment?.length})`, isActive: true }
                 } else {
-                    return { ...item, label: `Emergency (${emergencyAppointment?.length})`, isActive: false }
+                    const languageText = finalText("Emergency", translations, selectedLanguage)
+                    return { ...item, label: `${languageText} (${emergencyAppointment?.length})`, isActive: false }
                 }
             });
             setNavData(newNavData);
@@ -156,7 +158,7 @@ const Appointments = () => {
                     ref={scrollViewRef} 
                     style={{ marginTop: 20 }}>
                     {filteredAppointments?.length === 0 ?
-                        <CustomText textStyle={{ fontSize: 16, lineHeight: 20, fontWeight: 600, color: "#32383D" }} text="No Appointment" />
+                        <CustomText multiLingual={true} textStyle={{ fontSize: 16, lineHeight: 20, fontWeight: 600, color: "#32383D" }} text="No Appointment Today!" />
                     : 
                         filteredAppointments?.map((appointment: any, index: number) => {
                         return (

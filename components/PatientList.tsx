@@ -24,9 +24,9 @@ const PatientList = (props: any) => {
                     </View>
                     <View style={styles.cardSection}>
                         <View style={{ display: "flex", flexDirection: "row" }} >
-                            <CustomText textStyle={{ fontSize: 14, lineHeight: 16, fontWeight: 600, color: "#000" }} text="Age"/>
+                            <CustomText multiLingual={true} textStyle={{ fontSize: 14, lineHeight: 16, fontWeight: 600, color: "#000" }} text="Age"/>
                             <CustomText textStyle={{ fontSize: 14, lineHeight: 16, fontWeight: 600, color: "#000" }} text={` :  ${patient?.age}`}/>
-                            <CustomText textStyle={{ fontSize: 14, lineHeight: 16, fontWeight: 600, color: "#000", marginLeft: 4 }} text="years"/>
+                            <CustomText multiLingual={true} textStyle={{ fontSize: 14, lineHeight: 16, fontWeight: 600, color: "#000", marginLeft: 4 }} text="years"/>
                         </View>
                         <CustomText textStyle={{ fontSize: 14, lineHeight: 16, fontWeight: 600, color: "#000" }} text={patient?.uhiid}/>
                     </View>

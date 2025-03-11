@@ -82,7 +82,7 @@ const PatientProfile = () => {
         return (
             <View style={{ marginHorizontal: 16, marginTop: 52, height }} >
                 <MainHeader selectedNav="patientProfile" />
-                <CustomText text="Loading..." textStyle={styles.loadingText} />
+                <CustomText multiLingual={true} text="Loading..." textStyle={styles.loadingText} />
             </View>
         );
     }
@@ -91,7 +91,7 @@ const PatientProfile = () => {
         return (
             <View style={{ marginHorizontal: 16, marginTop: 52, height }} >
                 <MainHeader selectedNav="patientProfile" />
-                <CustomText text={error || 'Patient not found'} textStyle={styles.errorText} />
+                <CustomText multiLingual={true} text={error || 'Patient not found'} textStyle={styles.errorText} />
             </View>
         );
     }
@@ -123,11 +123,11 @@ const PatientProfile = () => {
                     <View style={styles.headerInfo}>
                         <CustomText text={patientDetails?.name} textStyle={styles.nameText} />
                         <View style={styles.infoRow}>
-                            <CustomText text={patientDetails?.gender} textStyle={styles.infoText} />
+                            <CustomText multiLingual={true} text={patientDetails?.gender} textStyle={styles.infoText} />
                             <View style={styles.dot} />
                             <View style={{ display: 'flex', flexDirection: 'row' }}>
                                 <CustomText textStyle={styles.infoText}  text={patientDetails?.age}/>
-                                <CustomText textStyle={[styles.infoText, { marginLeft: 4 }]} text="years"/>
+                                <CustomText multiLingual={true} textStyle={[styles.infoText, { marginLeft: 4 }]} text="years"/>
                             </View>
                         </View>
                         <View style={styles.phoneContainer}>
@@ -138,7 +138,7 @@ const PatientProfile = () => {
                 </View>
 
                 <Pressable onPress={() => setShowMore(!showMore)} style={styles.moreButton}>
-                    <CustomText text={showMore ? "Less Details" :"More Details"} textStyle={styles.moreText} />
+                    <CustomText multiLingual={true} text={showMore ? "Less Details" :"More Details"} textStyle={styles.moreText} />
                     <Ionicons 
                         name={showMore ? "chevron-up" : "chevron-down"} 
                         size={24} 
@@ -154,7 +154,7 @@ const PatientProfile = () => {
                                     <Ionicons name="call" size={20} color="#fff" />
                                 </View>
                                 <View>
-                                    <CustomText text="Alternate No." textStyle={styles.labelText} />
+                                    <CustomText multiLingual={true} text="Alternate No." textStyle={styles.labelText} />
                                     <CustomText text={patientDetails?.alternatePhone || '-'} textStyle={styles.valueText} />
                                 </View>
                             </View>
@@ -163,7 +163,7 @@ const PatientProfile = () => {
                                     <Ionicons name="water" size={20} color="#fff" />
                                 </View>
                                 <View>
-                                    <CustomText text="Blood Group" textStyle={styles.labelText} />
+                                    <CustomText multiLingual={true} text="Blood Group" textStyle={styles.labelText} />
                                     <CustomText text={patientDetails?.bloodGroup || '-'} textStyle={styles.valueText} />
                                 </View>
                             </View>
@@ -175,7 +175,7 @@ const PatientProfile = () => {
                                     <Ionicons name="heart" size={20} color="#fff" />
                                 </View>
                                 <View>
-                                    <CustomText text="Marital Status" textStyle={styles.labelText} />
+                                    <CustomText multiLingual={true} text="Marital Status" textStyle={styles.labelText} />
                                     <CustomText text={patientDetails?.maritalStatus || '-'} textStyle={styles.valueText} />
                                 </View>
                             </View>
@@ -201,7 +201,7 @@ const PatientProfile = () => {
                                     <Ionicons name="location" size={20} color="#fff" />
                                 </View>
                                 <View>
-                                    <CustomText text="Address" textStyle={styles.labelText} />
+                                    <CustomText multiLingual={true} text="Address" textStyle={styles.labelText} />
                                     <CustomText text={patientDetails?.address?.addressLine ? getAddress(patientDetails?.address) : '-'} textStyle={styles.valueText} />
                                 </View>
                             </View>

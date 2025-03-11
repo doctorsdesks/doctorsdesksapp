@@ -319,7 +319,7 @@ const PersonalDetailsSetting = () => {
                             {doctorData?.imageUrl !== "" && <Image source={{uri: doctorDetails?.imageUrl}} resizeMode='cover' height={100} width={100} style={{ marginTop: 8, height: 100, width: 100, borderColor: "#CFD8DC", borderRadius: 100 }} />}
                         </View>
                         {isEditable && <Pressable onPress={pickImage} style={{ borderBottomWidth: 1, borderBottomColor: "#1EA6D6", marginTop: 12}}>
-                            <CustomText textStyle={{ color: "#1EA6D6"}} text="Change Photo" />
+                            <CustomText multiLingual={true} textStyle={{ color: "#1EA6D6"}} text="Change Photo" />
                         </Pressable>}
                     </View>
                     <ScrollView
@@ -344,7 +344,7 @@ const PersonalDetailsSetting = () => {
                                 })}
                     </ScrollView>
                     <View style={{ display: "flex", alignItems: "center", marginTop: 24, marginBottom: 32 }} >
-                        <CustomButton width='FULL' title={isEditable ? "Save" : "Update"} onPress={handleButtonClick} />
+                        <CustomButton multiLingual={true} width='FULL' title={isEditable ? "Save" : "Update"} onPress={handleButtonClick} />
                     </View>
                 </View>
             :   
@@ -355,7 +355,7 @@ const PersonalDetailsSetting = () => {
                                 <View style={{ padding: 6, borderWidth: 1, borderRadius: 4, borderColor: "#D9D9D9" }} >
                                     <Image source={require('../../assets/images/registration.png')} resizeMode='contain' height={24} width={24} />
                                 </View>
-                                <CustomText textStyle={{ fontSize: 14, lineHeight: 14, fontWeight: 600, color: "#32383D", marginLeft: 8 }} text="Registration Certificate" />
+                                <CustomText multiLingual={true} textStyle={{ fontSize: 14, lineHeight: 14, fontWeight: 600, color: "#32383D", marginLeft: 8 }} text="Registration Certificate" />
                             </View>
                             <Pressable onPress={() => openDocumentCard("registrationInfo")} style={{ transform: [{ rotate: idInfo?.registrationInfo?.isOpen ? '180deg' : '0' }] }} >
                                 <Ionicons size={24} color={"#A9A9AB"} name='chevron-down' />
@@ -383,9 +383,7 @@ const PersonalDetailsSetting = () => {
                                     <View style={{ padding: 6, borderWidth: 1, borderRadius: 4, borderColor: "#D9D9D9" }} >
                                         <Image source={require('../../assets/images/address.png')} resizeMode='contain' height={24} width={24} />
                                     </View>
-                                    <Text style={{ fontSize: 14, lineHeight: 14, fontWeight: 600, color: "#32383D",  marginLeft: 8 }} >
-                                        Aadhar Card 
-                                    </Text>
+                                    <CustomText multiLingual={true} textStyle={{ fontSize: 14, lineHeight: 14, fontWeight: 600, color: "#32383D", marginLeft: 8 }} text="Aadhar Card" />
                                 </View>
                                 <Pressable onPress={() => openDocumentCard("aadharInfo")} style={{ transform: [{ rotate: idInfo?.aadharInfo?.isOpen ? '180deg' : '0' }] }} >
                                     <Ionicons size={24} color={"#A9A9AB"} name='chevron-down' />
@@ -414,9 +412,7 @@ const PersonalDetailsSetting = () => {
                                     <View style={{ padding: 6, borderWidth: 1, borderRadius: 4, borderColor: "#D9D9D9" }} >
                                         <Image source={require('../../assets/images/address.png')} resizeMode='contain' height={24} width={24} />
                                     </View>
-                                    <Text style={{ fontSize: 14, lineHeight: 14, fontWeight: 600, color: "#32383D",  marginLeft: 8 }} >
-                                        Pan Card 
-                                    </Text>
+                                    <CustomText multiLingual={true} textStyle={{ fontSize: 14, lineHeight: 14, fontWeight: 600, color: "#32383D", marginLeft: 8 }} text="Pan Card" />
                                 </View>
                                 <Pressable onPress={() => openDocumentCard("panInfo")} style={{ transform: [{ rotate: idInfo?.panInfo?.isOpen ? '180deg' : '0' }] }} >
                                     <Ionicons size={24} color={"#A9A9AB"} name='chevron-down' />

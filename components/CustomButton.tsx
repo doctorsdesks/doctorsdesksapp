@@ -1,5 +1,7 @@
+import { useAppContext } from '@/context/AppContext';
 import React from 'react';
 import { Text, StyleSheet, GestureResponderEvent, Pressable } from 'react-native';
+import { finalText } from './Utils';
 
 // Define the prop types for the CustomButton
 interface CustomButtonProps {
@@ -9,10 +11,13 @@ interface CustomButtonProps {
   containerStyle?: object;
   isDisabled?: boolean;
   width?: string;
+  multiLingual?: boolean;
 }
 
 // Functional component definition using the props interface
-const CustomButton: React.FC<CustomButtonProps> = ({ title, onPress, textColor = '#FFFFFF', containerStyle, isDisabled = false, width = "AUTO" }) => {
+const CustomButton: React.FC<CustomButtonProps> = ({ title, onPress, textColor = '#FFFFFF', containerStyle, isDisabled = false, width = "AUTO", multiLingual }) => {
+  const { translations, selectedLanguage } = useAppContext();
+
   return (
     <Pressable
       style={[
@@ -24,7 +29,7 @@ const CustomButton: React.FC<CustomButtonProps> = ({ title, onPress, textColor =
       onPress={(e) => onPress(e)}
       disabled={isDisabled}
     >
-      <Text style={[styles.buttonText, { color: textColor }]}>{title}</Text>
+      <Text style={[styles.buttonText, { color: textColor }]}>{finalText(title, translations, selectedLanguage)}</Text>
     </Pressable>
   );
 };

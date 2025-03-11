@@ -101,7 +101,7 @@ const AppointmentCardTwo: React.FC<AppointmentCardTwoProps> = ({ lastAppointment
                         }}
                         onPress={() => handleStatusUpdate("COMPLETE")}
                     >
-                        <CustomText textStyle={{ fontSize: 14, lineHeight: 16, fontWeight: 600, color: "#2DB9B0" }} text="Complete" />
+                        <CustomText multiLingual={true} textStyle={{ fontSize: 14, lineHeight: 16, fontWeight: 600, color: "#2DB9B0" }} text="Complete" />
                     </Pressable>
                 </View>
             </View>

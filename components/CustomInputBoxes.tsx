@@ -1,5 +1,7 @@
+import { useAppContext } from '@/context/AppContext';
 import React from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { finalText } from './Utils';
 
 interface CustomInputBoxesProps {
     data: { 
@@ -16,12 +18,13 @@ interface CustomInputBoxesProps {
 }
 
 const CustomInputBoxes: React.FC<CustomInputBoxesProps> = ({ data, onChange }) => {
+  const { translations, selectedLanguage } = useAppContext();
     const languages = ["Hindi", "English", "Haryanvi"]
 
     return (
         <View style={{ marginBottom: 16}} >
             <Text style={styles.label}>
-                {data?.label} {data?.isMandatory && <Text style={styles.mandatory}>*</Text>}
+                {finalText(data?.label, translations, selectedLanguage)} {data?.isMandatory && <Text style={styles.mandatory}>*</Text>}
             </Text>
             <View 
                 style={{ 
