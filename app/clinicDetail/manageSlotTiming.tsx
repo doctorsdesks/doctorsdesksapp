@@ -191,6 +191,7 @@ const ManageSlotTiming = () => {
                             {days?.map((day: DaysForSlot) => {
                                 return (
                                     <Pressable
+                                        key={day?.label}
                                         id={day?.label} 
                                         style={{ height: 32, width: 32, display: 'flex', alignItems: "center", justifyContent: 'center', borderColor: "#2DB9B0", borderWidth: 1, borderRadius: 32, backgroundColor: day?.isSelected ? "#2DB9B0" : "#F9F9F9" }}
                                         onPress={() => !eachDayChange && handleDaySelect(day?.day)}
@@ -265,7 +266,7 @@ const ManageSlotTiming = () => {
                         </View>
                     </View>
                 </View>
-                <View style={{ display: "flex", alignItems: "center", marginTop: 24, position: 'absolute', bottom: 100, width: width - 32 }} >
+                <View style={{ display: "flex", alignItems: "center", marginTop: 24, position: 'absolute', bottom: 100, width: width - 32, right: -16 }} >
                         <CustomButton multiLingual={true} width='FULL' title="Add" onPress={handleAddFinal} />
                 </View>
             </View>
