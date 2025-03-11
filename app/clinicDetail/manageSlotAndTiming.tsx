@@ -216,7 +216,7 @@ const ManageSlotDurationAndTiming = () => {
                             })}
                         </View>
                     :
-                        <CustomText multiLingual={true} textStyle={{ marginTop: 32, fontSize: 16, lineHeight: 21, fontWeight: 600, color: "#32383D" }} text="Please add slots" />
+                        <CustomText multiLingual={true} textStyle={{ marginTop: 12, fontSize: 14, lineHeight: 21, fontWeight: 600, color: "red" }} text="Please add slots" />
                     }
                     <View style={{ display: "flex", alignItems: "center", marginTop: 24, marginBottom: 32 }} >
                         <CustomButton multiLingual={true} width='FULL' title="Add Slots" onPress={handlAddSlots} isDisabled={!isEditable} />
