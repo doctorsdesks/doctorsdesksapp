@@ -71,7 +71,7 @@ const ManageSlotDurationAndTiming = () => {
                 Toast.show({
                     type: 'error',  
                     text1: respnose.error,
-                    visibilityTime: 5000,
+                    visibilityTime: 3000,
                 });
                 setLoader(false);
             }
@@ -147,7 +147,7 @@ const ManageSlotDurationAndTiming = () => {
                 Toast.show({
                     type: 'success',  
                     text1: data.message,
-                    visibilityTime: 5000,
+                    visibilityTime: 3000,
                 });
             }
             setLoader(false);
@@ -156,7 +156,7 @@ const ManageSlotDurationAndTiming = () => {
                 Toast.show({
                     type: 'error',  
                     text1: error.response.data.message,
-                    visibilityTime: 5000,
+                    visibilityTime: 3000,
                 });
             setLoader(false);
         }

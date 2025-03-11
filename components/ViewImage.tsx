@@ -27,14 +27,14 @@ const ViewImage: React.FC<ImageProps> = ({ data, height, width, style, resizeMod
                         Toast.show({
                             type: 'error',  
                             text1: "File doesn't exist at the given URI.",
-                            visibilityTime: 5000,
+                            visibilityTime: 3000,
                         });
                     }
                 } catch (error) {
                     Toast.show({
                         type: 'error',  
                         text1: `Error accessing the file: ${error}`,
-                        visibilityTime: 5000,
+                        visibilityTime: 3000,
                     });
                 }
             } else {

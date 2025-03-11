@@ -63,7 +63,7 @@ const UploadCard = () => {
                 Toast.show({
                     type: 'error',  
                     text1: `Something went wrong, error: ${backUrlObject.data}`,
-                    visibilityTime: 5000,
+                    visibilityTime: 3000,
                 });
                 setLoader(false);
             }
@@ -71,40 +71,11 @@ const UploadCard = () => {
             Toast.show({
                 type: 'error',  
                 text1: `Something went wrong, error: ${frontUrlObject.data}`,
-                visibilityTime: 5000,
+                visibilityTime: 3000,
             });
             setLoader(false);
         }
     }
-    //     setLoader(true);
-    //     const fileExtension = fileUri.uri.split('.').pop();
-    //     console.info("in process 1", fileExtension);
-    //     const storageRef = storage().ref(`uploads/${fileName}`);
-    //     console.info("in process 2", storageRef.fullPath);
-    //     try {
-    //         const task = storageRef.putFile(fileUri.uri);
-    //         task.on('state_changed', taskSnapshot => {
-    //         console.log(`${taskSnapshot.bytesTransferred} transferred out of ${taskSnapshot.totalBytes}`);
-    //         });
-    //         await task;
-    //         const downloadUrl = await storageRef.getDownloadURL();
-    //         Toast.show({
-    //             type: 'success',  
-    //             text1: 'Image uploaded Successfully.',
-    //             visibilityTime: 5000,
-    //         });
-    //         return downloadUrl;
-    //     } catch (error) {
-    //         Toast.show({
-    //             type: 'error',  
-    //             text1: 'Something went wrong.',
-    //             visibilityTime: 5000,
-    //         });
-    //         console.log("Error uploading file: ", error);
-    //     } finally {
-    //         setLoader(false);
-    //     }
-    //   };
 
     return (
         <View style={{ marginTop: 32, marginHorizontal: 16 }}>

@@ -8,9 +8,10 @@ import { finalText } from './Utils';
 
 interface MainHeaderProps {
     selectedNav: string;
+    title?: string;
 }
 
-const MainHeader: React.FC<MainHeaderProps> = ({ selectedNav }) => {
+const MainHeader: React.FC<MainHeaderProps> = ({ selectedNav, title = "" }) => {
     const { translations, selectedLanguage } = useAppContext();
 
     const handleBackNav = () => {
@@ -83,6 +84,9 @@ const MainHeader: React.FC<MainHeaderProps> = ({ selectedNav }) => {
             case "appLanguage":
                 text = "App Language";
                 break;
+            case "patientProfile":
+                text = title || "";
+                break;
             default:
                 text = "";
                 break;
@@ -95,7 +99,7 @@ const MainHeader: React.FC<MainHeaderProps> = ({ selectedNav }) => {
             {selectedNav !== "home" && <Pressable style={{ position: 'absolute', left: 0 }} onPress={handleBackNav}>
                 <Ionicons name="arrow-back" size={24} color="black" />
             </Pressable>}
-            <CustomText text={finalText(showtext(), translations, selectedLanguage)} textStyle={{ fontSize: 16, fontWeight: 600, color: "#32383D", lineHeight: 22 }} />
+            <CustomText text={finalText(showtext(), translations, selectedLanguage)} textStyle={{ fontSize: 16, fontWeight: 600, color: "#32383D", lineHeight: 22, textTransform: title ? "capitalize" : "" }} />
         </View>
     );
 };

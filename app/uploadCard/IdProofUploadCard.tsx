@@ -26,7 +26,7 @@ const IdProofUploadCard: React.FC<IdProofUploadCardProps> = ({ data, onChange, h
           Toast.show({
             type: 'error',  
             text1: 'Permission denied, We need camera roll permissions to make this work!',
-            visibilityTime: 5000,
+            visibilityTime: 3000,
         });
         }
     };

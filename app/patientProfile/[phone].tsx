@@ -32,39 +32,20 @@ const PatientProfile = () => {
         const fetchPatientDetails = async () => {
             try {
                 setLoading(true);
-                // const response = await getPatient(phone);
-                setPatientDetails(
-                    {
-                        "phone": "3333333330",
-                        "imageUrl": "",
-                        "name": "sumit patient",
-                        "gender": "MALE",
-                        "bloodGroup": "A+",
-                        "alternatePhone": "1234567891",
-                        "maritalStatus": "Married",
-                        "emailId": "email@gmail.com",
-                        "address": {
-                            "addressLine": "add line one",
-                            "landmark": "landmark",
-                            "city": "Bijnor",
-                            "state": "UP",
-                            "pincode": "2517261"
-                        },
-                        "age": "28"
-                    })
-                // if (response.status === "SUCCESS") {
-                //     setPatientDetails(response?.data || {});
-                //     setLoading(false);
-                //     setError(null);
-                // } else {
-                //     Toast.show({
-                //         type: 'error',  
-                //         text1: response.error,
-                //         visibilityTime: 5000,
-                //     });
-                //     setLoading(false);
-                //     setError(response.error);
-                // }
+                const response = await getPatient(phone);
+                if (response.status === "SUCCESS") {
+                    setPatientDetails(response?.data || {});
+                    setLoading(false);
+                    setError(null);
+                } else {
+                    Toast.show({
+                        type: 'error',  
+                        text1: response.error,
+                        visibilityTime: 3000,
+                    });
+                    setLoading(false);
+                    setError(response.error);
+                }
             } catch (err) {
                 setError('Failed to fetch patient details');
                 console.error('Error fetching patient details:', err);
@@ -103,7 +84,7 @@ const PatientProfile = () => {
 
     return (
         <View style={{ marginHorizontal: 16, marginTop: 52, height }} >
-            <MainHeader selectedNav="patientProfile" />
+            <MainHeader selectedNav="patientProfile" title={patientDetails?.name} />
             <View style={[styles.profileCard, { width: width - 32 }]}>
                 <View style={styles.profileHeader}>
                     {patientDetails?.imageUrl !== "" ? 

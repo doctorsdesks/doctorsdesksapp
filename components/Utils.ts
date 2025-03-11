@@ -18,7 +18,7 @@ export const uploadFile = async (fileUri: any, fileName: string, phoneNumber: st
         Toast.show({
             type: 'success',  
             text1: 'Image uploaded Successfully.',
-            visibilityTime: 5000,
+            visibilityTime: 3000,
         });
         return {
             data: downloadUrl,
@@ -88,7 +88,7 @@ export const uploadFile = async (fileUri: any, fileName: string, phoneNumber: st
             Toast.show({
                 type: 'success',  
                 text1: data.message,
-                visibilityTime: 5000,
+                visibilityTime: 3000,
             });
             return {
               status: "SUCCESS",
@@ -123,7 +123,7 @@ export const uploadFile = async (fileUri: any, fileName: string, phoneNumber: st
         Toast.show({
             type: 'success',  
             text1: data.message,
-            visibilityTime: 5000,
+            visibilityTime: 3000,
         });
         return {
           status: "SUCCESS",
@@ -158,7 +158,7 @@ export const uploadFile = async (fileUri: any, fileName: string, phoneNumber: st
             Toast.show({
                 type: 'success',  
                 text1: data.message,
-                visibilityTime: 5000,
+                visibilityTime: 3000,
             });
             return {
               status: "SUCCESS",
@@ -193,7 +193,7 @@ export const uploadFile = async (fileUri: any, fileName: string, phoneNumber: st
             Toast.show({
                 type: 'success',  
                 text1: data.message,
-                visibilityTime: 5000,
+                visibilityTime: 3000,
             });
             return {
               status: "SUCCESS",
@@ -228,7 +228,7 @@ export const uploadFile = async (fileUri: any, fileName: string, phoneNumber: st
             Toast.show({
                 type: 'success',  
                 text1: data.message,
-                visibilityTime: 5000,
+                visibilityTime: 3000,
             });
             return {
               status: "SUCCESS",
@@ -271,7 +271,7 @@ export const uploadFile = async (fileUri: any, fileName: string, phoneNumber: st
             Toast.show({
                 type: 'success',  
                 text1: data.message,
-                visibilityTime: 5000,
+                visibilityTime: 3000,
             });
             return {
               status: "SUCCESS",
