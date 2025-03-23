@@ -3,7 +3,7 @@ import Navbar, { NavbarObject } from '@/components/Navbar';
 import { DocStatusType } from '@/constants/Enums';
 import { useAppContext } from '@/context/AppContext';
 import React, { useEffect, useState } from 'react';
-import { BackHandler, Dimensions, Image, Pressable, ScrollView, Text, View } from 'react-native';
+import { BackHandler, Dimensions, Image, Keyboard, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import Toast from 'react-native-toast-message';
 import { getValueById, uploadFile } from '@/components/Utils';
@@ -37,11 +37,18 @@ const PersonalDetailsSetting = () => {
     const [loader, setLoader] = useState<boolean>(false);
     const [isEditable, setIsEditable] = useState<boolean>(false);
     const [idInfo, setIdInfo] = useState<any>({});
+    const [showImage, setShowImage] = useState<boolean>(true);
+    const [isKeyboardOpen, setIsKeyboardOpen] = useState<boolean>(false);
 
     useEffect(() => {
         const backAction = () => {
-            router.replace("/dashboard/profile");
-            return true;
+            if (isKeyboardOpen) {
+                Keyboard.dismiss();
+                return true;
+            } else {
+                router.replace("/dashboard/profile");
+                return true;
+            }
         };
 
         const backHandler = BackHandler.addEventListener("hardwareBackPress", backAction);
@@ -88,6 +95,12 @@ const PersonalDetailsSetting = () => {
 
     useEffect(() => {
         if (isEditable) {
+            const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () =>
+                { setIsKeyboardOpen(true); setShowImage(false)}
+              );
+              const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () =>
+               { setIsKeyboardOpen(false); setShowImage(true)}
+              );
             let newDoctorData = { ...doctorData };
             let newPersonalData = [...newDoctorData?.personalData]
             newPersonalData = newPersonalData?.map((item: any) => {
@@ -273,17 +286,17 @@ const PersonalDetailsSetting = () => {
         switch (item?.inputType) {
             case "TEXT":
                 return (
-                    <CustomInput2 data={item} onChange={(value, id) => handleChange(value, id)} />
+                    <CustomInput2 data={item} handleFocus={() => setShowImage(false)} onChange={(value, id) => handleChange(value, id)} />
                 )
                 break;
             case "NUMBER":
                 return (
-                    <CustomInput2 data={item} onChange={(value, id) => handleChange(value, id)} />
+                    <CustomInput2 data={item} handleFocus={() => setShowImage(false)} onChange={(value, id) => handleChange(value, id)} />
                 )
                 break;
             case "EMAIL":
                 return (
-                    <CustomInput2 data={item} onChange={(value, id) => handleChange(value, id)} />
+                    <CustomInput2 data={item} handleFocus={() => setShowImage(false)} onChange={(value, id) => handleChange(value, id)} />
                 )
                 break;
             case "RADIO":
@@ -311,17 +324,21 @@ const PersonalDetailsSetting = () => {
             <Navbar data={navData} onClick={handleNavClick} />
             {navData[0]?.isActive ?
                 <View style={{ height: height - 100 }} >
-                    <View style={{ display: 'flex', alignItems: "center", justifyContent: 'center', marginTop: 32 }} >
+                    {showImage && <View style={{ display: 'flex', alignItems: "center", justifyContent: 'center', marginTop: 32 }} >
                         <View style={{ position: 'relative' }} >
-                            {doctorData?.docStatus === DocStatusType.VERIFIED && <View style={{ position: 'absolute', right: 4, top: 8, zIndex: 1 }} >
-                                <Ionicons size={24} color={"#1EA6D6"} name='checkmark-done-circle' />
-                            </View>}
-                            {doctorData?.imageUrl !== "" && <Image source={{uri: doctorDetails?.imageUrl}} resizeMode='cover' height={100} width={100} style={{ marginTop: 8, height: 100, width: 100, borderColor: "#CFD8DC", borderRadius: 100 }} />}
+                            <View style={{ position: 'absolute', right: 4, top: 8, zIndex: 1 }} >
+                                {doctorData?.docStatus === DocStatusType.VERIFIED ? <Ionicons size={24} color={"#1EA6D6"} name='checkmark-done-circle' /> : <Ionicons size={24} color={"#A9A9AB"} name='close-circle' />}
+                            </View>
+                            {doctorData?.imageUrl !== "" ? <Image source={{uri: doctorDetails?.imageUrl}} resizeMode='cover' height={100} width={100} style={{ marginTop: 8, height: 100, width: 100, borderColor: "#CFD8DC", borderRadius: 100 }} />
+                            : <Image
+                                source={require('@/assets/images/Girl_doctor.png')}
+                                style={styles.profileImage}
+                            />}
                         </View>
                         {isEditable && <Pressable onPress={pickImage} style={{ borderBottomWidth: 1, borderBottomColor: "#1EA6D6", marginTop: 12}}>
                             <CustomText multiLingual={true} textStyle={{ color: "#1EA6D6"}} text="Change Photo" />
                         </Pressable>}
-                    </View>
+                    </View>}
                     <ScrollView
                         ref={scrollViewRef}
                         style={{ 
@@ -337,7 +354,7 @@ const PersonalDetailsSetting = () => {
                     >
                         {doctorData?.personalData?.map((item: any) => {
                                     return (
-                                        <View key={item?.id} style={{ marginBottom: 16 }} >
+                                        <View key={item?.id} style={{ marginBottom: 18 }} >
                                             {renderInputType(item)}
                                         </View>
                                     )
@@ -440,5 +457,14 @@ const PersonalDetailsSetting = () => {
         </View>
     );
 };
+
+const styles = StyleSheet.create({
+    profileImage: {
+        width: 80,
+        height: 80,
+        borderRadius: 40,
+        marginRight: 16,
+    },
+})
 
 export default PersonalDetailsSetting;

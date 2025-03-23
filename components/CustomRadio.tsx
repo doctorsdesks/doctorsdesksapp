@@ -73,7 +73,7 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 14,
     color: '#8C8C8C',
-    marginBottom: 5,
+    marginBottom: 6,
   },
   mandatory: {
     color: 'red',
@@ -83,7 +83,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   option: {
-    paddingVertical: 10,
+    paddingVertical: 4,
     paddingRight: 10,
     flexDirection: 'row',
     marginHorizontal: 5,

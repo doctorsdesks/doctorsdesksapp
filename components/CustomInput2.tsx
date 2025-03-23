@@ -120,7 +120,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FCFCFC',
     fontSize: 14,
     color: '#8C8C8C',
-    marginBottom: 8,
+    marginBottom: 6
   },
   labelFocused: {
     color: '#2DB9B0',
@@ -137,7 +137,6 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     padding: 10,
     fontSize: 16,
-    paddingTop: 14,
   },
   inputFocused: {
     borderColor: '#2DB9B0',

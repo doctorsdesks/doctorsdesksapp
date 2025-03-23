@@ -39,7 +39,7 @@ const MainFooter: React.FC<MainFooterProps> = ({ selectedNav }) => {
             display: 'flex', 
             flexDirection: 'row', 
             justifyContent: 'space-between',
-            backgroundColor: '#fff'
+            backgroundColor: '#A9A9AB'
         }} >
             <Pressable onPress={() => handleClick("home")} style={{ width: 60, paddingVertical: 10, borderTopWidth: selectedNav === "home" ? 3 : 3, borderColor: selectedNav === "home" ? "#5257E9" : "#A9A9AB", display: 'flex', flexDirection: 'column', alignItems: 'center' }} >
                 <Ionicons name='home' size={24} color={selectedNav === "home" ? "#5257E9" : "#A9A9AB" } />
