@@ -4,14 +4,17 @@ import Onboarding from '../components/Onboarding';
 import { getSecureKey } from '@/components/Utils';
 import { router } from 'expo-router';
 import { useAppContext } from '@/context/AppContext';
+import Loader from '@/components/Loader';
 
 const OnboardingScreen = () => {
     const { setSelectedLanguage } = useAppContext();
-    const [isReady, setIsReady] = useState<boolean>(false); 
+    const [isReady, setIsReady] = useState<boolean>(false);
+    const [loader, setLoader] = useState<boolean>(false);
 
     useEffect(() => {
         const initialize = async () => {
             setIsReady(true);
+            setLoader(true);
             await checkForLogin();
         };
         initialize();
@@ -21,6 +24,8 @@ const OnboardingScreen = () => {
         const value = await getSecureKey("isUserOnBoarded");
         if (value === "true") {
             router.replace("/login");
+        } else {
+            setLoader(false);
         }
     }
 
@@ -44,9 +49,11 @@ const OnboardingScreen = () => {
     }
 
     return (
-        <View>
-            <Onboarding />
-        </View>
+        loader ? <Loader />
+        :
+            <View>
+                <Onboarding />
+            </View>
     );
 };
 
