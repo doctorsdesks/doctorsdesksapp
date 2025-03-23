@@ -13,7 +13,7 @@ const CustomText: React.FC<CustomTextProps> = ({ text, textStyle, multiLingual =
     const { translations, selectedLanguage } = useAppContext();
 
     return (
-        <Text style={textStyle}>{finalText(text, translations, selectedLanguage)}</Text>
+        <Text style={textStyle}>{multiLingual ? finalText(text, translations, selectedLanguage) : text}</Text>
     );
 };
 

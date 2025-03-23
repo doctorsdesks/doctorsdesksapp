@@ -60,7 +60,7 @@ const Tasks = () => {
         if (respnose.status === "SUCCESS") {
             const appointments = respnose.data;
             setAppointments(appointments);
-            const filterApp = appointments?.filter((item: any) => item?.status === AppointmentStatus.ACCEPTED);
+            const filterApp = appointments?.filter((item: any) => item?.status === AppointmentStatus.PENDING);
             setFilteredAppointments(filterApp || []);
             setLoader(false);
         } else {
