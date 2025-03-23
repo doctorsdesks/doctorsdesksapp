@@ -1,6 +1,7 @@
 import CustomText from '@/components/CustomText';
 import MainFooter from '@/components/MainFooter';
 import MainHeader from '@/components/MainHeader';
+import { saveSecureKey } from '@/components/Utils';
 import { useAppContext } from '@/context/AppContext';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
@@ -12,7 +13,7 @@ const Profile = () => {
     const { setDoctorDetails } = useAppContext();
     const { height } = Dimensions.get('window');
 
-    const handleLogout = () => {
+    const handleLogout = async () => {
         setDoctorDetails({});
         router.replace({
             pathname: "/login",
@@ -20,6 +21,7 @@ const Profile = () => {
                 allowBack: "false",
             }
         });
+        await saveSecureKey("isUserLoggedIn", "false");
     }
 
     useEffect(() => {
@@ -36,7 +38,7 @@ const Profile = () => {
     return (
         <View style={{ marginHorizontal: 16, marginTop: 52, position: 'relative', height }} >
             <MainHeader selectedNav='profile' />
-            <View style={{ borderRadius: 8, borderColor: "#D9D9D9", borderWidth: 1, display: 'flex', flexDirection: 'column', paddingHorizontal: 16, paddingVertical: 12, width: "100%" }} >
+            <View style={{ borderRadius: 8, borderColor: "#D9D9D9", borderWidth: 1, display: 'flex', flexDirection: 'column', paddingHorizontal: 16, paddingRight: 8, paddingVertical: 12, width: "100%" }} >
                 <View style={{ paddingVertical: 8, display: 'flex', flexDirection:'row', justifyContent: 'space-between', alignItems: 'center' }} >
                     <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }} >
                         <Ionicons size={24} name='person' color={"#0F1828"} />
@@ -46,6 +48,7 @@ const Profile = () => {
                         onPress={() => {
                             router.replace("/personalDetails");
                         }}
+                        style={{ paddingHorizontal: 8 }}
                     >
                         <Ionicons size={24} color={"#0F1828"} name='chevron-forward' />
                     </Pressable>
@@ -59,12 +62,13 @@ const Profile = () => {
                         onPress={() => {
                             router.replace("/clinicDetail");
                         }}
+                        style={{ paddingHorizontal: 8 }}
                     >
                         <Ionicons size={24} color={"#0F1828"} name='chevron-forward' />
                     </Pressable>
                 </View>
            </View>
-           <View style={{ borderRadius: 8, borderColor: "#D9D9D9", borderWidth: 1, display: 'flex', flexDirection: 'column', paddingHorizontal: 16, paddingVertical: 12, width: "100%", marginTop: 20}} >
+           <View style={{ borderRadius: 8, borderColor: "#D9D9D9", borderWidth: 1, display: 'flex', flexDirection: 'column', paddingHorizontal: 16, paddingRight: 8, paddingVertical: 12, width: "100%", marginTop: 20}} >
                 <View style={{ paddingVertical: 8, display: 'flex', flexDirection:'row', justifyContent: 'space-between', alignItems: 'center' }} >
                     <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }} >
                         <Ionicons size={24} name='settings-outline' color={"#0F1828"} />
@@ -74,6 +78,7 @@ const Profile = () => {
                         onPress={() => {
                             router.replace("/clinicDetail/manageSlotAndTiming");
                         }}
+                        style={{ paddingHorizontal: 8 }}
                     >
                         <Ionicons size={24} color={"#0F1828"} name='chevron-forward' />
                     </Pressable>
@@ -87,12 +92,13 @@ const Profile = () => {
                         onPress={() => {
                             router.replace("/clinicDetail/consultationFee");
                         }}
+                        style={{ paddingHorizontal: 8 }}
                     >
                         <Ionicons size={24} color={"#0F1828"} name='chevron-forward' />
                     </Pressable>
                 </View>
            </View>
-           <View style={{ borderRadius: 8, borderColor: "#D9D9D9", borderWidth: 1, display: 'flex', flexDirection: 'column', paddingHorizontal: 16, paddingVertical: 12, width: "100%", marginTop: 20}} >
+           <View style={{ borderRadius: 8, borderColor: "#D9D9D9", borderWidth: 1, display: 'flex', flexDirection: 'column', paddingHorizontal: 16, paddingRight: 8, paddingVertical: 12, width: "100%", marginTop: 20}} >
                 <View style={{ paddingVertical: 8, display: 'flex', flexDirection:'row', justifyContent: 'space-between', alignItems: 'center' }} >
                     <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }} >
                         <Ionicons size={24} name='language-outline' color={"#0F1828"} />
@@ -102,6 +108,7 @@ const Profile = () => {
                         onPress={() => {
                             router.replace("/clinicDetail/appLanguage");
                         }}
+                        style={{ paddingHorizontal: 8 }}
                     >
                         <Ionicons size={24} color={"#0F1828"} name='chevron-forward' />
                     </Pressable>
