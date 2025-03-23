@@ -19,7 +19,7 @@ const Home = () => {
     const { setDoctorDetails, setTranslations } = useAppContext();
     const scrollViewRef = React.useRef(null);
     const { width, height } = Dimensions.get('window');
-    const [isFocused, setIsFocused] = useState<boolean>(false);
+    const [isListOpened, setIsListOpened] = useState<boolean>(false);
     const [loader, setLoader] = useState<boolean>(false);
     const [appointments, setAppointments] = useState<Array<any>>([]);
     const [patientCount, setPatientCount] = useState<string>('0');
@@ -142,6 +142,7 @@ const Home = () => {
             const response = await getPatientList(searchText);
             if (response.status === "SUCCESS") {
                 setPatientList(response?.data || []);
+                setIsListOpened(true);
                 setShowPatientList(true);
                 setLoader(false);
             } else {
@@ -154,30 +155,14 @@ const Home = () => {
             }
         } else {
             setShowPatientList(false);
+            setIsListOpened(false);
             setPatientList([]);
         }
     };
 
-    const handleFocusChange = (focused: boolean) => {
-        setIsFocused(focused);
-    };
-
     return (
-        <View style={{ marginHorizontal: 16, marginTop: 52, height }} >
-            <View style={{
-                borderWidth: 1,
-                borderColor: showPatientList || isFocused ? "#2DB9B0" : "#F6F5FA",
-                borderTopLeftRadius: 34,
-                borderTopRightRadius: 34,
-                borderBottomLeftRadius: showPatientList ? 0 : 34,
-                borderBottomRightRadius: showPatientList ? 0 : 34,
-                display: 'flex',
-                flexDirection: 'row',
-                alignItems: 'center',
-                marginTop: 28,
-            }}>
-                <SearchBar searchPatients={searchPatients} setIsFocused={handleFocusChange} listOpened={patientList?.length > 0} />
-            </View>
+        <View style={{ marginHorizontal: 16, marginTop: 52, height, position: 'relative' }} >
+            <SearchBar searchPatients={searchPatients}  showPatientList={showPatientList} listOpened={isListOpened} />
             {showPatientList &&
                 (patientList?.length > 0 ? 
                     <PatientList patientList={patientList} />
@@ -197,7 +182,7 @@ const Home = () => {
                 </View>
                 <View style={{ marginTop: 24 }} >
                     <CustomText multiLingual={true} textStyle={{ fontSize: 16, lineHeight: 20, fontWeight: 600, color: "#32383D" }} text="Today's Appointment" />
-                    <View style={{ height: height - 360 }} >
+                    <View style={{ height: height - 300 }} >
                         <ScrollView
                             ref={scrollViewRef} 
                             style={{ marginTop: 20 }}>
@@ -231,7 +216,7 @@ const styles = StyleSheet.create({
     },
     list: {
         position: 'absolute',
-        top: 102,
+        top: 76,
         left: 0,
         right: 0,
         height: 80,

@@ -80,11 +80,6 @@ export const uploadFile = async (fileUri: any, fileName: string, phoneNumber: st
           );
         const { data, status } = response;
         if (status === 200){
-            Toast.show({
-                type: 'success',  
-                text1: data.message,
-                visibilityTime: 3000,
-            });
             return {
               status: "SUCCESS",
               data: data.data,
@@ -115,11 +110,6 @@ export const uploadFile = async (fileUri: any, fileName: string, phoneNumber: st
       );
     const { data, status } = response;
     if (status === 200){
-        Toast.show({
-            type: 'success',  
-            text1: data.message,
-            visibilityTime: 3000,
-        });
         return {
           status: "SUCCESS",
           data: data.data,
@@ -150,11 +140,6 @@ export const uploadFile = async (fileUri: any, fileName: string, phoneNumber: st
           );
         const { data, status } = response;
         if (status === 200){
-            Toast.show({
-                type: 'success',  
-                text1: data.message,
-                visibilityTime: 3000,
-            });
             return {
               status: "SUCCESS",
               data: data.data,
@@ -185,11 +170,6 @@ export const uploadFile = async (fileUri: any, fileName: string, phoneNumber: st
           );
         const { data, status } = response;
         if (status === 200){
-            Toast.show({
-                type: 'success',  
-                text1: data.message,
-                visibilityTime: 3000,
-            });
             return {
               status: "SUCCESS",
               data: data.data,
@@ -220,11 +200,6 @@ export const uploadFile = async (fileUri: any, fileName: string, phoneNumber: st
           );
         const { data, status } = response;
         if (status === 200){
-            Toast.show({
-                type: 'success',  
-                text1: data.message,
-                visibilityTime: 3000,
-            });
             return {
               status: "SUCCESS",
               data: data.data,
