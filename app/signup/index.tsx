@@ -177,7 +177,7 @@ const SignUp = () => {
                 Toast.show({
                     type: 'success',  
                     text1: data.data,
-                    visibilityTime: 5000,
+                    visibilityTime: 3000,
                 });
             }
             setLoader(false);
@@ -191,13 +191,13 @@ const SignUp = () => {
                 Toast.show({
                     type: 'error',  
                     text1: error.response.data.message,
-                    visibilityTime: 5000,
+                    visibilityTime: 3000,
                 });
             } else {
                 Toast.show({
                     type: 'error',  
                     text1: error.response.data.message,
-                    visibilityTime: 5000,
+                    visibilityTime: 3000,
                 });
             }
             setLoader(false);

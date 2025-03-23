@@ -67,7 +67,7 @@ const Tasks = () => {
             Toast.show({
                 type: 'error',  
                 text1: respnose.error,
-                visibilityTime: 5000,
+                visibilityTime: 3000,
             });
             setLoader(false);
         }
@@ -117,7 +117,7 @@ const Tasks = () => {
                 Toast.show({
                     type: 'success',  
                     text1: data.message,
-                    visibilityTime: 5000,
+                    visibilityTime: 3000,
                 });
             }
             setLoader(false);
@@ -128,7 +128,7 @@ const Tasks = () => {
                 Toast.show({
                     type: 'error',  
                     text1: error.response.data.message,
-                    visibilityTime: 5000,
+                    visibilityTime: 3000,
                 });
             setLoader(false);
         }
@@ -144,7 +144,7 @@ const Tasks = () => {
                     style={{ marginTop: 20 }}>
                     {filteredAppointments?.length === 0 ?
                         <View>
-                            <CustomText textStyle={{ fontSize: 16, fontWeight: 600, color: "#32383D" }} text="No Appointment" />
+                            <CustomText multiLingual={true} textStyle={{ fontSize: 16, fontWeight: 600, color: "#32383D" }} text="No Appointment today!" />
                         </View>
                     :
                         filteredAppointments?.map((appointment: any) => {

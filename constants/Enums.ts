@@ -53,3 +53,9 @@ export interface DaysForSlot {
     isSelected: boolean;
     timings: { [key: string]: string; }[]
 }
+
+export interface PatientListProps {
+    name: string;
+    age: string;
+    phone: string;
+}

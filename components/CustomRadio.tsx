@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, Pressable } from 'react-native';
+import { finalText } from './Utils';
+import { useAppContext } from '@/context/AppContext';
 
 interface CustomRadioProps {
   data: {
@@ -16,8 +18,9 @@ interface CustomRadioProps {
 }
 
 const CustomRadio: React.FC<CustomRadioProps> = ({ data, onChange }) => {
+  const { translations, selectedLanguage } = useAppContext();
   const [selectedValue, setSelectedValue] = useState(data.value);
-  const { id, label, isMandatory, errorMessage, options } = data;
+  const { id, label, isMandatory, options } = data;
 
   const handleSelect = (value: string) => {
     setSelectedValue(value);
@@ -27,7 +30,7 @@ const CustomRadio: React.FC<CustomRadioProps> = ({ data, onChange }) => {
   return (
     <View>
       <Text style={[styles.label]}>
-        {label} {isMandatory && <Text style={styles.mandatory}>*</Text>}
+        {finalText(label, translations, selectedLanguage)} {isMandatory && <Text style={styles.mandatory}>*</Text>}
       </Text>
       <View style={styles.optionsContainer}>
         {options.map((option) => (
@@ -70,7 +73,7 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 14,
     color: '#8C8C8C',
-    marginBottom: 5,
+    marginBottom: 6,
   },
   mandatory: {
     color: 'red',
@@ -80,7 +83,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   option: {
-    paddingVertical: 10,
+    paddingVertical: 4,
     paddingRight: 10,
     flexDirection: 'row',
     marginHorizontal: 5,

@@ -18,7 +18,7 @@ export const uploadFile = async (fileUri: any, fileName: string, phoneNumber: st
         Toast.show({
             type: 'success',  
             text1: 'Image uploaded Successfully.',
-            visibilityTime: 5000,
+            visibilityTime: 3000,
         });
         return {
             data: downloadUrl,
@@ -88,7 +88,7 @@ export const uploadFile = async (fileUri: any, fileName: string, phoneNumber: st
             Toast.show({
                 type: 'success',  
                 text1: data.message,
-                visibilityTime: 5000,
+                visibilityTime: 3000,
             });
             return {
               status: "SUCCESS",
@@ -123,7 +123,7 @@ export const uploadFile = async (fileUri: any, fileName: string, phoneNumber: st
         Toast.show({
             type: 'success',  
             text1: data.message,
-            visibilityTime: 5000,
+            visibilityTime: 3000,
         });
         return {
           status: "SUCCESS",
@@ -158,7 +158,77 @@ export const uploadFile = async (fileUri: any, fileName: string, phoneNumber: st
             Toast.show({
                 type: 'success',  
                 text1: data.message,
-                visibilityTime: 5000,
+                visibilityTime: 3000,
+            });
+            return {
+              status: "SUCCESS",
+              data: data.data,
+            }
+        } else {
+          return {
+            status: "FAILURE",
+            error: "Something wrong. Please try again.",
+          }
+        }
+    } catch (error: any) {
+        return {
+          status: "FAILURE",
+          error: error?.response?.data?.message
+        }
+    }
+  }
+
+  export const getPatientList = async (searchString: string) => {
+    const url = URLS.BASE + URLS.GET_PATIENT_LIST + "/" + searchString;
+    try {
+        const response = await axios.get(url,
+            {
+              headers: {
+                'X-Requested-With': 'doctorsdesks_web_app',
+              },
+            }
+          );
+        const { data, status } = response;
+        if (status === 200){
+            Toast.show({
+                type: 'success',  
+                text1: data.message,
+                visibilityTime: 3000,
+            });
+            return {
+              status: "SUCCESS",
+              data: data.data,
+            }
+        } else {
+          return {
+            status: "FAILURE",
+            error: "Something wrong. Please try again.",
+          }
+        }
+    } catch (error: any) {
+        return {
+          status: "FAILURE",
+          error: error?.response?.data?.message
+        }
+    }
+  }
+
+  export const getPatient = async (phone: any) => {
+    const url = URLS.BASE + URLS.GET_PATIENT + "/" + phone;
+    try {
+        const response = await axios.get(url,
+            {
+              headers: {
+                'X-Requested-With': 'doctorsdesks_web_app',
+              },
+            }
+          );
+        const { data, status } = response;
+        if (status === 200){
+            Toast.show({
+                type: 'success',  
+                text1: data.message,
+                visibilityTime: 3000,
             });
             return {
               status: "SUCCESS",
@@ -201,7 +271,7 @@ export const uploadFile = async (fileUri: any, fileName: string, phoneNumber: st
             Toast.show({
                 type: 'success',  
                 text1: data.message,
-                visibilityTime: 5000,
+                visibilityTime: 3000,
             });
             return {
               status: "SUCCESS",
@@ -220,3 +290,13 @@ export const uploadFile = async (fileUri: any, fileName: string, phoneNumber: st
         }
     }
   }
+
+  export const finalText = (text: string, translations: any, selectedLanguage: any) => {
+    let currentText = text;
+    if (text !== "") currentText = currentText?.toLowerCase();
+    if (translations && translations[selectedLanguage] && (translations[selectedLanguage][currentText]) ) {
+        return translations[selectedLanguage][currentText];
+    } else {
+        return text;
+    }
+}

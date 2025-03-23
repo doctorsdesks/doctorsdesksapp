@@ -28,7 +28,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ }) => {
             Toast.show({
                 type: 'error',  
                 text1: 'Permission denied, We need camera roll permissions to make this work!',
-                visibilityTime: 5000,
+                visibilityTime: 3000,
             });
         }
     };
@@ -63,7 +63,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ }) => {
             Toast.show({
                 type: 'success',  
                 text1: 'Image uploaded Successfully.',
-                visibilityTime: 5000,
+                visibilityTime: 3000,
             });
             setImageUrl(uploadedImageUrlObject.data);
             const newSignUpDetails = { ...signUpDetails, imageUrl: uploadedImageUrlObject.data}
@@ -73,7 +73,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ }) => {
             Toast.show({
                 type: 'error',  
                 text1: `Something went wrong, error: ${uploadedImageUrlObject.data}`,
-                visibilityTime: 5000,
+                visibilityTime: 3000,
             });
         }
         

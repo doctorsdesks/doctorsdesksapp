@@ -3,8 +3,10 @@ import { View } from 'react-native';
 import Onboarding from '../components/Onboarding';
 import { getSecureKey } from '@/components/Utils';
 import { router } from 'expo-router';
+import { useAppContext } from '@/context/AppContext';
 
-const OnboardingScreen = () => { 
+const OnboardingScreen = () => {
+    const { setSelectedLanguage } = useAppContext();
     const [isReady, setIsReady] = useState<boolean>(false); 
 
     useEffect(() => {
@@ -28,6 +30,12 @@ const OnboardingScreen = () => {
             router.replace("/dashboard");
         } else {
             checkForOnBoarding();
+        }
+        const savedLanguage = await getSecureKey("language");
+        if (savedLanguage && savedLanguage !== "") {
+            setSelectedLanguage(savedLanguage);
+        } else {
+            setSelectedLanguage("English");
         }
     }
 

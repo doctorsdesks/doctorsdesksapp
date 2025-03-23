@@ -1,30 +1,22 @@
 import CustomText from '@/components/CustomText';
 import MainHeader from '@/components/MainHeader';
-import { getSecureKey, saveSecureKey } from '@/components/Utils';
 import { useAppContext } from '@/context/AppContext';
 import { router } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import { BackHandler, Dimensions, Pressable, Text, View } from 'react-native';
+import { BackHandler, Dimensions, Pressable, View } from 'react-native';
 
 const AppLanguage = () => {
-    const { translations } = useAppContext();
+    const { translations, selectedLanguage, setSelectedLanguage } = useAppContext();
     const { height } = Dimensions.get('window');
     const [languages, setLanguages] = useState<Array<any>>([]);
-    const [selectedValue, setSelectedValue] = useState<any>("English");
 
     useEffect(() => {
-        const checkForLanguage = async () => {
-            const value: any = await getSecureKey("language");
-            setSelectedValue(value);
-        }
-
         const backAction = () => {
             router.replace("/dashboard/profile");
             return true;
         };
 
         const backHandler = BackHandler.addEventListener("hardwareBackPress", backAction);
-        checkForLanguage()
         return () => backHandler.remove();
     }, []);
 
@@ -38,8 +30,7 @@ const AppLanguage = () => {
     },[translations])
 
     const handleValueChange = (value: string) => {
-        setSelectedValue(value);
-        saveSecureKey("language", value);
+        setSelectedLanguage(value);
     }
 
     return (
@@ -62,9 +53,9 @@ const AppLanguage = () => {
                             paddingVertical: 6, 
                             marginRight: 8,
                             height: 34,
-                            backgroundColor: language === selectedValue ? "#2DB9B0" : "#fff",
+                            backgroundColor: language === selectedLanguage ? "#2DB9B0" : "#fff",
                         }} onPress={() => handleValueChange(language)}>
-                            <Text style={{ color: language === selectedValue ? "#fff" : "#2DB9B0", fontSize: 14, lineHeight: 20, fontWeight: 600 }} >{language}</Text>
+                            <CustomText text={language} textStyle={{ color: language === selectedLanguage ? "#fff" : "#2DB9B0", fontSize: 14, lineHeight: 20, fontWeight: 600 }} multiLingual={true} />
                         </Pressable>
                     )
                 })}

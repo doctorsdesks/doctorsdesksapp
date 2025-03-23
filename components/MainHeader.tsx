@@ -3,12 +3,16 @@ import React from 'react';
 import { Pressable, View } from 'react-native';
 import CustomText from './CustomText';
 import { router } from 'expo-router';
+import { useAppContext } from '@/context/AppContext';
+import { finalText } from './Utils';
 
 interface MainHeaderProps {
     selectedNav: string;
+    title?: string;
 }
 
-const MainHeader: React.FC<MainHeaderProps> = ({ selectedNav }) => {
+const MainHeader: React.FC<MainHeaderProps> = ({ selectedNav, title = "" }) => {
+    const { translations, selectedLanguage } = useAppContext();
 
     const handleBackNav = () => {
         switch (selectedNav) {
@@ -38,6 +42,9 @@ const MainHeader: React.FC<MainHeaderProps> = ({ selectedNav }) => {
                 break;
             case "appLanguage":
                 router.replace("/dashboard/profile");
+                break;
+            case "patientProfile":
+                router.replace("/dashboard");
                 break;
             default:
                 break;
@@ -77,7 +84,11 @@ const MainHeader: React.FC<MainHeaderProps> = ({ selectedNav }) => {
             case "appLanguage":
                 text = "App Language";
                 break;
+            case "patientProfile":
+                text = title || "";
+                break;
             default:
+                text = "";
                 break;
         }
         return text;
@@ -88,7 +99,7 @@ const MainHeader: React.FC<MainHeaderProps> = ({ selectedNav }) => {
             {selectedNav !== "home" && <Pressable style={{ position: 'absolute', left: 0 }} onPress={handleBackNav}>
                 <Ionicons name="arrow-back" size={24} color="black" />
             </Pressable>}
-            <CustomText text={showtext()} textStyle={{ fontSize: 16, fontWeight: 600, color: "#32383D", lineHeight: 22 }} />
+            <CustomText text={finalText(showtext(), translations, selectedLanguage)} textStyle={{ fontSize: 16, fontWeight: 600, color: "#32383D", lineHeight: 22, textTransform: title ? "capitalize" : "" }} />
         </View>
     );
 };

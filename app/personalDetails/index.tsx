@@ -3,7 +3,7 @@ import Navbar, { NavbarObject } from '@/components/Navbar';
 import { DocStatusType } from '@/constants/Enums';
 import { useAppContext } from '@/context/AppContext';
 import React, { useEffect, useState } from 'react';
-import { BackHandler, Dimensions, Image, Pressable, ScrollView, Text, View } from 'react-native';
+import { BackHandler, Dimensions, Image, Keyboard, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import Toast from 'react-native-toast-message';
 import { getValueById, uploadFile } from '@/components/Utils';
@@ -37,11 +37,18 @@ const PersonalDetailsSetting = () => {
     const [loader, setLoader] = useState<boolean>(false);
     const [isEditable, setIsEditable] = useState<boolean>(false);
     const [idInfo, setIdInfo] = useState<any>({});
+    const [showImage, setShowImage] = useState<boolean>(true);
+    const [isKeyboardOpen, setIsKeyboardOpen] = useState<boolean>(false);
 
     useEffect(() => {
         const backAction = () => {
-            router.replace("/dashboard/profile");
-            return true;
+            if (isKeyboardOpen) {
+                Keyboard.dismiss();
+                return true;
+            } else {
+                router.replace("/dashboard/profile");
+                return true;
+            }
         };
 
         const backHandler = BackHandler.addEventListener("hardwareBackPress", backAction);
@@ -88,6 +95,12 @@ const PersonalDetailsSetting = () => {
 
     useEffect(() => {
         if (isEditable) {
+            const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () =>
+                { setIsKeyboardOpen(true); setShowImage(false)}
+              );
+              const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () =>
+               { setIsKeyboardOpen(false); setShowImage(true)}
+              );
             let newDoctorData = { ...doctorData };
             let newPersonalData = [...newDoctorData?.personalData]
             newPersonalData = newPersonalData?.map((item: any) => {
@@ -141,7 +154,7 @@ const PersonalDetailsSetting = () => {
                 Toast.show({
                     type: 'success',  
                     text1: data.message,
-                    visibilityTime: 5000,
+                    visibilityTime: 3000,
                 });
             }
             setLoader(false);
@@ -151,7 +164,7 @@ const PersonalDetailsSetting = () => {
                 Toast.show({
                     type: 'error',  
                     text1: error.response.data.message,
-                    visibilityTime: 5000,
+                    visibilityTime: 3000,
                 });
             setLoader(false);
         }
@@ -172,7 +185,7 @@ const PersonalDetailsSetting = () => {
             Toast.show({
                 type: 'error',  
                 text1: 'Permission denied, We need camera roll permissions to make this work!',
-                visibilityTime: 5000,
+                visibilityTime: 3000,
             });
         }
     };
@@ -207,7 +220,7 @@ const PersonalDetailsSetting = () => {
             Toast.show({
                 type: 'success',  
                 text1: 'Image uploaded Successfully.',
-                visibilityTime: 5000,
+                visibilityTime: 3000,
             });
             setDoctorData({
                 ...doctorData,
@@ -218,7 +231,7 @@ const PersonalDetailsSetting = () => {
             Toast.show({
                 type: 'error',  
                 text1: `Something went wrong, error: ${uploadedImageUrlObject.data}`,
-                visibilityTime: 5000,
+                visibilityTime: 3000,
             });
         }
     }
@@ -273,17 +286,17 @@ const PersonalDetailsSetting = () => {
         switch (item?.inputType) {
             case "TEXT":
                 return (
-                    <CustomInput2 data={item} onChange={(value, id) => handleChange(value, id)} />
+                    <CustomInput2 data={item} handleFocus={() => setShowImage(false)} onChange={(value, id) => handleChange(value, id)} />
                 )
                 break;
             case "NUMBER":
                 return (
-                    <CustomInput2 data={item} onChange={(value, id) => handleChange(value, id)} />
+                    <CustomInput2 data={item} handleFocus={() => setShowImage(false)} onChange={(value, id) => handleChange(value, id)} />
                 )
                 break;
             case "EMAIL":
                 return (
-                    <CustomInput2 data={item} onChange={(value, id) => handleChange(value, id)} />
+                    <CustomInput2 data={item} handleFocus={() => setShowImage(false)} onChange={(value, id) => handleChange(value, id)} />
                 )
                 break;
             case "RADIO":
@@ -311,17 +324,21 @@ const PersonalDetailsSetting = () => {
             <Navbar data={navData} onClick={handleNavClick} />
             {navData[0]?.isActive ?
                 <View style={{ height: height - 100 }} >
-                    <View style={{ display: 'flex', alignItems: "center", justifyContent: 'center', marginTop: 32 }} >
+                    {showImage && <View style={{ display: 'flex', alignItems: "center", justifyContent: 'center', marginTop: 32 }} >
                         <View style={{ position: 'relative' }} >
-                            {doctorData?.docStatus === DocStatusType.VERIFIED && <View style={{ position: 'absolute', right: 4, top: 8, zIndex: 1 }} >
-                                <Ionicons size={24} color={"#1EA6D6"} name='checkmark-done-circle' />
-                            </View>}
-                            {doctorData?.imageUrl !== "" && <Image source={{uri: doctorDetails?.imageUrl}} resizeMode='cover' height={100} width={100} style={{ marginTop: 8, height: 100, width: 100, borderColor: "#CFD8DC", borderRadius: 100 }} />}
+                            <View style={{ position: 'absolute', right: 4, top: 8, zIndex: 1 }} >
+                                {doctorData?.docStatus === DocStatusType.VERIFIED ? <Ionicons size={24} color={"#1EA6D6"} name='checkmark-done-circle' /> : <Ionicons size={24} color={"#A9A9AB"} name='close-circle' />}
+                            </View>
+                            {doctorData?.imageUrl !== "" ? <Image source={{uri: doctorDetails?.imageUrl}} resizeMode='cover' height={100} width={100} style={{ marginTop: 8, height: 100, width: 100, borderColor: "#CFD8DC", borderRadius: 100 }} />
+                            : <Image
+                                source={require('@/assets/images/Girl_doctor.png')}
+                                style={styles.profileImage}
+                            />}
                         </View>
                         {isEditable && <Pressable onPress={pickImage} style={{ borderBottomWidth: 1, borderBottomColor: "#1EA6D6", marginTop: 12}}>
-                            <CustomText textStyle={{ color: "#1EA6D6"}} text="Change Photo" />
+                            <CustomText multiLingual={true} textStyle={{ color: "#1EA6D6"}} text="Change Photo" />
                         </Pressable>}
-                    </View>
+                    </View>}
                     <ScrollView
                         ref={scrollViewRef}
                         style={{ 
@@ -337,14 +354,14 @@ const PersonalDetailsSetting = () => {
                     >
                         {doctorData?.personalData?.map((item: any) => {
                                     return (
-                                        <View key={item?.id} style={{ marginBottom: 16 }} >
+                                        <View key={item?.id} style={{ marginBottom: 18 }} >
                                             {renderInputType(item)}
                                         </View>
                                     )
                                 })}
                     </ScrollView>
                     <View style={{ display: "flex", alignItems: "center", marginTop: 24, marginBottom: 32 }} >
-                        <CustomButton width='FULL' title={isEditable ? "Save" : "Update"} onPress={handleButtonClick} />
+                        <CustomButton multiLingual={true} width='FULL' title={isEditable ? "Save" : "Update"} onPress={handleButtonClick} />
                     </View>
                 </View>
             :   
@@ -355,7 +372,7 @@ const PersonalDetailsSetting = () => {
                                 <View style={{ padding: 6, borderWidth: 1, borderRadius: 4, borderColor: "#D9D9D9" }} >
                                     <Image source={require('../../assets/images/registration.png')} resizeMode='contain' height={24} width={24} />
                                 </View>
-                                <CustomText textStyle={{ fontSize: 14, lineHeight: 14, fontWeight: 600, color: "#32383D", marginLeft: 8 }} text="Registration Certificate" />
+                                <CustomText multiLingual={true} textStyle={{ fontSize: 14, lineHeight: 14, fontWeight: 600, color: "#32383D", marginLeft: 8 }} text="Registration Certificate" />
                             </View>
                             <Pressable onPress={() => openDocumentCard("registrationInfo")} style={{ transform: [{ rotate: idInfo?.registrationInfo?.isOpen ? '180deg' : '0' }] }} >
                                 <Ionicons size={24} color={"#A9A9AB"} name='chevron-down' />
@@ -383,9 +400,7 @@ const PersonalDetailsSetting = () => {
                                     <View style={{ padding: 6, borderWidth: 1, borderRadius: 4, borderColor: "#D9D9D9" }} >
                                         <Image source={require('../../assets/images/address.png')} resizeMode='contain' height={24} width={24} />
                                     </View>
-                                    <Text style={{ fontSize: 14, lineHeight: 14, fontWeight: 600, color: "#32383D",  marginLeft: 8 }} >
-                                        Aadhar Card 
-                                    </Text>
+                                    <CustomText multiLingual={true} textStyle={{ fontSize: 14, lineHeight: 14, fontWeight: 600, color: "#32383D", marginLeft: 8 }} text="Aadhar Card" />
                                 </View>
                                 <Pressable onPress={() => openDocumentCard("aadharInfo")} style={{ transform: [{ rotate: idInfo?.aadharInfo?.isOpen ? '180deg' : '0' }] }} >
                                     <Ionicons size={24} color={"#A9A9AB"} name='chevron-down' />
@@ -414,9 +429,7 @@ const PersonalDetailsSetting = () => {
                                     <View style={{ padding: 6, borderWidth: 1, borderRadius: 4, borderColor: "#D9D9D9" }} >
                                         <Image source={require('../../assets/images/address.png')} resizeMode='contain' height={24} width={24} />
                                     </View>
-                                    <Text style={{ fontSize: 14, lineHeight: 14, fontWeight: 600, color: "#32383D",  marginLeft: 8 }} >
-                                        Pan Card 
-                                    </Text>
+                                    <CustomText multiLingual={true} textStyle={{ fontSize: 14, lineHeight: 14, fontWeight: 600, color: "#32383D", marginLeft: 8 }} text="Pan Card" />
                                 </View>
                                 <Pressable onPress={() => openDocumentCard("panInfo")} style={{ transform: [{ rotate: idInfo?.panInfo?.isOpen ? '180deg' : '0' }] }} >
                                     <Ionicons size={24} color={"#A9A9AB"} name='chevron-down' />
@@ -444,5 +457,14 @@ const PersonalDetailsSetting = () => {
         </View>
     );
 };
+
+const styles = StyleSheet.create({
+    profileImage: {
+        width: 80,
+        height: 80,
+        borderRadius: 40,
+        marginRight: 16,
+    },
+})
 
 export default PersonalDetailsSetting;

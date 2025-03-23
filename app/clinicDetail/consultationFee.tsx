@@ -134,7 +134,7 @@ const ConsultationFee = () => {
                 })}
             </View>
             <View style={{ display: "flex", alignItems: "center", marginTop: 24, position: 'absolute', bottom: 100, width: width - 32 }} >
-                    <CustomButton width='FULL' title={isEditable ? "Save" : "Update"} onPress={handleSave} />
+                    <CustomButton multiLingual={true} width='FULL' title={isEditable ? "Save" : "Update"} onPress={handleSave} />
             </View>
             {loader && <Loader />}
         </View>

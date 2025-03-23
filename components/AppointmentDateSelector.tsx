@@ -8,12 +8,15 @@ import {
 } from 'react-native';
 import CustomText from './CustomText';
 import { Ionicons } from '@expo/vector-icons';
+import { finalText } from './Utils';
+import { useAppContext } from '@/context/AppContext';
 
 interface AppointmentDateSelectorProps {
     handleDateChange: (date: string) => void;
 }
 
 const AppointmentDateSelector: React.FC<AppointmentDateSelectorProps> = ({ handleDateChange }) => {
+  const { translations, selectedLanguage } = useAppContext();
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [daysToRender, setDaysToRender] = useState<Array<string>>([]);
   const [selectedDay, setSelectedDay] = useState<string>("");
@@ -146,8 +149,7 @@ const AppointmentDateSelector: React.FC<AppointmentDateSelectorProps> = ({ handl
             <View style={{ display: 'flex', flexDirection: 'row' }}>
                 <CustomText
                     textStyle={styles.monthText}
-                    text={formatMonthYear(currentMonth).split(' ')[0]}
-                    multiLingual={true}
+                    text={finalText(formatMonthYear(currentMonth).split(' ')[0], translations, selectedLanguage)}
                 />
                 <CustomText
                     textStyle={[styles.monthText, { marginLeft: 8 }]}
@@ -158,7 +160,7 @@ const AppointmentDateSelector: React.FC<AppointmentDateSelectorProps> = ({ handl
             <Ionicons name='chevron-forward-circle-outline' size={32} color={"#1EA6D6"} />
             </Pressable>
         </View>
-        <FlatList
+        {daysToRender?.length > 0 && <FlatList
             ref={flatListRef}
             data={daysToRender}
             horizontal
@@ -225,7 +227,7 @@ const AppointmentDateSelector: React.FC<AppointmentDateSelectorProps> = ({ handl
                 }, 500);
             }}
             
-        />
+        />}
     </View>
   );
 };

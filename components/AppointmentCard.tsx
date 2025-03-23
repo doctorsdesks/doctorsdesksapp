@@ -120,8 +120,8 @@ const AppointmentCard: React.FC<AppointmentCardProps> = ({ appointment, width, h
             <View style={{ marginTop: 16 }} >
                     {appointment?.status === AppointmentStatus.PENDING &&
                         <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }} >
-                            <CustomButton width='HALF' title="Deny" onPress={() => handleStatusUpdate && handleStatusUpdate("CANCEL", appointment?._id)} textColor="#009688" containerStyle={{ backgroundColor: "#fff", borderWidth: 1, borderColor: "#009688" }} />
-                            <CustomButton width='HALF' title="Approve" onPress={() => handleStatusUpdate && handleStatusUpdate("ACCEPT", appointment?._id)} />
+                            <CustomButton multiLingual={true} width='HALF' title="Deny" onPress={() => handleStatusUpdate && handleStatusUpdate("CANCEL", appointment?._id)} textColor="#009688" containerStyle={{ backgroundColor: "#fff", borderWidth: 1, borderColor: "#009688" }} />
+                            <CustomButton multiLingual={true} width='HALF' title="Approve" onPress={() => handleStatusUpdate && handleStatusUpdate("ACCEPT", appointment?._id)} />
                         </View>
                     }
             </View>

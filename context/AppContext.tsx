@@ -1,6 +1,7 @@
 import { CardProps } from '@/constants/Enums';
-import React, { createContext, useState, useContext, ReactNode } from 'react';
+import React, { createContext, useState, useContext, ReactNode, useEffect } from 'react';
 import { signUpDetailsInitial, signUpHeaderDataInitial } from './InitialState';
+import { getSecureKey, saveSecureKey } from '@/components/Utils';
 
 // Define the context type
 interface AppContextType {
@@ -16,6 +17,8 @@ interface AppContextType {
   setClinicTimings: (data: any) => void;
   slotDuration: string;
   setSlotDuration: (data: string) => void;
+  selectedLanguage: string;
+  setSelectedLanguage: (language: string) => void;
 }
 
 // Create the context with a default value (can be null)
@@ -23,20 +26,47 @@ const AppContext = createContext<AppContextType | null>(null);
 
 // Define the provider component
 export const AppProvider = ({ children }: { children: ReactNode }) => {
-  const [ signUpHeaderData, setSignUpHeaderData ] = React.useState(signUpHeaderDataInitial);
-
+  const [signUpHeaderData, setSignUpHeaderData] = React.useState(signUpHeaderDataInitial);
   const [signUpDetails, setSignUpDetails] = React.useState(signUpDetailsInitial);
-
   const [doctorDetails, setDoctorDetails] = React.useState({});
   const [translations, setTranslations] = React.useState<any>({});
   const [clinicTimings, setClinicTimings] = React.useState("");
   const [slotDuration, setSlotDuration] = React.useState<string>("");
+  const [selectedLanguage, setSelectedLanguage] = useState<string>("");
 
-  // const [user, setUser] = useState({ name: 'John', age: 30 });
+  useEffect(() => {
+    // Load saved language preference on app start
+    const loadLanguage = async () => {
+      try {
+        const savedLanguage = await getSecureKey("language");
+        if (savedLanguage) {
+          setSelectedLanguage(savedLanguage);
+        } else {
+          // Set default language if none is saved
+          setSelectedLanguage("English");
+        }
+      } catch (error) {
+        console.error("Error loading language:", error);
+        // Set default language on error
+        setSelectedLanguage("English");
+      }
+    };
+    loadLanguage();
+  }, []);
 
-  // const logout = () => {
-  //   setUser({ name: '', age: 0 });
-  // };
+  // Update stored language whenever it changes
+  useEffect(() => {
+    const updateLanguage = async () => {
+      try {
+        if (selectedLanguage) {
+          await saveSecureKey("language", selectedLanguage);
+        }
+      } catch (error) {
+        console.error("Error saving language:", error);
+      }
+    };
+    updateLanguage();
+  }, [selectedLanguage]);
 
   return (
     <AppContext.Provider value={{ 
@@ -51,7 +81,9 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
         clinicTimings,
         setClinicTimings,
         slotDuration,
-        setSlotDuration
+        setSlotDuration,
+        selectedLanguage,
+        setSelectedLanguage
       }}>
       {children}
     </AppContext.Provider>

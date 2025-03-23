@@ -71,7 +71,7 @@ const ManageSlotDurationAndTiming = () => {
                 Toast.show({
                     type: 'error',  
                     text1: respnose.error,
-                    visibilityTime: 5000,
+                    visibilityTime: 3000,
                 });
                 setLoader(false);
             }
@@ -147,7 +147,7 @@ const ManageSlotDurationAndTiming = () => {
                 Toast.show({
                     type: 'success',  
                     text1: data.message,
-                    visibilityTime: 5000,
+                    visibilityTime: 3000,
                 });
             }
             setLoader(false);
@@ -156,7 +156,7 @@ const ManageSlotDurationAndTiming = () => {
                 Toast.show({
                     type: 'error',  
                     text1: error.response.data.message,
-                    visibilityTime: 5000,
+                    visibilityTime: 3000,
                 });
             setLoader(false);
         }
@@ -170,13 +170,13 @@ const ManageSlotDurationAndTiming = () => {
                     {isEditable ?
                         <CustomInput2 data={slotDurationObject} onChange={(value) => handleSlotChange(value)} />
                     :   slotDurationObject?.value === "" ? 
-                            <CustomText textStyle={{ fontSize: 16, lineHeight: 20, fontWeight: 600, color: "#32383D" }} text="Please add slot duration" />
+                            <CustomText multiLingual={true} textStyle={{ fontSize: 16, lineHeight: 20, fontWeight: 600, color: "#32383D" }} text="Please add slot duration" />
                         :
                             <CustomInput2 data={slotDurationObject} onChange={(value) => handleSlotChange(value)} />
                     }
                 </View>
                 <View style={{ marginTop: 32 }} >
-                    <CustomText textStyle={{ fontSize: 16, lineHeight: 20, fontWeight: 600, color: "#32383D" }} text="Slot Timings" />
+                    <CustomText multiLingual={true} textStyle={{ fontSize: 16, lineHeight: 20, fontWeight: 600, color: "#32383D" }} text="Slot Timings" />
                 </View>
                 <View style={{ marginTop: 8 }}  >
                     {timings?.length > 0 ?
@@ -216,12 +216,10 @@ const ManageSlotDurationAndTiming = () => {
                             })}
                         </View>
                     :
-                        <Text style={{ marginTop: 32, fontSize: 16, lineHeight: 21, fontWeight: 600, color: "#32383D" }} >
-                            Please add slots
-                        </Text>
+                        <CustomText multiLingual={true} textStyle={{ marginTop: 12, fontSize: 14, lineHeight: 21, fontWeight: 600, color: "red" }} text="Please add slots" />
                     }
                     <View style={{ display: "flex", alignItems: "center", marginTop: 24, marginBottom: 32 }} >
-                        <CustomButton width='FULL' title="Add Slots" onPress={handlAddSlots} isDisabled={!isEditable} />
+                        <CustomButton multiLingual={true} width='FULL' title="Add Slots" onPress={handlAddSlots} isDisabled={!isEditable} />
                     </View>
                 </View>
             </View>
