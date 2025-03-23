@@ -13,7 +13,7 @@ interface ImageUploadProps {
 const ImageUpload: React.FC<ImageUploadProps> = ({ }) => {
     const { signUpDetails, setSignUpDetails } = useAppContext();
     const [loader, setLoader] = useState<boolean>(false);
-    const [imageUrl, setImageUrl] = useState<any>();
+    const [imageUrl, setImageUrl] = useState<any>("");
 
     useEffect(() => {
         if(signUpDetails){
@@ -75,6 +75,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ }) => {
                 text1: `Something went wrong, error: ${uploadedImageUrlObject.data}`,
                 visibilityTime: 3000,
             });
+            setLoader(false);
         }
         
     }
@@ -86,11 +87,10 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ }) => {
             </Text>
             <View style={{marginTop: 12, display: 'flex', alignItems: 'center' }} >
                 <Text style={{ color: "#32383D", fontSize: 12, lineHeight: 14, fontWeight: 600 }} >Your Profile Picture</Text>
-                {imageUrl === "" ?
+                {imageUrl === "" || imageUrl === null ?
                     <View style={{ marginTop: 8, height: 100, width: 100, borderColor: "#CFD8DC", backgroundColor: "#CFD8DC", borderRadius: 100 }}  />
                 :
-                // <View style={{ marginTop: 8, height: 100, width: 100, borderColor: "#CFD8DC", backgroundColor: "#CFD8DC", borderRadius: 100 }}  />
-                    imageUrl !== "" && <Image source={{uri: imageUrl}} resizeMode='cover' height={100} width={100} style={{ marginTop: 8, height: 100, width: 100, borderColor: "#CFD8DC", borderRadius: 100 }} />
+                    imageUrl && imageUrl !== "" && <Image source={{uri: imageUrl}} resizeMode='cover' height={100} width={100} style={{ marginTop: 8, height: 100, width: 100, borderColor: "#CFD8DC", borderRadius: 100 }} />
                 }
                 {imageUrl === "" && 
                     <Pressable onPress={pickImage} style={{ borderBottomWidth: 1, borderBottomColor: "#1EA6D6", marginTop: 12}}>

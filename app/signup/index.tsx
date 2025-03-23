@@ -1,9 +1,8 @@
 import React, { useEffect } from 'react';
-import { View, StyleSheet, ScrollView, BackHandler } from 'react-native';
+import { View, StyleSheet, ScrollView, BackHandler, Keyboard } from 'react-native';
 import SignUpHeader from './SignupHeader';
 import CustomInput2 from '@/components/CustomInput2';
 import CustomButton from '@/components/CustomButton';
-import CustomInput from '@/components/CustomInput';
 import CustomRadio from '@/components/CustomRadio';
 import IdProof from './IdProof';
 import { router, useLocalSearchParams } from 'expo-router';
@@ -29,6 +28,7 @@ const SignUp = () => {
     const [idProofData, setIdProofData] = React.useState<any>([]);
     const [clinicDetails, setClinicDetails] = React.useState<any>([]);
     const [showImage, setShowImage] = React.useState<boolean>(true);
+    const [isKeyboardOpen, setIsKeyboardOpen] = React.useState<boolean>(false);
     const [loader, setLoader] = React.useState<boolean>(false);
 
     useEffect(() => {
@@ -44,11 +44,23 @@ const SignUp = () => {
 
     useEffect(() => {
         const backAction = () => {
-            setSignUpDetails(signUpDetailsInitial);
-            setSignUpHeaderData(signUpHeaderDataInitial);
-            router.replace("/login");
-            return true;
+            if (isKeyboardOpen) {
+                Keyboard.dismiss();
+                return true;
+            } else {
+                setSignUpDetails(signUpDetailsInitial);
+                setSignUpHeaderData(signUpHeaderDataInitial);
+                router.replace("/login");
+                return true;
+            }
         };
+
+        const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () =>
+            { setIsKeyboardOpen(true); setShowImage(false)}
+          );
+          const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () =>
+           { setIsKeyboardOpen(false); setShowImage(true)}
+          );
 
         const backHandler = BackHandler.addEventListener("hardwareBackPress", backAction);
 
@@ -204,10 +216,6 @@ const SignUp = () => {
         }
     }
 
-    const handleGoToHome = () => {
-        router.replace("/dashboard");
-    }
-
     const handleDisable = () => {
         if (step === "PD") {
             if( personalDetails?.some((item: any) => item.isMandatory && item.value === "")) return true;
@@ -216,7 +224,8 @@ const SignUp = () => {
 
             if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(emailValue)) return true;
         } else if (step === "CD") {
-            return clinicDetails.some((item: any) => item.isMandatory && item.value === "");
+            if (clinicDetails.some((item: any) => item.isMandatory && item.value === "")) return true;
+            if (clinicDetails?.find((item: any) => item?.id === "pincode")?.value?.length !== 6) return true;
         } else if (step === "IDP" ) {
             if (idProofData[0]?.isUploaded && (idProofData[1]?.isUploaded || idProofData[2]?.isUploaded) ) return false;
             else return true;
@@ -248,17 +257,11 @@ const SignUp = () => {
         setPersonalDetails(pDUpdatedData);
     }
 
-    const handleNameBlue = (value: string) => {
-        if(value === ""){
-            setShowImage(true);
-        }
-    };
-
     const renderInputType = (item: any, detailType: string) => {
         switch (item.inputType) {
             case "TEXT":
                 return (
-                    <CustomInput2 data={item} onChange={(value, id) => handleChange(value, id, detailType)} handleFocus={() => setShowImage(false)} handleBlur={handleNameBlue} />
+                    <CustomInput2 data={item} onChange={(value, id) => handleChange(value, id, detailType)} />
                 )
                 break;
             case "NUMBER":
@@ -285,10 +288,17 @@ const SignUp = () => {
                 return (
                     <SearchSelect data={item} onChange={(value, id) => handleChange(value, id, detailType)} />
                 )
+                break;
             case "BOXES": 
                 return (
                     <CustomInputBoxes data={item} onChange={(value, id, type) => handleChangeLanguage(value, id, type)} />
                 )
+                break;
+            case "DATE":
+                return (
+                    <CustomInput2 data={item} onChange={(value, id) => handleChange(value, id, detailType)} />
+                )
+                break;
             default:
                 break;
         }
@@ -324,29 +334,30 @@ const SignUp = () => {
         }
     }
 
-    return (
-        <View style={style.container} >
-            <SignUpHeader data={signUpHeaderData} />
-            {showImage && step === "PD" && <ImageUpload />}
-            <ScrollView
-                ref={scrollViewRef}
-                style={{ 
-                    display: 'flex',
-                    backgroundColor: "#F9F9F9",
-                    borderRadius: 8,
-                    borderColor: "#DDDDDD",
-                    marginTop: 16,
-                    borderWidth: 1,
-                    paddingHorizontal: 12,
-                    paddingVertical: 16,
-                }}
-            >
-                {renderValue()}
-            </ScrollView>
-            <View style={{ display: "flex", alignItems: "center", marginTop: 24 }} >
-                <CustomButton width='FULL' title="Continue" onPress={handleButtonClick} isDisabled={handleDisable()} />
+    return (loader ? <Loader /> 
+        :
+            <View style={style.container} >
+                <SignUpHeader data={signUpHeaderData} />
+                {showImage && step === "PD" && <ImageUpload />}
+                <ScrollView
+                    ref={scrollViewRef}
+                    style={{ 
+                        display: 'flex',
+                        backgroundColor: "#F9F9F9",
+                        borderRadius: 8,
+                        borderColor: "#DDDDDD",
+                        marginTop: 16,
+                        borderWidth: 1,
+                        paddingHorizontal: 12,
+                        paddingVertical: 16,
+                    }}
+                >
+                    {renderValue()}
+                </ScrollView>
+                <View style={{ display: "flex", alignItems: "center", marginTop: 24 }} >
+                    <CustomButton width='FULL' title="Continue" onPress={handleButtonClick} isDisabled={handleDisable()} />
+                </View>
             </View>
-        </View>
     );
 }
 

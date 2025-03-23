@@ -27,7 +27,7 @@ const IdProofCard: React.FC<IdProofCardProps> = ({ data }) => {
             }} 
         >
             <View style={{ display: 'flex', justifyContent: 'flex-start', flexDirection: 'row', alignItems: 'center' }} >
-                <Image source={data?.docIcon} resizeMode='contain' height={32} width={32} />
+                {data?.docIcon && data?.docIcon !== "" && <Image source={data?.docIcon} resizeMode='contain' height={32} width={32} />}
                 <Text style={{ marginLeft: 12, color: "#32383D", fontSize: 14, fontWeight: 600 }} >
                     {data?.label}
                 </Text>

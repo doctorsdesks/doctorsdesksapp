@@ -46,9 +46,13 @@ const ViewImage: React.FC<ImageProps> = ({ data, height, width, style, resizeMod
             changeUri(uri);
         }
     },[data])
-    return (
-        <Image source={imageSource} resizeMode={resizeMode} height={height} width={width} style={style} />
-    )
+    if (imageSource && imageSource !== "") {
+        return (
+            <Image source={imageSource} resizeMode={resizeMode} height={height} width={width} style={style} />
+        )
+    } else {
+        return null;
+    }
 };
 
 export default ViewImage;
