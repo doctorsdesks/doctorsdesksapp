@@ -23,6 +23,7 @@ const PersonalDetailsSetting = () => {
     const { height } = Dimensions.get('window');
     const { doctorDetails, setDoctorDetails } = useAppContext();
     const scrollViewRef = React.useRef(null);
+    const scrollDocRef = React.useRef(null);
     const [doctorData, setDoctorData] = useState<any>();
     const [navData, setNavData] = useState<Array<NavbarObject>>([
         {
@@ -67,13 +68,14 @@ const PersonalDetailsSetting = () => {
                     if (item?.id === "fullName") return { ...item, value: doctorDetails?.name, isDisabled: true };
                     if (item?.id === "gender") return { ...item, value: doctorDetails?.gender, isDisabled: true };
                     if (item?.id === "email") return { ...item, value: doctorDetails?.email, isDisabled: true };
+                    if (item?.id === "dob") return { ...item, value: doctorDetails?.dob, isDisabled: true };
                     if (item?.id === "experience") return { ...item, value: doctorDetails?.experience, isDisabled: true };
                     if (item?.id === "graduation") return { ...item, value: doctorDetails?.graduation, isDisabled: true };
                     if (item?.id === "graduationCollege") return { ...item, value: doctorDetails?.graduationCollege, isDisabled: true };
                     if (item?.id === "graduationYear") return { ...item, value: doctorDetails?.graduationYear, isDisabled: true };
                     if (item?.id === "specialisation") return { ...item, value: doctorDetails?.specialisation, isDisabled: true };
-                    if (item?.id === "specialisationCollege") return { ...item, value: doctorDetails?.specialisationYear, isDisabled: true };
-                    if (item?.id === "specialisationYear") return { ...item, value: doctorDetails?.specialisation, isDisabled: true };
+                    if (item?.id === "specialisationCollege") return { ...item, value: doctorDetails?.specialisationCollege, isDisabled: true };
+                    if (item?.id === "specialisationYear") return { ...item, value: doctorDetails?.specialisationYear, isDisabled: true };
                     if (item?.id === "otherQualification") return { ...item, value: doctorDetails?.otherQualification, isDisabled: true };
                     if (item?.id === "languages") return { ...item, value: doctorDetails?.languages, isDisabled: true };
                 }),
@@ -106,14 +108,15 @@ const PersonalDetailsSetting = () => {
             newPersonalData = newPersonalData?.map((item: any) => {
                 if (item?.id === "fullName") return { ...item, value: doctorDetails?.name, isDisabled: true };
                 if (item?.id === "gender") return { ...item, value: doctorDetails?.gender, isDisabled: true };
-                if (item?.id === "email") return { ...item, value: doctorDetails?.email, isDisabled: false };
+                if (item?.id === "dob") return { ...item, value: doctorDetails?.dob, isDisabled: true };
+                if (item?.id === "email") return { ...item, value: doctorDetails?.email, isDisabled: true };
                 if (item?.id === "experience") return { ...item, value: doctorDetails?.experience, isDisabled: false };
                 if (item?.id === "graduation") return { ...item, value: doctorDetails?.graduation, isDisabled: true };
                 if (item?.id === "graduationCollege") return { ...item, value: doctorDetails?.graduationCollege, isDisabled: true };
                 if (item?.id === "graduationYear") return { ...item, value: doctorDetails?.graduationYear, isDisabled: true };
                 if (item?.id === "specialisation") return { ...item, value: doctorDetails?.specialisation, isDisabled: false };
-                if (item?.id === "specialisationCollege") return { ...item, value: doctorDetails?.specialisationYear, isDisabled: false };
-                if (item?.id === "specialisationYear") return { ...item, value: doctorDetails?.specialisation, isDisabled: false };
+                if (item?.id === "specialisationCollege") return { ...item, value: doctorDetails?.specialisationCollege, isDisabled: false };
+                if (item?.id === "specialisationYear") return { ...item, value: doctorDetails?.specialisationYear, isDisabled: false };
                 if (item?.id === "otherQualification") return { ...item, value: doctorDetails?.otherQualification, isDisabled: false };
                 if (item?.id === "languages") return { ...item, value: doctorDetails?.languages, isDisabled: false };
             }),
@@ -131,6 +134,7 @@ const PersonalDetailsSetting = () => {
     }
 
     const updateDoctor = async () => {
+        setDoctorDetails({});
         const updateData = {
             experience: getValueById(doctorData?.personalData, "experience"),
             specialisation: getValueById(doctorData?.personalData, "specialisation"),
@@ -157,8 +161,9 @@ const PersonalDetailsSetting = () => {
                     visibilityTime: 3000,
                 });
             }
-            setLoader(false);
+
             setDoctorDetails(data.data);
+            setLoader(false);
             router.replace("/dashboard/profile");
         } catch (error: any) {
                 Toast.show({
@@ -308,6 +313,12 @@ const PersonalDetailsSetting = () => {
                 return (
                     <CustomInputBoxes data={item} onChange={(value, id, type) => handleChangeLanguage(value, id, type)} />
                 )
+                break;
+            case "DATE":
+                return (
+                    <CustomInput2 data={item} handleFocus={() => setShowImage(false)} onChange={(value, id) => handleChange(value, id)} />
+                )
+                break;
             default:
                 break;
         }
@@ -326,14 +337,16 @@ const PersonalDetailsSetting = () => {
                 <View style={{ height: height - 100 }} >
                     {showImage && <View style={{ display: 'flex', alignItems: "center", justifyContent: 'center', marginTop: 32 }} >
                         <View style={{ position: 'relative' }} >
-                            <View style={{ position: 'absolute', right: 4, top: 8, zIndex: 1 }} >
+                            <View style={{ position: 'absolute', right: 4, top: 8, zIndex: 20 }} >
                                 {doctorData?.docStatus === DocStatusType.VERIFIED ? <Ionicons size={24} color={"#1EA6D6"} name='checkmark-done-circle' /> : <Ionicons size={24} color={"#A9A9AB"} name='close-circle' />}
                             </View>
-                            {doctorData?.imageUrl !== "" ? <Image source={{uri: doctorDetails?.imageUrl}} resizeMode='cover' height={100} width={100} style={{ marginTop: 8, height: 100, width: 100, borderColor: "#CFD8DC", borderRadius: 100 }} />
-                            : <Image
-                                source={require('@/assets/images/Girl_doctor.png')}
-                                style={styles.profileImage}
-                            />}
+                            {doctorData && doctorData?.imageUrl && doctorData?.imageUrl !== "" ? <Image source={{uri: doctorData?.imageUrl}} resizeMode='cover' height={100} width={100} style={{ marginTop: 8, height: 100, width: 100, borderColor: "#CFD8DC", borderRadius: 100 }} />
+                            : 
+                                <Image
+                                    source={require('@/assets/images/Girl_doctor.png')}
+                                    style={styles.profileImage}
+                                />
+                            }
                         </View>
                         {isEditable && <Pressable onPress={pickImage} style={{ borderBottomWidth: 1, borderBottomColor: "#1EA6D6", marginTop: 12}}>
                             <CustomText multiLingual={true} textStyle={{ color: "#1EA6D6"}} text="Change Photo" />
@@ -345,6 +358,7 @@ const PersonalDetailsSetting = () => {
                             display: 'flex',
                             backgroundColor: "#F9F9F9",
                             borderRadius: 8,
+                            maxHeight: height - 380,
                             borderColor: "#DDDDDD",
                             marginTop: 16,
                             borderWidth: 1,
@@ -360,97 +374,112 @@ const PersonalDetailsSetting = () => {
                                     )
                                 })}
                     </ScrollView>
-                    <View style={{ display: "flex", alignItems: "center", marginTop: 24, marginBottom: 32 }} >
+                    <View style={{ display: "flex", alignItems: "center", marginTop: 24, marginBottom: 32, position: 'absolute', bottom: 0, right: 0, left: 0 }} >
                         <CustomButton multiLingual={true} width='FULL' title={isEditable ? "Save" : "Update"} onPress={handleButtonClick} />
                     </View>
                 </View>
             :   
                 <View style={{ marginTop: 32 }} >
-                    <View style={{ padding: 16, borderColor: "#D9D9D9", borderWidth: 1, borderTopRightRadius: 8, borderTopLeftRadius: 8 }}  >
-                        <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-                            <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }} >
-                                <View style={{ padding: 6, borderWidth: 1, borderRadius: 4, borderColor: "#D9D9D9" }} >
-                                    <Image source={require('../../assets/images/registration.png')} resizeMode='contain' height={24} width={24} />
-                                </View>
-                                <CustomText multiLingual={true} textStyle={{ fontSize: 14, lineHeight: 14, fontWeight: 600, color: "#32383D", marginLeft: 8 }} text="Registration Certificate" />
-                            </View>
-                            <Pressable onPress={() => openDocumentCard("registrationInfo")} style={{ transform: [{ rotate: idInfo?.registrationInfo?.isOpen ? '180deg' : '0' }] }} >
-                                <Ionicons size={24} color={"#A9A9AB"} name='chevron-down' />
-                            </Pressable>
-                        </View>
-                        {idInfo?.registrationInfo?.isOpen &&
-                            <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 32 }} >
-                                {idInfo?.registrationInfo?.frontUrl !== "" && 
-                                    <View style={{ borderColor: "#D9D9D9", borderWidth: 1, borderRadius: 8, paddingHorizontal: 16, paddingVertical: 12 }} >
-                                        <Image source={{uri: idInfo?.registrationInfo?.frontUrl}} resizeMode='cover' height={86} width={108} style={{height: 86, width: 108 }} />
+                    <ScrollView
+                        ref={scrollDocRef}
+                        style={{ 
+                            display: 'flex',
+                            backgroundColor: "#F9F9F9",
+                            borderRadius: 8,
+                            maxHeight: height - 200,
+                            borderColor: "#DDDDDD",
+                            marginTop: 16,
+                            borderWidth: 1,
+                            paddingHorizontal: 12,
+                            paddingVertical: 16,
+                        }}
+                    >
+                        <View style={{ padding: 16, borderColor: "#D9D9D9", borderWidth: 1, borderTopRightRadius: 8, borderTopLeftRadius: 8 }}  >
+                            <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                                <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }} >
+                                    <View style={{ padding: 6, borderWidth: 1, borderRadius: 4, borderColor: "#D9D9D9" }} >
+                                        <Image source={require('../../assets/images/registration.png')} resizeMode='contain' height={24} width={24} />
                                     </View>
-                                }
-                                {idInfo?.registrationInfo?.backUrl !== "" && 
-                                    <View style={{ borderColor: "#D9D9D9", borderWidth: 1, borderRadius: 8, paddingHorizontal: 16, paddingVertical: 12 }} >
-                                        <Image source={{uri: idInfo?.registrationInfo?.backUrl}} resizeMode='cover' height={86} width={108} style={{ height: 86, width: 108 }} />
+                                    <CustomText multiLingual={true} textStyle={{ fontSize: 14, lineHeight: 14, fontWeight: 600, color: "#32383D", marginLeft: 8 }} text="Registration Certificate" />
+                                </View>
+                                <Pressable onPress={() => openDocumentCard("registrationInfo")} style={{ transform: [{ rotate: idInfo?.registrationInfo?.isOpen ? '180deg' : '0deg' }] }} >
+                                    <Ionicons size={24} color={"#A9A9AB"} name='chevron-down' />
+                                </Pressable>
+                            </View>
+                            {idInfo?.registrationInfo?.isOpen &&
+                                <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 32 }} >
+                                    {idInfo?.registrationInfo?.frontUrl !== "" && 
+                                        <View style={{ borderColor: "#D9D9D9", borderWidth: 1, borderRadius: 8, paddingHorizontal: 16, paddingVertical: 12 }} >
+                                            <Image source={{uri: idInfo?.registrationInfo?.frontUrl}} resizeMode='cover' height={86} width={108} style={{height: 86, width: 108 }} />
+                                        </View>
+                                    }
+                                    {idInfo?.registrationInfo?.backUrl !== "" && 
+                                        <View style={{ borderColor: "#D9D9D9", borderWidth: 1, borderRadius: 8, paddingHorizontal: 16, paddingVertical: 12 }} >
+                                            <Image source={{uri: idInfo?.registrationInfo?.backUrl}} resizeMode='cover' height={86} width={108} style={{ height: 86, width: 108 }} />
+                                        </View>
+                                    }
+                                </View>
+                            }
+                        </View>
+                        {idInfo?.aadharInfo &&
+                            <View style={{ padding: 16, borderColor: "#D9D9D9", borderWidth: 1, borderBottomRightRadius: idInfo?.panInfo ? 0 : 8, borderBottomLeftRadius: idInfo?.panInfo ? 0 : 8 }}  >
+                                <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }} >
+                                    <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }} >
+                                        <View style={{ padding: 6, borderWidth: 1, borderRadius: 4, borderColor: "#D9D9D9" }} >
+                                            <Image source={require('../../assets/images/address.png')} resizeMode='contain' height={24} width={24} />
+                                        </View>
+                                        <CustomText multiLingual={true} textStyle={{ fontSize: 14, lineHeight: 14, fontWeight: 600, color: "#32383D", marginLeft: 8 }} text="Aadhar Card" />
+                                    </View>
+                                    <Pressable onPress={() => openDocumentCard("aadharInfo")} style={{ transform: [{ rotate: idInfo?.aadharInfo?.isOpen ? '180deg' : '0deg' }] }} >
+                                        <Ionicons size={24} color={"#A9A9AB"} name='chevron-down' />
+                                    </Pressable>
+                                </View>
+                                {idInfo?.aadharInfo?.isOpen &&
+                                    <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 32 }} >
+                                        {idInfo?.aadharInfo?.frontUrl !== "" && 
+                                            <View style={{ borderColor: "#D9D9D9", borderWidth: 1, borderRadius: 8, paddingHorizontal: 16, paddingVertical: 12 }} >
+                                                <Image source={{uri: idInfo?.aadharInfo?.frontUrl}} resizeMode='cover' height={86} width={108} style={{ height: 86, width: 108 }} />
+                                            </View>
+                                        }
+                                        {idInfo?.aadharInfo?.backUrl !== "" && 
+                                            <View style={{ borderColor: "#D9D9D9", borderWidth: 1, borderRadius: 8, paddingHorizontal: 16, paddingVertical: 12 }} >
+                                                <Image source={{uri: idInfo?.aadharInfo?.backUrl}} resizeMode='cover' height={86} width={108} style={{ height: 86, width: 108 }} />
+                                            </View>
+                                        }
                                     </View>
                                 }
                             </View>
                         }
-                    </View>
-                    {idInfo?.aadharInfo &&
-                        <View style={{ padding: 16, borderColor: "#D9D9D9", borderWidth: 1, borderBottomRightRadius: idInfo?.panInfo ? 0 : 8, borderBottomLeftRadius: idInfo?.panInfo ? 0 : 8 }}  >
-                            <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }} >
-                                <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }} >
-                                    <View style={{ padding: 6, borderWidth: 1, borderRadius: 4, borderColor: "#D9D9D9" }} >
-                                        <Image source={require('../../assets/images/address.png')} resizeMode='contain' height={24} width={24} />
+                        {idInfo?.panInfo &&
+                            <View style={{ padding: 16, borderColor: "#D9D9D9", borderWidth: 1, borderBottomRightRadius: 8, borderBottomLeftRadius: 8 }}  >
+                                <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }} >
+                                    <View style={{ display: 'flex', alignItems: 'center', flexDirection: 'row' }} >
+                                        <View style={{ padding: 6, borderWidth: 1, borderRadius: 4, borderColor: "#D9D9D9" }} >
+                                            <Image source={require('../../assets/images/address.png')} resizeMode='contain' height={24} width={24} />
+                                        </View>
+                                        <CustomText multiLingual={true} textStyle={{ fontSize: 14, lineHeight: 14, fontWeight: 600, color: "#32383D", marginLeft: 8 }} text="Pan Card" />
                                     </View>
-                                    <CustomText multiLingual={true} textStyle={{ fontSize: 14, lineHeight: 14, fontWeight: 600, color: "#32383D", marginLeft: 8 }} text="Aadhar Card" />
+                                    <Pressable onPress={() => openDocumentCard("panInfo")} style={{ transform: [{ rotate: idInfo?.panInfo?.isOpen ? '180deg' : '0deg' }] }} >
+                                        <Ionicons size={24} color={"#A9A9AB"} name='chevron-down' />
+                                    </Pressable>
                                 </View>
-                                <Pressable onPress={() => openDocumentCard("aadharInfo")} style={{ transform: [{ rotate: idInfo?.aadharInfo?.isOpen ? '180deg' : '0' }] }} >
-                                    <Ionicons size={24} color={"#A9A9AB"} name='chevron-down' />
-                                </Pressable>
-                            </View>
-                            {idInfo?.aadharInfo?.isOpen &&
-                                <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 32 }} >
-                                    {idInfo?.aadharInfo?.frontUrl !== "" && 
-                                        <View style={{ borderColor: "#D9D9D9", borderWidth: 1, borderRadius: 8, paddingHorizontal: 16, paddingVertical: 12 }} >
-                                            <Image source={{uri: idInfo?.aadharInfo?.frontUrl}} resizeMode='cover' height={86} width={108} style={{ height: 86, width: 108 }} />
-                                        </View>
-                                    }
-                                    {idInfo?.aadharInfo?.backUrl !== "" && 
-                                        <View style={{ borderColor: "#D9D9D9", borderWidth: 1, borderRadius: 8, paddingHorizontal: 16, paddingVertical: 12 }} >
-                                            <Image source={{uri: idInfo?.aadharInfo?.backUrl}} resizeMode='cover' height={86} width={108} style={{ height: 86, width: 108 }} />
-                                        </View>
-                                    }
-                                </View>
-                            }
-                        </View>
-                    }
-                    {idInfo?.panInfo &&
-                        <View style={{ padding: 16, borderColor: "#D9D9D9", borderWidth: 1, borderBottomRightRadius: 8, borderBottomLeftRadius: 8 }}  >
-                            <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }} >
-                                <View style={{ display: 'flex', alignItems: 'center', flexDirection: 'row' }} >
-                                    <View style={{ padding: 6, borderWidth: 1, borderRadius: 4, borderColor: "#D9D9D9" }} >
-                                        <Image source={require('../../assets/images/address.png')} resizeMode='contain' height={24} width={24} />
+                                {idInfo?.panInfo?.isOpen &&
+                                    <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 32 }} >
+                                        {idInfo?.panInfo?.frontUrl !== "" && 
+                                            <View style={{ borderColor: "#D9D9D9", borderWidth: 1, borderRadius: 8, paddingHorizontal: 16, paddingVertical: 12 }} >
+                                                <Image source={{uri: idInfo?.panInfo?.frontUrl}} resizeMode='cover' height={86} width={108} style={{ height: 86, width: 108 }} />
+                                            </View>
+                                        }
+                                        {idInfo?.panInfo?.backUrl !== "" && 
+                                            <View style={{ borderColor: "#D9D9D9", borderWidth: 1, borderRadius: 8, paddingHorizontal: 16, paddingVertical: 12 }} >
+                                                <Image source={{uri: idInfo?.panInfo?.backUrl}} resizeMode='cover' height={86} width={108} style={{ height: 86, width: 108 }} />
+                                            </View>
+                                        }
                                     </View>
-                                    <CustomText multiLingual={true} textStyle={{ fontSize: 14, lineHeight: 14, fontWeight: 600, color: "#32383D", marginLeft: 8 }} text="Pan Card" />
-                                </View>
-                                <Pressable onPress={() => openDocumentCard("panInfo")} style={{ transform: [{ rotate: idInfo?.panInfo?.isOpen ? '180deg' : '0' }] }} >
-                                    <Ionicons size={24} color={"#A9A9AB"} name='chevron-down' />
-                                </Pressable>
+                                }
                             </View>
-                            {idInfo?.panInfo?.isOpen &&
-                                <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 32 }} >
-                                    {idInfo?.panInfo?.frontUrl !== "" && 
-                                        <View style={{ borderColor: "#D9D9D9", borderWidth: 1, borderRadius: 8, paddingHorizontal: 16, paddingVertical: 12 }} >
-                                            <Image source={{uri: idInfo?.panInfo?.frontUrl}} resizeMode='cover' height={86} width={108} style={{ height: 86, width: 108 }} />
-                                        </View>
-                                    }
-                                    {idInfo?.panInfo?.backUrl !== "" && 
-                                        <View style={{ borderColor: "#D9D9D9", borderWidth: 1, borderRadius: 8, paddingHorizontal: 16, paddingVertical: 12 }} >
-                                            <Image source={{uri: idInfo?.panInfo?.backUrl}} resizeMode='cover' height={86} width={108} style={{ height: 86, width: 108 }} />
-                                        </View>
-                                    }
-                                </View>
-                            }
-                        </View>
-                    }
+                        }
+                    </ScrollView>
                 </View>
             }
             {loader && <Loader />}
