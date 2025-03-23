@@ -1,7 +1,7 @@
 import { useAppContext } from '@/context/AppContext';
-import { Ionicons } from '@expo/vector-icons';
 import React, { useState } from 'react';
 import { View, Text, TextInput, StyleSheet, Image } from 'react-native';
+import DateTimePicker from '@react-native-community/datetimepicker';
 import { finalText } from './Utils';
 
 interface CustomInput2Props {
