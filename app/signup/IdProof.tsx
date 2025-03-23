@@ -1,10 +1,7 @@
 import Header from '@/components/Header';
 import IdProofCard from '@/components/IdProofCard';
-import IdProofCardUpdate from '@/components/IdProofCardUpdate';
-import { CardProps } from '@/constants/Enums';
-import { useAppContext } from '@/context/AppContext';
 import { router } from 'expo-router';
-import React, { useState } from 'react';
+import React from 'react';
 import { Pressable, Text, View } from 'react-native';
 
 interface IdProofProps {
