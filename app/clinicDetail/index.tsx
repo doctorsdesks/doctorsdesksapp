@@ -1,7 +1,7 @@
 import CustomButton from '@/components/CustomButton';
 import { useAppContext } from '@/context/AppContext';
 import React, { useEffect, useState } from 'react';
-import { BackHandler, Dimensions, ScrollView, View } from 'react-native';
+import { BackHandler, Dimensions, Keyboard, ScrollView, View } from 'react-native';
 import Toast from 'react-native-toast-message';
 import { getClinics, getValueById } from '@/components/Utils';
 import CustomInput2 from '@/components/CustomInput2';
@@ -20,11 +20,17 @@ const ClinicDetailsSetting = () => {
     const [clinicData, setClinicData] = useState<any>();
     const [loader, setLoader] = useState<boolean>(false);
     const [isEditable, setIsEditable] = useState<boolean>(false);
+    const [isKeyboardOpen, setIsKeyboardOpen] = useState<boolean>(false);
 
     useEffect(() => {
         const backAction = () => {
-            router.replace("/dashboard/profile");
-            return true;
+            if (isKeyboardOpen) {
+                Keyboard.dismiss();
+                return true;
+            } else {
+                router.replace("/dashboard/profile");
+                return true;
+            }
         };
 
         const backHandler = BackHandler.addEventListener("hardwareBackPress", backAction);
@@ -93,6 +99,12 @@ const ClinicDetailsSetting = () => {
                 clinicInfo: newClinicInfo
             }
             setClinicData(newClinicData);
+            const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () =>
+                setIsKeyboardOpen(true)
+            );
+            const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () =>
+               setIsKeyboardOpen(false)
+            );
         }
     },[isEditable])
 
@@ -201,21 +213,22 @@ const ClinicDetailsSetting = () => {
                         backgroundColor: "#F9F9F9",
                         borderRadius: 8,
                         borderColor: "#DDDDDD",
-                        marginTop: 60,
+                        marginTop: 20,
                         borderWidth: 1,
                         paddingHorizontal: 12,
                         paddingVertical: 16,
+                        maxHeight: isKeyboardOpen ? height - 400 : height -  200,
                     }}
                 >
                     {clinicData?.clinicInfo?.map((item: any) => {
-                                return (
-                                    <View key={item?.id} style={{ marginBottom: 16 }} >
-                                        {renderInputType(item)}
-                                    </View>
-                                )
-                            })}
+                        return (
+                            <View key={item?.id} style={{ marginBottom: 16, paddingBottom: 12 }} >
+                                {renderInputType(item)}
+                            </View>
+                        )
+                    })}
                 </ScrollView>
-                <View style={{ display: "flex", alignItems: "center", marginTop: 24, marginBottom: 32 }} >
+                <View style={{ display: "flex", alignItems: "center", marginBottom: 0, position: 'absolute', left: 0, right: 0, bottom: 0 }} >
                     <CustomButton width='FULL' title={isEditable ? "Save" : "Update"} onPress={handleButtonClick} />
                 </View>
             </View>
