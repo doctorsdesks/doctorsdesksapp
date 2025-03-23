@@ -1,5 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
-import React, { useState } from 'react';
+import React from 'react';
 import { Image, Text, View } from 'react-native';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import { CardProps } from '@/constants/Enums';
