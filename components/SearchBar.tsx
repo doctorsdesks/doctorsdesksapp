@@ -1,18 +1,37 @@
-import { Dimensions, Pressable, StyleSheet, TextInput, View } from "react-native";
+import { Keyboard, StyleSheet, TextInput, useColorScheme, View } from "react-native";
 import { Ionicons } from '@expo/vector-icons';
-import { useState, useCallback, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useAppContext } from "@/context/AppContext";
 import { finalText, getSecureKey } from "./Utils";
 
 interface SearchBarProps {
     searchPatients: (value: string) => void;
-    setIsFocused:(value: boolean) => void;
     listOpened: boolean;
+    showPatientList: boolean;
 }
 
-const SearchBar: React.FC<SearchBarProps> = ({ searchPatients, setIsFocused, listOpened }) => {
+const SearchBar: React.FC<SearchBarProps> = ({ searchPatients, listOpened, showPatientList }) => {
+    const colorSchema = useColorScheme();
     const [searchValue, setSearchValue] = useState<string>("");
     const { translations, selectedLanguage } = useAppContext();
+    const [isFocused, setIsFocused] = useState<boolean>(false);
+    const [isKeyboardOpen, setIsKeyboardOpen] = useState<boolean>(false);
+
+    useEffect(() => {
+        const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => {
+            setIsKeyboardOpen(true);
+            setIsFocused(true);
+        });
+        const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => {
+            setIsKeyboardOpen(false);
+            setIsFocused(false);
+        });
+
+          return () => {
+            keyboardDidShowListener.remove();
+            keyboardDidHideListener.remove();
+          };
+    },[])
 
     const handleChange = (value: string) => {
         setSearchValue(value);
@@ -20,13 +39,13 @@ const SearchBar: React.FC<SearchBarProps> = ({ searchPatients, setIsFocused, lis
     };
 
     return (
-        <View style={{ width: "100%", borderRadius: listOpened ? 34 : 80, borderBottomRightRadius: listOpened ? 0 : 80, borderBottomLeftRadius: listOpened ? 0 : 80, backgroundColor: "#F6F5FA", paddingHorizontal: 20, paddingVertical: 12, display: 'flex', flexDirection: 'row', alignItems: 'center', position: 'relative' }} >
+        <View style={{ width: "100%", overflow: "hidden", borderTopStartRadius: listOpened ? 38 : 80, borderTopEndRadius: listOpened ? 36 : 80, borderBottomEndRadius: listOpened ? 0 : 80, borderBottomStartRadius: listOpened ? 0 : 80, borderWidth: 1, borderColor: showPatientList || isFocused ? "#2DB9B0" : "#F6F5FA", backgroundColor: colorSchema === "dark" ? "#303135" : "#F6F5FA", paddingHorizontal: 20, paddingVertical: 12, display: 'flex', flexDirection: 'row', alignItems: 'center', position: 'relative' }} >
             <View style={{ width: 28 }} >
                 <Ionicons name='search-sharp' size={20} />
             </View>
             <TextInput
                 placeholderTextColor={'#8C8C8C'}
-                style={[styles.input]}
+                style={{ borderWidth: 1, borderRadius: 4, padding: 10, fontSize: 16, width: "90%", borderColor: colorSchema === 'dark' ? "#303135" : "#F6F5FA"}}
                 value={searchValue}
                 onChangeText={handleChange}
                 onFocus={() => setIsFocused(true)}
@@ -45,7 +64,7 @@ const styles = StyleSheet.create({
         borderRadius: 4,
         padding: 10,
         fontSize: 16,
-        borderColor: '#F6F5FA',
-        width: "100%",
+        borderColor: '#303135',
+        width: "90%",
     },
 });

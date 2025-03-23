@@ -1,6 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
-import React, { useEffect, useState } from 'react';
-import { Dimensions, Pressable, View } from 'react-native';
+import React from 'react';
+import { Dimensions, Pressable, useColorScheme, View } from 'react-native';
 import CustomText from './CustomText';
 import { router } from 'expo-router';
 
@@ -10,6 +10,7 @@ interface MainFooterProps {
 
 const MainFooter: React.FC<MainFooterProps> = ({ selectedNav }) => {
     const { width, height } = Dimensions.get('window');
+    const colorSchema = useColorScheme();
 
     const handleClick = (value: string) => {
         switch (value) {
@@ -39,21 +40,21 @@ const MainFooter: React.FC<MainFooterProps> = ({ selectedNav }) => {
             display: 'flex', 
             flexDirection: 'row', 
             justifyContent: 'space-between',
-            backgroundColor: '#A9A9AB'
+            backgroundColor: colorSchema === 'dark' ? '#303135' : '#fff'
         }} >
-            <Pressable onPress={() => handleClick("home")} style={{ width: 60, paddingVertical: 10, borderTopWidth: selectedNav === "home" ? 3 : 3, borderColor: selectedNav === "home" ? "#5257E9" : "#A9A9AB", display: 'flex', flexDirection: 'column', alignItems: 'center' }} >
+            <Pressable onPress={() => handleClick("home")} style={{ width: 60, paddingVertical: 10, borderTopWidth: selectedNav === "home" ? 3 : 3, borderColor: selectedNav === "home" ? "#5257E9" : colorSchema === 'dark' ? "#303135" : "#fff", display: 'flex', flexDirection: 'column', alignItems: 'center' }} >
                 <Ionicons name='home' size={24} color={selectedNav === "home" ? "#5257E9" : "#A9A9AB" } />
                 <CustomText text="Home" textStyle={{ fontSize: 10, lineHeight: 14, fontWeight: 600, color: selectedNav === "home" ? "#5257E9" : "#A9A9AB", marginTop: 4 }} />
             </Pressable>
-            <Pressable onPress={() => handleClick("task")} style={{  width: 60, paddingVertical: 10, borderTopWidth: selectedNav === "task" ? 3 : 3, borderColor: selectedNav === "task" ? "#5257E9" : "#A9A9AB", display: 'flex', flexDirection: 'column', alignItems: 'center' }} >
+            <Pressable onPress={() => handleClick("task")} style={{  width: 60, paddingVertical: 10, borderTopWidth: selectedNav === "task" ? 3 : 3, borderColor: selectedNav === "task" ? "#5257E9" : colorSchema === 'dark' ? "#303135" : "#fff", display: 'flex', flexDirection: 'column', alignItems: 'center' }} >
                 <Ionicons name='clipboard-outline' size={24} color={selectedNav === "task" ? "#5257E9" : "#A9A9AB" } />
                 <CustomText text="Task" textStyle={{ fontSize: 10, lineHeight: 14, fontWeight: 600, color: selectedNav === "task" ? "#5257E9" : "#A9A9AB", marginTop: 4 }} />
             </Pressable>
-            <Pressable onPress={() => handleClick("appointment")} style={{  width: 60, paddingVertical: 10, borderTopWidth: selectedNav === "appointment" ? 3 : 3, borderColor: selectedNav === "appointment" ? "#5257E9" : "#A9A9AB", display: 'flex', flexDirection: 'column', alignItems: 'center' }} >
+            <Pressable onPress={() => handleClick("appointment")} style={{  width: 60, paddingVertical: 10, borderTopWidth: selectedNav === "appointment" ? 3 : 3, borderColor: selectedNav === "appointment" ? "#5257E9" : colorSchema === 'dark' ? "#303135" : "#fff", display: 'flex', flexDirection: 'column', alignItems: 'center' }} >
                 <Ionicons name='calendar-outline' size={24} color={selectedNav === "appointment" ? "#5257E9" : "#A9A9AB" } />
                 <CustomText text="Appointment" textStyle={{ fontSize: 10, lineHeight: 14, fontWeight: 600, color: selectedNav === "appointment" ? "#5257E9" : "#A9A9AB", marginTop: 4 }} />
             </Pressable>
-            <Pressable onPress={() => handleClick("profile")} style={{ width: 60, paddingVertical: 10, borderTopWidth: selectedNav === "profile" ? 3 : 3, borderColor: selectedNav === "profile" ? "#5257E9" : "#A9A9AB", display: 'flex', flexDirection: 'column', alignItems: 'center' }} >
+            <Pressable onPress={() => handleClick("profile")} style={{ width: 60, paddingVertical: 10, borderTopWidth: selectedNav === "profile" ? 3 : 3, borderColor: selectedNav === "profile" ? "#5257E9" : colorSchema === 'dark' ? "#303135" : "#fff", display: 'flex', flexDirection: 'column', alignItems: 'center' }} >
                 <Ionicons name='person-outline' size={24} color={selectedNav === "profile" ? "#5257E9" : "#A9A9AB" } />
                 <CustomText text="Profile" textStyle={{ fontSize: 10, lineHeight: 14, fontWeight: 600, color: selectedNav === "profile" ? "#5257E9" : "#A9A9AB", marginTop: 4 }} />
             </Pressable>

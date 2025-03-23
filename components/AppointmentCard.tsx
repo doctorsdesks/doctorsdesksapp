@@ -88,7 +88,7 @@ const AppointmentCard: React.FC<AppointmentCardProps> = ({ appointment, width, h
         >
             <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', borderBottomWidth: 1, borderBottomColor: "#F1F1F1" }} >
                 <View style={{ height: 70, width: 70, borderRadius: 100, display: 'flex', alignItems: 'center', flexDirection: 'row', justifyContent: 'center', backgroundColor: "#2DB9B0" }} >
-                    {appointment?.patientImageUrl !== ""
+                    {appointment?.patientImageUrl && appointment?.patientImageUrl !== ""
                     ?
                         <Image source={{uri: appointment?.patientImageUrl}} resizeMode='cover' height={70} width={70} style={{ height: 70, width: 70, borderRadius: 100 }} />  
                     :
@@ -105,8 +105,8 @@ const AppointmentCard: React.FC<AppointmentCardProps> = ({ appointment, width, h
                         <Ionicons name='time-outline' size={16} />
                         <CustomText textStyle={{ marginLeft: 8, fontSize: 12, lineHeight: 16, fontWeight: 400, color: "#32383D" }}  text={changeTimeToAmPm(appointment?.startTime)}/>
                     </View>
-                    <View style={{ marginTop: 6, marginBottom: 10, paddingHorizontal: 6, paddingVertical: 2, borderRadius: 40, backgroundColor: "#1EA6D6", display: 'flex', alignItems: 'center', justifyContent: 'center' }} >
-                        <CustomText multiLingual={true} textStyle={{ fontSize: 10, lineHeight: 16, fontWeight: 600, color: "#FFFFFF" }} text={appointment?.appointmentType === "OPD" ? "Normal" : "Emergency Appointment"} />
+                    <View style={{ marginTop: 6, marginBottom: 10, paddingHorizontal: 6, paddingVertical: 3, borderRadius: 40, backgroundColor: "#1EA6D6", display: 'flex', alignItems: 'center', justifyContent: 'center' }} >
+                        <CustomText multiLingual={true} textStyle={{ fontSize: 11, lineHeight: 16, fontWeight: 600, color: "#FFFFFF" }} text={appointment?.appointmentType === "OPD" ? "Normal Appointment" : "Emergency Appointment"} />
                     </View>
                 </View>
                 {appointment?.status !== AppointmentStatus.PENDING && 
