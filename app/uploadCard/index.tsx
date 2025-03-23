@@ -53,6 +53,11 @@ const UploadCard = () => {
                 })
                 const newSignUpDetails = { ...signUpDetails, idProofDetails: newDocData}
                 setSignUpDetails(newSignUpDetails);
+                Toast.show({
+                    type: 'success',  
+                    text1: 'Image uploaded Successfully.',
+                    visibilityTime: 3000,
+                });
                 router.replace({
                     pathname: '/signup',
                     params: {

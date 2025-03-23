@@ -15,7 +15,7 @@ export default function Layout() {
         text2Style={{ fontSize: 14 }}
         renderTrailingIcon={() => (
           <Pressable onPress={() => Toast.hide()} style={{ justifyContent: "center", alignItems: "center", padding: 10 }}>
-            <Ionicons name='close-circle-outline' size={20} color="red" />
+            <Ionicons name='close-circle-outline' size={20} color="#2DB9B0" />
           </Pressable>
         )}
       />

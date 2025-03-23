@@ -51,6 +51,16 @@ export const signUpDetailsInitial = {
             errorMessage: "Please enter a valid email Id",
         },
         {
+            id: "dob",
+            type: "STRING",
+            inputType: "DATE",
+            value: "",
+            label: "Date Of Birth",
+            isMandatory: true,
+            errorMessage: "Please provide your date of birth",
+            placeholder: "21-12-1999"
+        },
+        {
             id: "experience",
             type: "STRING",
             inputType: "NUMBER",

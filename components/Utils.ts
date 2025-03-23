@@ -15,11 +15,6 @@ export const uploadFile = async (fileUri: any, fileName: string, phoneNumber: st
         });
         await task;
         const downloadUrl = await storageRef.getDownloadURL();
-        Toast.show({
-            type: 'success',  
-            text1: 'Image uploaded Successfully.',
-            visibilityTime: 3000,
-        });
         return {
             data: downloadUrl,
             status: "SUCCESS"

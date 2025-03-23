@@ -83,11 +83,6 @@ const Login = () => {
     const handleOtpTrigger = () => {
 
         if(testingNumbers.includes(phoneNumber.value)){
-            Toast.show({
-                type: 'success',  
-                text1: 'OTP triggered successfully.',
-                visibilityTime: 3000,
-            });
             const newSignUpDetails = { ...signUpDetails, phoneOTPDetails: {
                     phoneNumber: phoneNumber.value,
                     otp: otp.value,
@@ -117,11 +112,6 @@ const Login = () => {
         try {
             const confirmation = await auth().signInWithPhoneNumber(completeNumber);
             setLoader(false);
-            Toast.show({
-                type: 'success',  
-                text1: 'OTP triggered successfully.',
-                visibilityTime: 3000,
-            });
             const newSignUpDetails = { ...signUpDetails, phoneOTPDetails: {
                     phoneNumber: phoneNumber.value,
                     otp: otp.value,
@@ -143,20 +133,10 @@ const Login = () => {
     const confirmCode = async () => { 
         setLoader(true);
         if(otp.value === "123456"){
-            Toast.show({
-                type: 'success',  
-                text1: `OTP confirmed`,
-                visibilityTime: 3000,
-            });
             CheckForUserExist();
         } else {
             try {
                 const responseOtp = await confirm.confirm(otp.value);
-                Toast.show({
-                    type: 'success',  
-                    text1: `OTP confirmed`,
-                    visibilityTime: 3000,
-                });
                 CheckForUserExist();
             } catch (error: any) {
                 Toast.show({
@@ -200,11 +180,6 @@ const Login = () => {
                 // existing doctor
                 setSignUpDetails(signUpDetailsInitial);
                 setDoctorDetails({ ...data.data })
-                Toast.show({
-                    type: 'success',  
-                    text1: `Welcome ${data.data.name}`,
-                    visibilityTime: 3000,
-                });
                 saveSecureKey("doctorId", data.data.phone);
                 saveSecureKey("isUserLoggedIn", "true");
                 setLoader(false);

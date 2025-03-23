@@ -84,7 +84,9 @@ const IdProofUploadCard: React.FC<IdProofUploadCardProps> = ({ data, onChange, h
                 </Text>
                 <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-around', marginTop: 16 }} >
                     <View style={{ height: 100, width: 140, borderWidth: 1, borderColor: "#D9D9D9", borderRadius: 8, justifyContent: 'center', alignItems: 'center' }} >
-                        {!frontUri ?
+                        {frontUri && frontUri?.uri !== "" ?
+                            <ViewImage resizeMode='cover' height={66} width={100} style={{ borderRadius: 8 }} data={frontUri} />
+                        :
                             <Pressable style={{ display:'flex', alignItems: 'center' }} onPress={() => pickImage('FRONT')} >
                                 <Entypo name="image-inverted" size={32} color="#A9A9AB" />
                                 <Text style={{ marginTop: 8}} >Front Photo</Text>
@@ -94,12 +96,12 @@ const IdProofUploadCard: React.FC<IdProofUploadCardProps> = ({ data, onChange, h
                                     </Text>
                                 </View>
                             </Pressable>
-                        :
-                            <ViewImage resizeMode='cover' height={66} width={100} style={{ borderRadius: 8 }} data={frontUri} />
                         }
                     </View>
                     <View style={{ height: 100, width: 140, borderWidth: 1, borderColor: "#D9D9D9", borderRadius: 8, justifyContent: 'center', alignItems: 'center' }} >
-                        {!backUri ?
+                        {backUri && backUri?.uri !== "" ?
+                            <ViewImage resizeMode='cover' height={66} width={100} style={{ borderRadius: 8 }} data={backUri} />
+                        : 
                             <Pressable style={{ display: 'flex', alignItems: 'center' }} onPress={() => pickImage('BACK')} >
                                 <Entypo name="image-inverted" size={32} color="#A9A9AB" />
                                 <Text style={{ marginTop: 8}} >Back Photo</Text>
@@ -109,8 +111,6 @@ const IdProofUploadCard: React.FC<IdProofUploadCardProps> = ({ data, onChange, h
                                     </Text>
                                 </View>
                             </Pressable>
-                        : 
-                            <ViewImage resizeMode='cover' height={66} width={100} style={{ borderRadius: 8 }} data={backUri} />
                         }
                     </View>
                 </View>
