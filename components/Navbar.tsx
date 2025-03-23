@@ -1,5 +1,5 @@
 import React from 'react';
-import { Dimensions, Pressable, Text, View } from 'react-native';
+import { Dimensions, Pressable, View } from 'react-native';
 import CustomText from './CustomText';
 
 export interface NavbarProps {
