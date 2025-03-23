@@ -12,7 +12,7 @@ const LowerPanel: React.FC<LowerPanelProps> = ({ children, closeLoserPanel }) =>
 
     return (
         <Pressable 
-            style={{ position: 'absolute', height, zIndex: 9, backgroundColor: "rgba(110, 114, 118, 0.3)", top: -50, width, marginLeft: -16 }}
+            style={{ position: 'absolute', height, zIndex: 9, backgroundColor: "rgba(110, 114, 118, 0.3)", top: -64, width, marginLeft: -16 }}
             onPress={closeLoserPanel}
         >
             <Pressable 

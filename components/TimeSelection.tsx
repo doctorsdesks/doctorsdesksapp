@@ -27,7 +27,7 @@ const TimePicker: React.FC<TimePickerProps> = ({ handleTimeSelection, title, tim
 
   useEffect(() => {
     if (time) {
-        const [hh, mm] = time.split(":");
+        const [hh, other] = time?.split(":");
         if (parseInt(hh) > 12) {
             setSelectedPeriod("PM");
             let currentHh = parseInt(hh) - 12;
@@ -36,8 +36,10 @@ const TimePicker: React.FC<TimePickerProps> = ({ handleTimeSelection, title, tim
             }
             setSelectedHour((currentHh).toString());
         } else {
+            setSelectedHour(hh);
             setSelectedPeriod("AM");
         }
+        const [mm] = other?.split(" ");
         setSelectedMinute(mm);
     }
   }, [time]);

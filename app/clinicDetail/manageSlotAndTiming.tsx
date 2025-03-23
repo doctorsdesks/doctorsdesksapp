@@ -3,6 +3,7 @@ import CustomInput2 from '@/components/CustomInput2';
 import CustomText from '@/components/CustomText';
 import Loader from '@/components/Loader';
 import MainHeader from '@/components/MainHeader';
+import ManageSlotTiming from '@/components/ManageSlotTiming';
 import { changeTimeToAmPm, changeTimeTwentyFourHours, getClinics } from '@/components/Utils';
 import { StringObject } from '@/constants/Enums';
 import { URLS } from '@/constants/Urls';
@@ -11,11 +12,12 @@ import { Ionicons } from '@expo/vector-icons';
 import axios from 'axios';
 import { router, useLocalSearchParams } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import { BackHandler, Dimensions, Pressable, Text, View } from 'react-native';
+import { BackHandler, Dimensions, Pressable, ScrollView, Text, View } from 'react-native';
 import Toast from 'react-native-toast-message';
 
 const ManageSlotDurationAndTiming = () => {
-    const { doctorDetails, clinicTimings, setClinicTimings, slotDuration, setSlotDuration } = useAppContext();
+    const scrollViewRef = React.useRef(null);
+    const { doctorDetails } = useAppContext();
     const { isEditablePath } = useLocalSearchParams();
     const { height, width } = Dimensions.get('window');
     const [slotDurationObject, setSlotDurationObject] = useState<StringObject>({
@@ -33,6 +35,8 @@ const ManageSlotDurationAndTiming = () => {
     const [loader, setLoader] = useState<boolean>(false);
     const [timings, setTimings] = useState<any>([]);
     const [clinicId, setClinicId] = useState<string>("");
+    const [isAddSlots, setIsAddSlots] = useState<boolean>(false);
+    const [eachDayChange, setEachDayChange] = useState<any>(null);
 
     useEffect(() => {
         const backAction = () => {
@@ -54,7 +58,7 @@ const ManageSlotDurationAndTiming = () => {
                 setClinicId(timingDetails?._id);
                 const comingSlotDuration = timingDetails?.slotDuration || "";
                 let comingSlotTimings = timingDetails?.clinicTimings || [];
-                setSlotDuration(comingSlotDuration);
+                setSlotDurationObject({ ...slotDurationObject, value: JSON.stringify(comingSlotDuration) });
                 comingSlotTimings = comingSlotTimings?.map((day: any) => {
                     let newTimings = [...day?.timings];
                     newTimings = newTimings?.map((eachTime: any) => {
@@ -62,7 +66,7 @@ const ManageSlotDurationAndTiming = () => {
                     })
                     return { ...day, timings: newTimings };
                 })
-                setClinicTimings(JSON.stringify(comingSlotTimings));
+                setTimings(comingSlotTimings);
                 if (comingSlotDuration === "" && comingSlotTimings?.length === 0) {
                     setIsEditable(true);
                 }
@@ -76,34 +80,20 @@ const ManageSlotDurationAndTiming = () => {
                 setLoader(false);
             }
         }
-        if (clinicTimings && clinicTimings !== "") {
-            setTimings(JSON.parse(clinicTimings));
-        } else {
-            getTimingDetails();
-        }
-    },[doctorDetails, clinicTimings])
-
-    useEffect(() => {
-        if (slotDuration) {
-            setSlotDurationObject({ ...slotDurationObject, value: slotDuration });
-        }
-    }, [slotDuration])
+       getTimingDetails();
+    },[doctorDetails])
 
     const handleSlotChange = (value: string) => {
-        setSlotDuration(value);
+        setSlotDurationObject({ ...slotDurationObject, value: value });
     }
 
     const handlAddSlots = () => {
-        router.replace("/clinicDetail/manageSlotTiming");
+        setIsAddSlots(true);
     }
 
     const handleClickEachDay = (day: string) => {
-        router.replace({
-            pathname: "/clinicDetail/manageSlotTiming",
-            params: {
-                eachDayChange: day
-            }
-        });
+        setIsAddSlots(true);
+        setEachDayChange(day);
     }
 
     const handleSave = () => {
@@ -112,13 +102,15 @@ const ManageSlotDurationAndTiming = () => {
             setIsEditable(false)
             updateClinic()
         } else {
-            setSlotDurationObject({ ...slotDurationObject, isDisabled: false })
+            const newObject = { ...slotDurationObject };
+            newObject.isDisabled = false;
+            setSlotDurationObject(newObject)
             setIsEditable(true);
         }
     }
 
     const updateClinic = async () => {
-        let finalTimings = JSON.parse(clinicTimings);
+        let finalTimings = timings;
         finalTimings = finalTimings?.filter((day: any) => day?.timings && day?.timings?.length > 0);
         finalTimings = finalTimings?.map((day: any) => {
             let timings = [...day?.timings];
@@ -129,7 +121,7 @@ const ManageSlotDurationAndTiming = () => {
         });
         const updateData = {
             timingPayload: {
-                slotDuration: slotDuration,
+                slotDuration: slotDurationObject?.value,
                 eachDayInfo: finalTimings
             }
         }
@@ -162,70 +154,94 @@ const ManageSlotDurationAndTiming = () => {
         }
     }
 
+    const handleSetTiming = (data: any) => {
+        setIsAddSlots(false);
+        setEachDayChange(null);
+        setTimings(data);
+    }
+
     return (
-        <View style={{ marginHorizontal: 16, marginTop: 52, position: 'relative', height }} >
-            <MainHeader selectedNav='manageSlotAndTiming' />
-            <View style={{ marginTop: 32 }} >
-                <View>
-                    {isEditable ?
-                        <CustomInput2 data={slotDurationObject} onChange={(value) => handleSlotChange(value)} />
-                    :   slotDurationObject?.value === "" ? 
-                            <CustomText multiLingual={true} textStyle={{ fontSize: 16, lineHeight: 20, fontWeight: 600, color: "#32383D" }} text="Please add slot duration" />
-                        :
-                            <CustomInput2 data={slotDurationObject} onChange={(value) => handleSlotChange(value)} />
-                    }
-                </View>
+        <View style={{ marginHorizontal: 16, marginTop: 52 }} >
+            <MainHeader selectedNav={ isAddSlots ? 'manageSlotTiming' : 'manageSlotAndTiming'} />
+            {!isAddSlots && <View style={{ position: 'relative', height }}>
                 <View style={{ marginTop: 32 }} >
-                    <CustomText multiLingual={true} textStyle={{ fontSize: 16, lineHeight: 20, fontWeight: 600, color: "#32383D" }} text="Slot Timings" />
-                </View>
-                <View style={{ marginTop: 8 }}  >
-                    {timings?.length > 0 ?
-                        <View>
-                            {timings?.map((timing: any) => {
-                                if (timing?.timings?.length > 0) {
-                                    return (
-                                        <View key={timing?.day} style={{ borderWidth: 1, borderColor: "#DDDDDD", borderRadius: 8, paddingHorizontal: 16, paddingVertical: 12, display: 'flex', flexDirection:  'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 12 }} >
-                                            <View>
-                                                <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-                                                    <Ionicons size={20} color={"#2DB9B0"} name='calendar' />
-                                                    <Text style={{ fontSize: 16, lineHeight: 20, fontWeight: 600, color: "#32383D", marginLeft: 8 }} >
-                                                        {timing?.day}
-                                                    </Text>
-                                                </View>
-                                                <View style={{ marginTop: 10, marginLeft: 20 }} >
-                                                    {timing?.timings?.map((eachTime: any) => {
-                                                        return (
-                                                            <View key={eachTime?.startTime + "-" + eachTime?.end}  style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginBottom: 8 }} >
-                                                                <Ionicons size={16} color={"#1EA6D6"} name='timer' />
-                                                                <Text style={{ fontSize: 12, lineHeight: 14, fontWeight: 400, color: "#1EA6D6", marginLeft: 8 }} >
-                                                                    {eachTime?.startTime} - {eachTime?.endTime}
-                                                                </Text>
-                                                            </View>
-                                                        )
-                                                    })}
-                                                </View>
-                                            </View>
-                                            <Pressable onPress={() => handleClickEachDay(timing?.day)} >
-                                                <Ionicons size={24} color={"#32383D"} name='chevron-forward' />
-                                            </Pressable>
-                                        </View>
-                                    )
-                                } else {
-                                    return <></>
-                                }
-                            })}
-                        </View>
-                    :
-                        <CustomText multiLingual={true} textStyle={{ marginTop: 12, fontSize: 14, lineHeight: 21, fontWeight: 600, color: "red" }} text="Please add slots" />
-                    }
-                    <View style={{ display: "flex", alignItems: "center", marginTop: 24, marginBottom: 32 }} >
-                        <CustomButton multiLingual={true} width='FULL' title="Add Slots" onPress={handlAddSlots} isDisabled={!isEditable} />
+                    <View>
+                        {isEditable ?
+                            <CustomInput2 data={slotDurationObject} onChange={(value) => handleSlotChange(value)} />
+                        :   slotDurationObject?.value === "" ?
+                                <CustomText multiLingual={true} textStyle={{ fontSize: 16, lineHeight: 20, fontWeight: 600, color: "#32383D" }} text="Please add slot duration" />
+                            :
+                                <CustomInput2 data={slotDurationObject} onChange={(value) => handleSlotChange(value)} />
+                        }
                     </View>
+                    <View style={{ marginTop: 32 }} >
+                        <CustomText multiLingual={true} textStyle={{ fontSize: 16, lineHeight: 20, fontWeight: 600, color: "#32383D" }} text="Slot Timings" />
+                    </View>
+                    <ScrollView
+                        ref={scrollViewRef}
+                        style={{ 
+                            display: 'flex',
+                            backgroundColor: "#F9F9F9",
+                            borderRadius: 8,
+                            borderColor: "#DDDDDD",
+                            marginTop: 12,
+                            borderWidth: 1,
+                            paddingHorizontal: 12,
+                            paddingVertical: 16,
+                            maxHeight: height - 300
+                        }}
+                    >
+                        <View style={{ paddingBottom: 12 }} >
+                            {timings?.length > 0 ?
+                                <View>
+                                    {timings?.map((timing: any) => {
+                                        if (timing?.timings?.length > 0) {
+                                            return (
+                                                <View key={timing?.day} style={{ borderWidth: 1, borderColor: "#DDDDDD", borderRadius: 8, paddingHorizontal: 16, paddingVertical: 12, display: 'flex', flexDirection:  'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 12 }} >
+                                                    <View>
+                                                        <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+                                                            <Ionicons size={20} color={"#2DB9B0"} name='calendar' />
+                                                            <Text style={{ fontSize: 16, lineHeight: 20, fontWeight: 600, color: "#32383D", marginLeft: 8 }} >
+                                                                {timing?.day}
+                                                            </Text>
+                                                        </View>
+                                                        <View style={{ marginTop: 10, marginLeft: 20 }} >
+                                                            {timing?.timings?.map((eachTime: any, i: number) => {
+                                                                return (
+                                                                    <View key={eachTime?.startTime + "-" + eachTime?.end + "_" + i}  style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginBottom: 8 }} >
+                                                                        <Ionicons size={16} color={"#1EA6D6"} name='timer' />
+                                                                        <Text style={{ fontSize: 12, lineHeight: 14, fontWeight: 400, color: "#1EA6D6", marginLeft: 8 }} >
+                                                                            {eachTime?.startTime} - {eachTime?.endTime}
+                                                                        </Text>
+                                                                    </View>
+                                                                )
+                                                            })}
+                                                        </View>
+                                                    </View>
+                                                    <Pressable onPress={() => handleClickEachDay(timing?.day)} >
+                                                        <Ionicons size={24} color={"#32383D"} name='chevron-forward' />
+                                                    </Pressable>
+                                                </View>
+                                            )
+                                        } else {
+                                            return <></>
+                                        }
+                                    })}
+                                </View>
+                            :
+                                <CustomText multiLingual={true} textStyle={{ marginTop: 4, fontSize: 14, lineHeight: 21, fontWeight: 600, color: "red" }} text="No slot exist, Please click on Update and Add Slots" />
+                            }
+                            <View style={{ display: "flex", alignItems: "center", marginTop: 24, marginBottom: 12 }} >
+                                <CustomButton multiLingual={true} width='FULL' title="Add Slots" onPress={handlAddSlots} isDisabled={!isEditable} />
+                            </View>
+                        </View>
+                    </ScrollView>
                 </View>
-            </View>
-            <View style={{ display: "flex", alignItems: "center", marginTop: 24, position: 'absolute', bottom: 100, width: width - 32 }} >
-                    <CustomButton width='FULL' title={isEditable ? "Save" : "Update"} onPress={handleSave} />
-            </View>
+                <View style={{ display: "flex", alignItems: "center", position: 'absolute', top: height - 116, width: width - 32 }} >
+                        <CustomButton width='FULL' title={isEditable ? "Save" : "Update"} onPress={handleSave} />
+                </View>
+            </View>}
+            {isAddSlots && <ManageSlotTiming eachDayChange={eachDayChange} timings={timings} setTimings={(data: any) => handleSetTiming(data)} />}
             {loader && <Loader />}
         </View>
     );

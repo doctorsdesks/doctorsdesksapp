@@ -19,7 +19,7 @@ const CustomSwitch: React.FC<CustomSwitchProps> = ({ isActive, onClick, isDisabl
                 style={{ 
                     height: 20, 
                     width: 20, 
-                    backgroundColor: isActive ? "#1EA6D6" : "#F4F5F8", 
+                    backgroundColor: isActive ? "#1EA6D6" : "#92949C", 
                     borderRadius: 20, 
                     position: 'absolute', 
                     zIndex: 2, top: -3, 
