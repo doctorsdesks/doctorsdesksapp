@@ -13,6 +13,7 @@ interface CustomRadioProps {
     isMandatory: boolean;
     errorMessage?: string;
     options: Array<'MALE' | 'FEMALE' | 'OTHER'>;
+    isDisabled?: boolean;
   };
   onChange: (value: string, id: string) => void;
 }
@@ -20,7 +21,7 @@ interface CustomRadioProps {
 const CustomRadio: React.FC<CustomRadioProps> = ({ data, onChange }) => {
   const { translations, selectedLanguage } = useAppContext();
   const [selectedValue, setSelectedValue] = useState(data.value);
-  const { id, label, isMandatory, options } = data;
+  const { id, label, isMandatory, options, isDisabled } = data;
 
   const handleSelect = (value: string) => {
     setSelectedValue(value);
@@ -30,7 +31,7 @@ const CustomRadio: React.FC<CustomRadioProps> = ({ data, onChange }) => {
   return (
     <View>
       <Text style={[styles.label]}>
-        {finalText(label, translations, selectedLanguage)} {isMandatory && <Text style={styles.mandatory}>*</Text>}
+        {finalText(label, translations, selectedLanguage)} {isMandatory && !isDisabled && <Text style={styles.mandatory}>*</Text>}
       </Text>
       <View style={styles.optionsContainer}>
         {options.map((option) => (
@@ -50,9 +51,9 @@ const CustomRadio: React.FC<CustomRadioProps> = ({ data, onChange }) => {
                     justifyContent: 'center',
                     marginRight: 10,
                 }}
-                onPress={() => handleSelect(option)}
+                onPress={() => !isDisabled && handleSelect(option)}
             />
-            <Pressable onPress={() => handleSelect(option)}>
+            <Pressable onPress={() => !isDisabled && handleSelect(option)}>
               <Text
                 style={[
                   styles.optionText,

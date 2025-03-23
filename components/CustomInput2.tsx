@@ -24,7 +24,7 @@ const CustomInput2: React.FC<CustomInput2Props> = ({ data, onChange, handleFocus
   const { translations, selectedLanguage } = useAppContext();
   const [isFocused, setIsFocused] = useState(false);
   const [isError, setIsError] = useState(false);
-  const { label, value, isMandatory, errorMessage, placeholder, inputType, id } = data;
+  const { label, value, isMandatory, errorMessage, placeholder, inputType, id, isDisabled } = data;
 
   const handleBlurLocal = () => {
     handleBlur && handleBlur(data?.value);
@@ -76,7 +76,7 @@ const CustomInput2: React.FC<CustomInput2Props> = ({ data, onChange, handleFocus
   return (
     <View>
         <Text style={[styles.label, isFocused && styles.labelFocused, isError && styles.labelError]}>
-          {finalText(label, translations, selectedLanguage)} {isMandatory && <Text style={styles.mandatory}>*</Text>}
+          {finalText(label, translations, selectedLanguage)} {isMandatory && !isDisabled && <Text style={styles.mandatory}>*</Text>}
         </Text>
         {data?.isDisabled ? 
           <View
