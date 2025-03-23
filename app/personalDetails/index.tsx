@@ -358,7 +358,7 @@ const PersonalDetailsSetting = () => {
                             display: 'flex',
                             backgroundColor: "#F9F9F9",
                             borderRadius: 8,
-                            maxHeight: height - 336,
+                            maxHeight: isEditable ? isKeyboardOpen ? height - 426 : height - 366 : height - 336,
                             borderColor: "#DDDDDD",
                             marginTop: 16,
                             borderWidth: 1,
@@ -374,7 +374,7 @@ const PersonalDetailsSetting = () => {
                                     )
                                 })}
                     </ScrollView>
-                    <View style={{ display: "flex", alignItems: "center", marginBottom: 12, position: 'absolute', bottom: 0, right: 0, left: 0 }} >
+                    <View style={{ display: "flex", alignItems: "center", position: 'absolute', top: height - 166, right: 0, left: 0 }} >
                         <CustomButton multiLingual={true} width='FULL' title={isEditable ? "Save" : "Update"} onPress={handleButtonClick} />
                     </View>
                 </View>

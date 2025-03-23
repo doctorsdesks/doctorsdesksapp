@@ -13,10 +13,6 @@ interface AppContextType {
   setDoctorDetails: (data: any) => void;
   translations: any;
   setTranslations: (data: any) => void;
-  clinicTimings: string;
-  setClinicTimings: (data: any) => void;
-  slotDuration: string;
-  setSlotDuration: (data: string) => void;
   selectedLanguage: string;
   setSelectedLanguage: (language: string) => void;
 }
@@ -30,8 +26,6 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
   const [signUpDetails, setSignUpDetails] = React.useState(signUpDetailsInitial);
   const [doctorDetails, setDoctorDetails] = React.useState({});
   const [translations, setTranslations] = React.useState<any>({});
-  const [clinicTimings, setClinicTimings] = React.useState("");
-  const [slotDuration, setSlotDuration] = React.useState<string>("");
   const [selectedLanguage, setSelectedLanguage] = useState<string>("");
 
   useEffect(() => {
@@ -78,10 +72,6 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
         setDoctorDetails,
         translations,
         setTranslations,
-        clinicTimings,
-        setClinicTimings,
-        slotDuration,
-        setSlotDuration,
         selectedLanguage,
         setSelectedLanguage
       }}>

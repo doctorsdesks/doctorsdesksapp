@@ -217,7 +217,7 @@ const ClinicDetailsSetting = () => {
                         borderWidth: 1,
                         paddingHorizontal: 12,
                         paddingVertical: 16,
-                        maxHeight: isKeyboardOpen ? height - 400 : height -  200,
+                        maxHeight: isEditable ? isKeyboardOpen ? height - 400 : height - 160 : height -  200,
                     }}
                 >
                     {clinicData?.clinicInfo?.map((item: any) => {
@@ -228,9 +228,9 @@ const ClinicDetailsSetting = () => {
                         )
                     })}
                 </ScrollView>
-                <View style={{ display: "flex", alignItems: "center", marginBottom: 0, position: 'absolute', left: 0, right: 0, bottom: 0 }} >
-                    <CustomButton width='FULL' title={isEditable ? "Save" : "Update"} onPress={handleButtonClick} />
-                </View>
+            </View>
+            <View style={{ display: "flex", alignItems: "center", position: 'absolute', left: 0, right: 0, top: height - 76 }} >
+                <CustomButton width='FULL' title={isEditable ? "Save" : "Update"} onPress={handleButtonClick} />
             </View>
             {loader && <Loader />}
         </View>
