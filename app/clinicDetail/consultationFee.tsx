@@ -28,6 +28,17 @@ const ConsultationFee = () => {
             errorMessage: "Please enter consultation fee",
             placeholder: "e.g 200",
             isDisabled: true,
+        },
+        {
+            id: "emergencyFee",
+            type: "STRING",
+            inputType: "AMOUNT",
+            value: "",
+            label: "Emergency Fee",
+            isMandatory: true,
+            errorMessage: "Please enter emergency fee",
+            placeholder: "e.g 200",
+            isDisabled: true,
         }
     ]);
     const [clinicId, setClinicId] = useState<string>("");
@@ -50,8 +61,11 @@ const ConsultationFee = () => {
             if (respnose.status === "SUCCESS") {
                 const clinicDetails = respnose.data;
                 setClinicId(clinicDetails?._id);
-                const consultationFee = clinicDetails?.appointmentFee || "";
-                handleChange(consultationFee);
+                const finalData = data?.map((item: any) => {
+                    if (item?.id === "consultationFee") return { ...item, value: JSON.stringify(clinicDetails?.appointmentFee) }
+                    if (item?.id === "emergencyFee") return { ...item, value: JSON.stringify(clinicDetails?.emergencyFee) }
+                })
+                setData(finalData);
                 setLoader(false);
             } else {
                 Toast.show({
@@ -79,18 +93,22 @@ const ConsultationFee = () => {
         }
     }
 
-    const handleChange = (value: string) => {
-        let newData = [...data];
-        newData = newData?.map((eachData: StringObject) => {
-            return { ...eachData, value: value }
+    const handleChange = (value: string, id: string) => {
+        const newData = [...data];
+        const finalData = newData.map((item: any) => {
+            if (item.id === id) {
+                return { ...item, value }; 
+            }
+            return item;
         });
-        setData(newData);
-    }
+        setData(finalData); 
+}
 
     const updateClinic = async () => {
         const updateData = {
             feeFollowupPayload: {
-                appointmentFee: data[0]?.value,
+                appointmentFee: data?.find((item: any) => item?.id === "consultationFee")?.value || "",
+                emergencyFee: data?.find((item: any) => item?.id === "emergencyFee")?.value || "",
             }
         }
         const url = URLS.BASE + URLS.UPDATE_CLINIC + "/" + doctorDetails?.phone + "/" + clinicId;
@@ -129,11 +147,13 @@ const ConsultationFee = () => {
             <View style={{ marginTop: 32, borderWidth: 1, borderRadius: 8, borderColor: "#DDDDDDDD", padding: 16 }} >
                 {data?.map((item: StringObject) => {
                     return (
-                        <CustomInput2 data={item} onChange={(value) => handleChange(value)} />
+                        <View key={item?.id} style={{ marginBottom: 16, paddingBottom: 12 }} >
+                            <CustomInput2 key={item?.id} data={item} onChange={(value) => handleChange(value, item?.id)} />
+                        </View>
                     )
                 })}
             </View>
-            <View style={{ display: "flex", alignItems: "center", marginTop: 24, position: 'absolute', bottom: 100, width: width - 32 }} >
+            <View style={{ display: "flex", alignItems: "center", position: 'absolute', top: height - 80, width: width - 32 }} >
                     <CustomButton multiLingual={true} width='FULL' title={isEditable ? "Save" : "Update"} onPress={handleSave} />
             </View>
             {loader && <Loader />}

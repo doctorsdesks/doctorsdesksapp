@@ -97,7 +97,7 @@ const MainHeader: React.FC<MainHeaderProps> = ({ selectedNav, title = "" }) => {
     return (
         <View style={{ display: 'flex', position: 'relative', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginBottom: 16 }} >
             {selectedNav !== "home" && <Pressable style={{ position: 'absolute', left: 0 }} onPress={handleBackNav}>
-                <Ionicons name="arrow-back" size={24} color="black" />
+                <Ionicons name="arrow-back" size={24} color="black" style={{ paddingRight: 12 }} />
             </Pressable>}
             <CustomText text={finalText(showtext(), translations, selectedLanguage)} textStyle={{ fontSize: 16, fontWeight: 600, color: "#32383D", lineHeight: 22, textTransform: title ? "capitalize" : "" }} />
         </View>
