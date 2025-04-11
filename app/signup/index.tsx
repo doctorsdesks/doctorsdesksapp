@@ -13,8 +13,10 @@ import axios from 'axios';
 import Toast from 'react-native-toast-message';
 import Loader from '@/components/Loader';
 import SearchSelect from '@/components/SearchSelect';
-import { getValueById, saveSecureKey } from '@/components/Utils';
+import { getConfig, getValueById, saveSecureKey } from '@/components/Utils';
 import { signUpDetailsInitial, signUpHeaderDataInitial } from '@/context/InitialState';
+import { ThemedView } from '@/components/ThemedView';
+import { CONFIGS } from '@/constants/Enums';
 
 
 const SignUp = () => {
@@ -30,6 +32,7 @@ const SignUp = () => {
     const [showImage, setShowImage] = React.useState<boolean>(true);
     const [isKeyboardOpen, setIsKeyboardOpen] = React.useState<boolean>(false);
     const [loader, setLoader] = React.useState<boolean>(false);
+    const [specialisationOptions, setSpecialisationOptions] = React.useState<any>([]);
 
     useEffect(() => {
         if(signUpDetails){
@@ -64,8 +67,20 @@ const SignUp = () => {
 
         const backHandler = BackHandler.addEventListener("hardwareBackPress", backAction);
 
+        getSpecialisation();
+
         return () => backHandler.remove();
     }, []);
+
+    const getSpecialisation = async () => {
+        const response = await getConfig(CONFIGS.SPECIALISATION);
+
+        if (response?.status === "SUCCESS") {
+            const specialisation = response?.data?.data || [];
+            let finalSpec = specialisation?.map((item: any) => Object.keys(item)[0]);
+            setSpecialisationOptions(finalSpec);
+        }
+    }
 
     const handleChange = (value: string, id: string, detailType: string) => {
         if (detailType === "PD") {
@@ -197,7 +212,7 @@ const SignUp = () => {
             setDoctorDetails(updateData);
             setSignUpDetails(signUpDetailsInitial);
             saveSecureKey("isUserOnBoarded", "true");
-            saveSecureKey("isUserLoggedIn", "true");
+            saveSecureKey("userAuthtoken", "authtoken");
             router.replace("/successSignUp");
         } catch (error: any) {
             if (error?.status === 409) {
@@ -285,10 +300,13 @@ const SignUp = () => {
                     <CustomRadio data={item} onChange={(value, id) => handleChange(value, id, detailType)} />
                 )
                 break;
-            case "SEARCHSELECT":
-                return (
-                    <SearchSelect data={item} onChange={(value, id) => handleChange(value, id, detailType)} />
-                )
+            case "SEARCHSELECT": {
+                    let finalItem = { ...item };
+                    finalItem.options = specialisationOptions;
+                    return (
+                        <SearchSelect data={finalItem} onChange={(value, id) => handleChange(value, id, detailType)} />
+                    )
+                }
                 break;
             case "BOXES": 
                 return (
@@ -337,14 +355,13 @@ const SignUp = () => {
 
     return (loader ? <Loader /> 
         :
-            <View style={style.container} >
+            <ThemedView style={style.container} >
                 <SignUpHeader data={signUpHeaderData} />
                 {showImage && step === "PD" && <ImageUpload />}
                 <ScrollView
                     ref={scrollViewRef}
                     style={{ 
                         display: 'flex',
-                        backgroundColor: "#F9F9F9",
                         borderRadius: 8,
                         borderColor: "#DDDDDD",
                         marginTop: 16,
@@ -358,14 +375,13 @@ const SignUp = () => {
                 <View style={{ display: "flex", alignItems: "center", marginTop: 24 }} >
                     <CustomButton width='FULL' title="Continue" onPress={handleButtonClick} isDisabled={handleDisable()} />
                 </View>
-            </View>
+            </ThemedView>
     );
 }
 
 
 const style = StyleSheet.create({
     container: {
-        backgroundColor: "#FCFCFC",
         paddingHorizontal: 16, 
         paddingTop: 16,
         paddingBottom: 20,

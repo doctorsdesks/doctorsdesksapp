@@ -17,7 +17,7 @@ export default function () {
                         <Pressable onPress={() => {
                             if(signUpHeaderData?.find((item) => item?.label === "Personal Info")?.status === "STARTED") {
                                 setSignUpDetails(signUpDetailsInitial)
-                                router.replace("/login");
+                                router.replace("/login/numberPassword");
                             } else if (signUpHeaderData?.find((item) => item?.label === "Clinic Info")?.status === "STARTED"){
                                 const newHeaderData = signUpHeaderData?.map((item) => {
                                     if (item?.label === "Personal Info") return { ...item, status: "STARTED"};
@@ -58,6 +58,6 @@ export default function () {
 
 const styles = StyleSheet.create({
     icon: {
-        marginLeft: 12,
+        marginLeft: 0,
     },
 });

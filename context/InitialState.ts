@@ -20,6 +20,38 @@ export const signUpDetailsInitial = {
       otp: "",
     },
     imageUrl: "",
+    loginDetails: [
+        {
+            id: "number",
+            type: "STRING",
+            inputType: "NUMBER",
+            value: "",
+            label: "Mobile Number",
+            isMandatory: true,
+            errorMessage: "Please provide your valid phone nmber.",
+            placeholder: "9797979797",
+        },
+        {
+            id: "password",
+            type: "STRING",
+            inputType: "PASSWORD",
+            value: "",
+            label: "Password",
+            isMandatory: true,
+            errorMessage: "Please enter minimum 8 digit password.",
+            placeholder: "********",
+        },
+        {
+            id: "confirmPassword",
+            type: "STRING",
+            inputType: "PASSWORD",
+            value: "",
+            label: "Confirm Password",
+            isMandatory: true,
+            errorMessage: "Password does not match.",
+            placeholder: "********",
+        },
+    ],
     personalDetails: [
         {
             id: "fullName",
@@ -103,12 +135,12 @@ export const signUpDetailsInitial = {
         {
             id: "specialisation",
             type: "STRING",
-            inputType: "TEXT",
+            inputType: "SEARCHSELECT",
             value: "",
             label: "Specialisation",
             isMandatory: false,
             errorMessage: "Please enter a valid specialisation",
-            placeholder: "Enter specialisation",
+            placeholder: "Type for specialisation",
         },
         {
             id: "specialisationCollege",

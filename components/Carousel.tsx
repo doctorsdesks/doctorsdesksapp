@@ -1,7 +1,8 @@
 import React, { useRef, useState } from 'react';
 import { View, Text, Image, StyleSheet, ScrollView, Dimensions, Animated } from 'react-native';
+import { ThemedText } from './ThemedText';
 
-const { width } = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
 
 const carouselItems = [
   {
@@ -11,18 +12,18 @@ const carouselItems = [
   },
   {
     image: require('../assets/images/Girl_doctor.png'),
-    title: 'Second Slide',
-    description: 'Description for the second slide.',
+    title: 'Emergency Appointment',
+    description: 'Track emergency appointments in real-time for instant medical attention when every second counts.',
   },
   {
     image: require('../assets/images/caldendar.png'),
-    title: 'Easy Appointment Management',
-    description: 'Manage easily patients appointment & stay on top of your schedule.',
+    title: 'Choose Your Personal Time',
+    description: 'Easily lock appointment slots to reserve personal time and avoid unexpected bookings.',
   },
   {
     image: require('../assets/images/Girl_doctor.png'),
-    title: 'Second Slide',
-    description: 'Description for the fourth slide.',
+    title: 'Multilingual Support',
+    description: 'Communicate effortlessly with built-in multilingual support for a seamless user experience.',
   },
 ];
 
@@ -38,13 +39,13 @@ const Carousel = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { maxHeight: height - 180}]}>
       <Animated.ScrollView
         ref={scrollViewRef}
         horizontal
         pagingEnabled
         showsHorizontalScrollIndicator={false}
-        snapToInterval={width}
+        snapToInterval={width - 24}
         decelerationRate="fast"
         snapToAlignment="center"
         onScroll={Animated.event(
@@ -54,10 +55,10 @@ const Carousel = () => {
         scrollEventThrottle={16} // Change from 280 to 16 for smoother event updates
       >
         {carouselItems.map((item, index) => (
-          <View style={styles.carouselItem} key={index}>
+          <View style={[styles.carouselItem, { maxHeight: height - 336 }]} key={index}>
             <Image source={item.image} style={styles.image} resizeMode='contain' />
-            <Text style={styles.title}>{item.title}</Text>
-            <Text style={styles.description}>{item.description}</Text>
+            <ThemedText type='title' style={{ marginBottom: 24 }} >{item?.title}</ThemedText>
+            <ThemedText type='subtitle' lightColor='#8C8C8C' darkColor='#8C8C8C' style={{ marginBottom: 24, marginHorizontal: 24 }}>{item.description}</ThemedText>
           </View>
         ))}
       </Animated.ScrollView>
@@ -66,9 +67,9 @@ const Carousel = () => {
         {carouselItems.map((_, index) => {
           const widthAnimated = scrollX.interpolate({
             inputRange: [
-              (index - 1) * width,
-              index * width,
-              (index + 1) * width,
+              (index - 1) * (width - 24),
+              index * (width - 24),
+              (index + 1) * (width - 24),
             ],
             outputRange: [8, 24, 8],
             extrapolate: 'clamp',
@@ -95,33 +96,18 @@ const Carousel = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: 80,
-    maxHeight: 432,
+    marginTop: 40,
+    marginHorizontal: 12
   },
   carouselItem: {
-    width: width - 32,
+    width: width - 24,
     alignItems: 'center',
-    marginRight: 32,
-    marginLeft: 12,
-    maxHeight: 432,
   },
   image: {
-    width: width - 32,
-    height: 250,
-    marginBottom: 64,
-    alignSelf: 'flex-start',
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: '700',
+    width: width - 24,
+    height: 446,
     marginBottom: 32,
-    color: '#32383D',
-  },
-  description: {
-    fontWeight: '500',
-    fontSize: 14,
-    marginBottom: 24,
-    color: '#8C8C8C',
+    alignSelf: 'flex-start',
   },
   animatedBarContainer: {
     flexDirection: 'row',

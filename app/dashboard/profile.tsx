@@ -21,7 +21,7 @@ const Profile = () => {
                 allowBack: "false",
             }
         });
-        await saveSecureKey("isUserLoggedIn", "false");
+        await saveSecureKey("userAuthtoken", "");
     }
 
     useEffect(() => {

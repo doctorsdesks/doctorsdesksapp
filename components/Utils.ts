@@ -104,7 +104,7 @@ export const uploadFile = async (fileUri: any, fileName: string, phoneNumber: st
       const response = await axios.get(url,
         {
           headers: {
-            'X-Requested-With': 'doctorsdesks_web_app',
+            'X-Requested-With': 'nirvaanhealth_web_app',
           },
         }
       );
@@ -258,7 +258,7 @@ export const uploadFile = async (fileUri: any, fileName: string, phoneNumber: st
     }
   }
 
-  export const finalText = (text: string, translations: any, selectedLanguage: any) => {
+  export const finalText = (text: string, translations: any, selectedLanguage: any) => {  
     let currentText = text;
     if (text !== "") currentText = currentText?.toLowerCase();
     if (translations && translations[selectedLanguage] && (translations[selectedLanguage][currentText]) ) {
@@ -266,4 +266,34 @@ export const uploadFile = async (fileUri: any, fileName: string, phoneNumber: st
     } else {
         return text;
     }
-}
+  }
+
+  export const getConfig = async (type: string) => {
+    const url = URLS.BASE + URLS.GET_CONFIG + "?type=" + type;
+    try {
+        const response = await axios.get(url,
+            {
+              headers: {
+                'X-Requested-With': 'nirvaanhealth_web_app',
+              },
+            }
+          );
+        const { data, status } = response;
+        if (status === 200){
+            return {
+              status: "SUCCESS",
+              data: data.data,
+            }
+        } else {
+          return {
+            status: "FAILURE",
+            error: "Something wrong. Please try again.",
+          }
+        }
+    } catch (error: any) {
+        return {
+          status: "FAILURE",
+          error: error?.response?.data?.message
+        }
+    }
+  }

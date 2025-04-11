@@ -1,4 +1,6 @@
+import { Colors } from '@/constants/Colors';
 import { useAppContext } from '@/context/AppContext';
+import { useColorScheme } from '@/hooks/useColorScheme.web';
 import { Ionicons } from '@expo/vector-icons';
 import { router, Stack, useLocalSearchParams } from 'expo-router';
 import React from 'react';
@@ -7,13 +9,26 @@ import { Pressable, StyleSheet } from 'react-native';
 export default function () {
     const { allowBack } = useLocalSearchParams();
     const { signUpDetails, setSignUpDetails } = useAppContext();
+
+    const colorScheme = useColorScheme() || 'light';
     
-    const handleBackPress = () => {
-        if( signUpDetails?.phoneOTPDetails?.otpTriggered) {
-            setSignUpDetails({ ...signUpDetails, phoneOTPDetails: { ...signUpDetails.phoneOTPDetails, otpTriggered: false }})
-        } else {
+    // const handleBackPress = () => {
+    //     if( signUpDetails?.phoneOTPDetails?.otpTriggered) {
+    //         setSignUpDetails({ ...signUpDetails, phoneOTPDetails: { ...signUpDetails.phoneOTPDetails, otpTriggered: false }})
+    //     } else {
+    //         router.replace('/')
+    //     }
+    // }
+
+    const handleBackPress = (currentPage: string) => {
+        if (currentPage === "login") {
             router.replace('/')
-        }
+        } else if(currentPage === "numberPassword") {
+            router.replace('/login')
+        } 
+        // else if (currentPage === "singup") {
+        //     router.replace('/login/numberPassword');
+        // }
     }
 
     return (
@@ -30,8 +45,28 @@ export default function () {
                     {
                         title: 'Login',
                         headerLeft: () => (
-                            <Pressable onPress={handleBackPress}>
+                            <Pressable onPress={() => handleBackPress("login")}>
                                 <Ionicons style={styles.icon} name="arrow-back" size={24} color="black" />
+                            </Pressable>
+                        ),
+                        headerTitleAlign: 'center',
+                    }
+                }
+            />
+            <Stack.Screen
+                name="numberPassword"
+                options={allowBack === "false" ? 
+
+                    {
+                        title: 'Sign up',
+                        headerTitleAlign: 'center',
+                    }
+                :
+                    {
+                        title: 'Sign up',
+                        headerLeft: () => (
+                            <Pressable onPress={() =>handleBackPress("numberPassword")}>
+                                <Ionicons style={styles.icon} name="arrow-back" size={24} color={Colors[colorScheme].icon} />
                             </Pressable>
                         ),
                         headerTitleAlign: 'center',
@@ -44,6 +79,6 @@ export default function () {
 
 const styles = StyleSheet.create({
     icon: {
-        marginLeft: 12,
+        marginLeft: 0,
     },
 });

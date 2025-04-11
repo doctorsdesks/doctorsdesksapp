@@ -1,6 +1,7 @@
 import { StringObject } from '@/constants/Enums';
 import React, { useState, useEffect } from 'react';
 import { View, TextInput, Text, FlatList, Pressable, StyleSheet } from 'react-native';
+import { ThemedView } from './ThemedView';
 
 interface SearchSelectProps {
     data: StringObject;
@@ -16,6 +17,7 @@ const SearchSelect: React.FC<SearchSelectProps> = ({ data, onChange }) => {
     useEffect(() => {
         // Filter options based on search text
         const filteredOptions = data?.options?.filter((item) => item?.toLowerCase()?.includes(searchText?.toLowerCase()));
+        console.info("Sdfa", data?.options, filteredOptions)
         setFilteredOptions(filteredOptions || []);
     }, [searchText, data]);
 
@@ -47,13 +49,13 @@ const SearchSelect: React.FC<SearchSelectProps> = ({ data, onChange }) => {
 
 
     return (
-        <View style={styles.container}>
+        <ThemedView style={styles.container}>
             <Text style={[styles.label, isFocused && styles.labelFocused, isError && styles.labelError]}>
                 {data?.label}
                 {data?.isMandatory && <Text style={styles.mandatory}> *</Text>}
             </Text>
             <TextInput
-                placeholderTextColor={'#D9D9D9'}
+                placeholderTextColor={'#8C8C8C'}
                 style={[styles.input, isFocused && styles.inputFocused, isError && styles.inputError]}
                 placeholder={data?.placeholder}
                 value={searchText}
@@ -78,7 +80,7 @@ const SearchSelect: React.FC<SearchSelectProps> = ({ data, onChange }) => {
                     )}
                 />
             )}
-        </View>
+        </ThemedView>
     );
 };
 
@@ -88,7 +90,6 @@ const styles = StyleSheet.create({
         marginVertical: 10,
     },
     label: {
-        backgroundColor: '#FCFCFC',
         fontSize: 14,
         color: '#8C8C8C',
         marginBottom: 8,
@@ -119,7 +120,6 @@ const styles = StyleSheet.create({
         borderColor: '#ccc',
         borderTopWidth: 0,
         maxHeight: 150,
-        backgroundColor: '#fff',
         borderBottomLeftRadius: 5,
         borderBottomRightRadius: 5,
     },

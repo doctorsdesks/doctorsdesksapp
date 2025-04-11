@@ -2,39 +2,38 @@ import CustomButton from '@/components/CustomButton';
 import React, { useEffect } from 'react';
 import { BackHandler, Pressable, StyleSheet, View } from 'react-native';
 import { router } from 'expo-router';
-import Toast from 'react-native-toast-message';
 import Loader from '@/components/Loader';
 import { useAppContext } from '@/context/AppContext';
-import axios from 'axios';
-import { saveSecureKey } from '@/components/Utils';
 import { ThemedView } from '@/components/ThemedView';
 import CustomInput2 from '@/components/CustomInput2';
 import { ThemedText } from '@/components/ThemedText';
+import { signUpDetailsInitial } from '@/context/InitialState';
+import axios from 'axios';
+import Toast from 'react-native-toast-message';
 
-const Login = () => {
-    const { signUpDetails } = useAppContext();
+const NumberPassword = () => {
+    const { signUpDetails, setSignUpDetails } = useAppContext();
     const [loginDetails, setLoginDetails] = React.useState<any>([]);
 
     const [loader, setLoader] = React.useState<boolean>(false);
 
     useEffect(() => {
-        if(signUpDetails){
-            const details = signUpDetails?.loginDetails;
-            const finalDetails = details?.filter((item: { id: string }) => item?.id !== "confirmPassword" );
-            setLoginDetails(finalDetails);
-        }
-    }, [signUpDetails]);
-
-    useEffect(() => {
         const backAction = () => {
-            BackHandler.exitApp()
+            setSignUpDetails(signUpDetailsInitial)
+            router.replace("/login");
             return true;
         };
 
         const backHandler = BackHandler.addEventListener("hardwareBackPress", backAction);
-
         return () => backHandler.remove();
-    }, []);
+    },[])
+
+    useEffect(() => {
+        if(signUpDetails){
+            const details = signUpDetails?.loginDetails;
+            setLoginDetails(details);
+        }
+    }, [signUpDetails]);
 
     const handleChange = (value: string, id: string) => {
         let finalValue = value;
@@ -47,28 +46,30 @@ const Login = () => {
         }
         const currentData = loginDetails.map((item: any) => {
             if (item.id === id) {
-                return { ...item, value: finalValue }; 
+                if (item?.id === "confirmPassword") {
+                    const password = loginDetails?.find((item: { id: string }) => item?.id === "password")?.value;
+                    return { ...item, value: finalValue, isError: finalValue !== password };
+                } else {
+                    return { ...item, value: finalValue};
+                }
             }
             return item;
         });
         setLoginDetails(currentData);  
     }
 
-    const handleLogin = async () => {
+    const handleContinue = () => {
+        checkIfUserExist();
+    }
+
+    const checkIfUserExist = async () => {
         setLoader(true);
         
         const phone = loginDetails?.find((item: { id: string }) => item?.id === "number")?.value;
-        const password = loginDetails?.find((item: { id: string }) => item?.id === "password")?.value;
         
-        const updateData = {
-            phone,
-            password,
-            type: "DOCTOR"
-        }
-        
-        const url = "http://docter-api-service-lb-413222422.ap-south-1.elb.amazonaws.com/v1/user/login";
+        const url = "http://docter-api-service-lb-413222422.ap-south-1.elb.amazonaws.com/v1/user/doctor/" + phone;
         try {
-            const response = await axios.post(url, updateData,
+            const response = await axios.get(url,
                 {
                   headers: {
                     'X-Requested-With': 'nirvaanhealth_web_app',
@@ -76,16 +77,17 @@ const Login = () => {
                 }
               );
             const { data } = response;
-            if (data.data?.success) {
-                saveSecureKey("patientId", data.data?.user?.phone);
-                saveSecureKey("userAuthtoken", data.data?.user?.authToken);
-                router.replace("/dashboard");
-            } else {
+            if (data.data) {
                 Toast.show({
                     type: 'error',  
-                    text1: data.data.message || "Something went wrong!",
+                    text1: `User exist with ${phone} number.`,
                     visibilityTime: 3000,
                 });
+            } else {
+                const newSignupDetails = { ...signUpDetailsInitial };
+                newSignupDetails.loginDetails = loginDetails;
+                setSignUpDetails(newSignupDetails);
+                router.replace('/signup');
             }
         } catch (error: any) {
             Toast.show({
@@ -98,6 +100,29 @@ const Login = () => {
         }
     }
 
+    const handleBlur = (value: any, id: string) => {
+        if (id === "confirmPassword") {
+            const password = loginDetails?.find((item: { id: string }) => item?.id === "password")?.value;
+            if (value !== password) {
+                const currentData = loginDetails.map((item: any) => {
+                    if (item.id === id) {
+                        return { ...item, isError: true}; 
+                    }
+                    return item;
+                });
+                setLoginDetails(currentData);
+            } else {
+                const currentData = loginDetails.map((item: any) => {
+                    if (item.id === id) {
+                        return { ...item, isError: false}; 
+                    }
+                    return item;
+                });
+                setLoginDetails(currentData);
+            }
+        }
+    }
+
     const renderInputType = (item: any) => {
         switch (item.inputType) {
             case "NUMBER":
@@ -107,7 +132,7 @@ const Login = () => {
                 break;
             case "PASSWORD":
                 return (
-                    <CustomInput2 data={item} onChange={(value, id) => handleChange(value, id)} />
+                    <CustomInput2 data={item} handleBlur={(value) => handleBlur(value, item?.id)} onChange={(value, id) => handleChange(value, id)} />
                 )
                 break;
             default:
@@ -128,14 +153,15 @@ const Login = () => {
     const handleDisable = () => {
         const number = loginDetails?.find((item: { id: string }) => item?.id === "number")?.value;
         const password = loginDetails?.find((item: { id: string }) => item?.id === "password")?.value;
-        if (number?.length !== 10 || password?.length < 8 ){
+        const confirmPassword = loginDetails?.find((item: { id: string }) => item?.id === "confirmPassword")?.value;
+        if (number?.length !== 10 || password?.length < 8 || confirmPassword?.length < 8 || password !== confirmPassword ){
             return true;
         }
         return false;
     }
 
-    const handleClickSignup = () => {
-        router.replace("/login/numberPassword");
+    const handleLoginClick = () => {
+        router.replace("/login");
     }
 
     return (
@@ -143,16 +169,16 @@ const Login = () => {
             {renderValue()}
             <View style={{ marginTop: 4, display: 'flex', flexDirection: 'row', justifyContent: 'center' }} >
                 <ThemedText type='subtitle' >
-                    Don't have an account ?
+                    Already have an account ?
                 </ThemedText>
-                <Pressable onPress={handleClickSignup} style={{ marginLeft: 4 }}  >
+                <Pressable onPress={handleLoginClick} style={{ marginLeft: 4 }}  >
                     <ThemedText type="subtitle" style={{ fontWeight: 600, color: "#1EA6D6" }}>
-                        SignUp
+                        Login
                     </ThemedText>
                 </Pressable>
             </View>
             <View style={{ display: "flex", alignItems: "center", marginTop: 24 }} >
-                <CustomButton width='FULL' title="Login" onPress={handleLogin} isDisabled={handleDisable()} />
+                <CustomButton width='FULL' title="Continue" onPress={handleContinue} isDisabled={handleDisable()} />
             </View>
             {loader && <Loader />}
         </ThemedView>
@@ -167,4 +193,4 @@ const style = StyleSheet.create({
     },
 });
 
-export default Login;
+export default NumberPassword;
