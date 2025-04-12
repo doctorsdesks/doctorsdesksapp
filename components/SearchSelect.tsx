@@ -1,7 +1,12 @@
 import { StringObject } from '@/constants/Enums';
 import React, { useState, useEffect } from 'react';
-import { View, TextInput, Text, FlatList, Pressable, StyleSheet } from 'react-native';
+import { View, TextInput, Text, FlatList, Pressable, StyleSheet, Modal } from 'react-native';
 import { ThemedView } from './ThemedView';
+import { Colors } from '@/constants/Colors';
+import { ThemedText } from './ThemedText';
+import { finalText } from './Utils';
+import { useAppContext } from '@/context/AppContext';
+import { useColorScheme } from '@/hooks/useColorScheme.web';
 
 interface SearchSelectProps {
     data: StringObject;
@@ -9,15 +14,17 @@ interface SearchSelectProps {
 }
 
 const SearchSelect: React.FC<SearchSelectProps> = ({ data, onChange }) => {
+    const { translations, selectedLanguage } = useAppContext();
     const [searchText, setSearchText] = useState<string>('');
     const [filteredOptions, setFilteredOptions] = useState<string[]>([]);
     const [isFocused, setIsFocused] = useState<boolean>(false);
     const [isError, setIsError] = useState<boolean>(false);
+    const colorScheme = useColorScheme() ?? 'light';
+    const colors = Colors[colorScheme];
 
     useEffect(() => {
         // Filter options based on search text
         const filteredOptions = data?.options?.filter((item) => item?.toLowerCase()?.includes(searchText?.toLowerCase()));
-        console.info("Sdfa", data?.options, filteredOptions)
         setFilteredOptions(filteredOptions || []);
     }, [searchText, data]);
 
@@ -28,11 +35,9 @@ const SearchSelect: React.FC<SearchSelectProps> = ({ data, onChange }) => {
         onChange(value, data?.id);
     };
 
-    const handleBlur = () => {
-        // Show error if no option is selected and it's mandatory
-        if (data?.isMandatory && !data?.options?.includes(searchText)) {
-            setIsError(true);
-        }
+    const handleClear = () => {
+        setSearchText('');
+        onChange('', data?.id);
     };
 
     useEffect(() => {
@@ -50,36 +55,122 @@ const SearchSelect: React.FC<SearchSelectProps> = ({ data, onChange }) => {
 
     return (
         <ThemedView style={styles.container}>
-            <Text style={[styles.label, isFocused && styles.labelFocused, isError && styles.labelError]}>
-                {data?.label}
-                {data?.isMandatory && <Text style={styles.mandatory}> *</Text>}
-            </Text>
-            <TextInput
-                placeholderTextColor={'#8C8C8C'}
-                style={[styles.input, isFocused && styles.inputFocused, isError && styles.inputError]}
-                placeholder={data?.placeholder}
-                value={searchText}
-                onChangeText={(text) => setSearchText(text)}
-                onFocus={() => setIsFocused(true)}
-                onBlur={handleBlur}
-            />
+            <ThemedText style={[styles.label, isFocused && styles.labelFocused, isError && styles.labelError]}>
+                {finalText(data?.label, translations, selectedLanguage)} {data?.isMandatory && !data?.isDisabled && <Text style={styles.labelError}>*</Text>}
+            </ThemedText>
+            <Pressable onPress={() => setIsFocused(true)}>
+                <TextInput
+                    placeholderTextColor={'#8C8C8C'}
+                    style={[
+                        styles.input,
+                        { 
+                            backgroundColor: colors.background,
+                            borderColor: colors.borderColor,
+                            color: colors.text
+                        },
+                        isFocused && { borderColor: colors.borderColorSelected },
+                        isError && { borderColor: colors.errorBorder }
+                    ]}
+                    placeholder={data?.placeholder}
+                    value={searchText}
+                    editable={false}
+                />
+            </Pressable>
             {isError && (
-                <Text style={styles.errorText}>
+                <Text style={[
+                    styles.errorText,
+                    { color: colors.errorBorder }
+                ]}>
                     Please select a valid option.
                 </Text>
             )}
-            {isFocused && (
-                <FlatList
-                    style={{ borderWidth: 1, borderColor: "#2DB9B0", borderTopRightRadius: 0, borderTopLeftRadius: 0, borderBottomRightRadius: 8, borderBottomLeftRadius: 8, top: -2, paddingTop: 2 }}
-                    data={filteredOptions}
-                    keyExtractor={(item) => item}
-                    renderItem={({ item }) => (
-                        <Pressable onPress={() => handleSelect(item)} style={styles.option}>
-                            <Text style={styles.optionText}>{item}</Text>
-                        </Pressable>
-                    )}
-                />
-            )}
+            <Modal
+                visible={isFocused}
+                transparent={true}
+                animationType="fade"
+                onRequestClose={() => setIsFocused(false)}
+            >
+                <Pressable style={styles.modalOverlay} onPress={() => setIsFocused(false)}>
+                    <Pressable 
+                        style={[
+                            styles.modalContent,
+                            {
+                                backgroundColor: colors.background,
+                                borderColor: colors.borderColorSelected
+                            }
+                        ]}
+                        onPress={e => e.stopPropagation()}
+                    >
+                        <View style={[
+                            styles.modalHeader,
+                            { borderBottomColor: colors.borderColor }
+                        ]}>
+                            <View style={styles.modalHeaderTitle}>
+                                <ThemedText style={[styles.modalTitle, { color: colors.text }]}>
+                                    {data?.label}
+                                </ThemedText>
+                                <Pressable 
+                                    onPress={() => setIsFocused(false)}
+                                    style={styles.closeButton}
+                                >
+                                    <Text style={[styles.closeButtonText, { color: colors.icon }]}>✕</Text>
+                                </Pressable>
+                            </View>
+                            <View style={styles.modalHeaderContent}>
+                                <View style={styles.inputContainer}>
+                                    <TextInput
+                                        placeholderTextColor={'#8C8C8C'}
+                                        style={[
+                                            styles.modalInput,
+                                            {
+                                                backgroundColor: colors.background,
+                                                borderColor: colors.borderColorSelected,
+                                                color: colors.text
+                                            }
+                                        ]}
+                                        placeholder={data?.placeholder}
+                                        value={searchText}
+                                        onChangeText={setSearchText}
+                                        autoFocus
+                                    />
+                                    {searchText ? (
+                                        <Pressable 
+                                            onPress={handleClear}
+                                            style={styles.clearButton}
+                                        >
+                                            <Text style={[styles.closeButtonText, { color: colors.icon }]}>✕</Text>
+                                        </Pressable>
+                                    ) : null}
+                                </View>
+                            </View>
+                        </View>
+                        <FlatList
+                            data={filteredOptions}
+                            keyExtractor={(item) => item}
+                            keyboardShouldPersistTaps="handled"
+                            renderItem={({ item }) => (
+                                <Pressable 
+                                    onPress={() => handleSelect(item)} 
+                                    style={({ pressed }) => [
+                                        styles.option,
+                                        {
+                                            backgroundColor: colors.background,
+                                            borderColor: colors.borderColor
+                                        },
+                                        pressed && { backgroundColor: colors.backgroundSelected }
+                                    ]}
+                                >
+                                    <Text style={[
+                                        styles.optionText,
+                                        { color: colors.borderColorSelected }
+                                    ]}>{item}</Text>
+                                </Pressable>
+                            )}
+                            style={styles.list}
+                        />
+                    </Pressable>
+                </Pressable>
+            </Modal>
         </ThemedView>
     );
 };
@@ -88,11 +179,7 @@ const styles = StyleSheet.create({
     container: {
         width: '100%',
         marginVertical: 10,
-    },
-    label: {
-        fontSize: 14,
-        color: '#8C8C8C',
-        marginBottom: 8,
+        position: 'relative',
     },
     labelFocused: {
         color: '#2DB9B0',
@@ -100,43 +187,95 @@ const styles = StyleSheet.create({
     labelError: {
         color: 'red',
     },
-    mandatory: {
-        color: 'red',
+    modalOverlay: {
+        flex: 1,
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        justifyContent: 'flex-start',
+        paddingTop: 100, // Modal starts 100px from top
+    },
+    modalContent: {
+        marginHorizontal: 16,
+        borderRadius: 12,
+        borderWidth: 1,
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        elevation: 5,
+        maxHeight: '80%',
+        overflow: 'hidden',
+    },
+    modalHeader: {
+        padding: 16,
+        borderBottomWidth: 1,
+    },
+    modalHeaderContent: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 8,
+    },
+    modalHeaderTitle: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        marginBottom: 16,
+    },
+    modalTitle: {
+        fontSize: 16,
+        fontWeight: '600',
+    },
+    inputContainer: {
+        flex: 1,
+        flexDirection: 'row',
+        alignItems: 'center',
+        position: 'relative',
+    },
+    modalInput: {
+        flex: 1,
+        borderWidth: 1,
+        borderRadius: 5,
+        padding: 10,
+        paddingRight: 40,
+    },
+    clearButton: {
+        position: 'absolute',
+        right: 8,
+        padding: 8,
+    },
+    closeButton: {
+        padding: 8,
+    },
+    closeButtonText: {
+        fontSize: 18,
+        fontWeight: '500',
+    },
+    list: {
+        maxHeight: '100%',
+    },
+    label: {
+        color: '#8C8C8C',
+        fontSize: 14,
+        marginBottom: 8,
     },
     input: {
         borderWidth: 1,
-        borderColor: '#ccc',
         borderRadius: 5,
         padding: 10,
     },
-    inputFocused: {
-        borderColor: '#2DB9B0',
-    },
-    inputError: {
-        borderColor: 'red',
-    },
-    dropdown: {
-        borderWidth: 1,
-        borderColor: '#ccc',
-        borderTopWidth: 0,
-        maxHeight: 150,
-        borderBottomLeftRadius: 5,
-        borderBottomRightRadius: 5,
-    },
     option: {
-        paddingLeft: 12,
-        paddingVertical: 4,
+        paddingHorizontal: 16,
+        paddingVertical: 12,
         borderBottomWidth: 1,
-        borderColor: "#99E4DF",
     },
     optionText: {
-        color: "#2DB9B0",
         fontSize: 14,
         lineHeight: 20,
         fontWeight: "600",
     },
     errorText: {
-        color: 'red',
         fontSize: 12,
         marginTop: 5,
     },

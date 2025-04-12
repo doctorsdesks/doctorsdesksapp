@@ -138,7 +138,7 @@ export const signUpDetailsInitial = {
             inputType: "SEARCHSELECT",
             value: "",
             label: "Specialisation",
-            isMandatory: false,
+            isMandatory: true,
             errorMessage: "Please enter a valid specialisation",
             placeholder: "Type for specialisation",
         },

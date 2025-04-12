@@ -78,6 +78,7 @@ const SignUp = () => {
         if (response?.status === "SUCCESS") {
             const specialisation = response?.data?.data || [];
             let finalSpec = specialisation?.map((item: any) => Object.keys(item)[0]);
+            finalSpec.sort((a: string, b: string) => a.localeCompare(b)); // Sort alphabetically
             setSpecialisationOptions(finalSpec);
         }
     }
