@@ -14,7 +14,7 @@ import { ThemedText } from '@/components/ThemedText';
 
 const Profile = () => {
     const { setDoctorDetails, doctorDetails, translations, selectedLanguage } = useAppContext();
-    const { height, width } = Dimensions.get('window');
+    const { width } = Dimensions.get('window');
     const [loader, setLoader] = useState<boolean>(false);
 
     const handleLogout = async () => {

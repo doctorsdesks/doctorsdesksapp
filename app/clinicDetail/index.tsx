@@ -1,9 +1,9 @@
 import CustomButton from '@/components/CustomButton';
 import { useAppContext } from '@/context/AppContext';
 import React, { useEffect, useState } from 'react';
-import { BackHandler, Dimensions, Keyboard, ScrollView, View } from 'react-native';
+import { BackHandler, Dimensions, Keyboard, ScrollView, StyleSheet, View } from 'react-native';
 import Toast from 'react-native-toast-message';
-import { getClinics, getValueById } from '@/components/Utils';
+import { getClinics, getSecureKey, getValueById } from '@/components/Utils';
 import CustomInput2 from '@/components/CustomInput2';
 import { signUpDetailsInitial } from '@/context/InitialState';
 import CustomRadio from '@/components/CustomRadio';
@@ -12,6 +12,7 @@ import axios from 'axios';
 import { router } from 'expo-router';
 import Loader from '@/components/Loader';
 import MainHeader from '@/components/MainHeader';
+import { ThemedView } from '@/components/ThemedView';
 
 const ClinicDetailsSetting = () => {
     const { height } = Dimensions.get('window');
@@ -121,12 +122,14 @@ const ClinicDetailsSetting = () => {
                 }
             }
         }
-        const url = URLS.BASE + URLS.UPDATE_CLINIC + "/" + doctorDetails?.phone + "/" + clinicData?.clinicId;
+        const url = URLS.BASE + URLS.UPDATE_CLINIC + "/" + clinicData?.clinicId;
+        const authToken = await getSecureKey("userAuthtoken");
         try {
             const response = await axios.post(url, updateData,
               {
                 headers: {
-                  'X-Requested-With': 'doctorsdesks_web_app',
+                  'X-Requested-With': 'nirvaanhealth_web_app',
+                  "Authorization": `Bearer ${authToken}`
                 },
               }
             );
@@ -137,15 +140,22 @@ const ClinicDetailsSetting = () => {
                     text1: data.message,
                     visibilityTime: 3000,
                 });
-            }
-            setLoader(false);
-            router.replace("/dashboard/profile");
-        } catch (error: any) {
+                setLoader(false);
+                router.replace("/dashboard/profile");
+            } else {
                 Toast.show({
                     type: 'error',  
-                    text1: error.response.data.message,
+                    text1: "Something wrong happened. Please try again!",
                     visibilityTime: 3000,
                 });
+                setLoader(false);
+            }
+        } catch (error: any) {
+            Toast.show({
+                type: 'error',  
+                text1: error.response.data.message,
+                visibilityTime: 3000,
+            });
             setLoader(false);
         }
     }
@@ -202,39 +212,48 @@ const ClinicDetailsSetting = () => {
         }
     }
 
-    return (
-        <View style={{ marginHorizontal: 16, marginTop: 52, position: 'relative', height }} >
-            <MainHeader selectedNav='clinicDetails' />
-            <View style={{ height: height - 100 }} >
-                <ScrollView
-                    ref={scrollViewRef}
-                    style={{ 
-                        display: 'flex',
-                        backgroundColor: "#F9F9F9",
-                        borderRadius: 8,
-                        borderColor: "#DDDDDD",
-                        marginTop: 20,
-                        borderWidth: 1,
-                        paddingHorizontal: 12,
-                        paddingVertical: 16,
-                        maxHeight: isEditable ? isKeyboardOpen ? height - 400 : height - 160 : height -  200,
-                    }}
-                >
-                    {clinicData?.clinicInfo?.map((item: any) => {
-                        return (
-                            <View key={item?.id} style={{ marginBottom: 16, paddingBottom: 12 }} >
-                                {renderInputType(item)}
-                            </View>
-                        )
-                    })}
-                </ScrollView>
-            </View>
-            <View style={{ display: "flex", alignItems: "center", position: 'absolute', left: 0, right: 0, top: height - 76 }} >
-                <CustomButton width='FULL' title={isEditable ? "Save" : "Update"} onPress={handleButtonClick} />
-            </View>
-            {loader && <Loader />}
-        </View>
+    return (loader ?
+            <Loader />
+        :
+            <ThemedView style={styles.container} >
+                <MainHeader selectedNav='clinicDetails' />
+                <View style={{ height: height - 100 }} >
+                    <ScrollView
+                        ref={scrollViewRef}
+                        style={{ 
+                            display: 'flex',
+                            borderRadius: 8,
+                            borderColor: "#DDDDDD",
+                            marginTop: 20,
+                            borderWidth: 1,
+                            paddingHorizontal: 12,
+                            paddingVertical: 16,
+                            maxHeight: isKeyboardOpen ? height - 460 : height - 160,
+                        }}
+                    >
+                        {clinicData?.clinicInfo?.map((item: any) => {
+                            return (
+                                <View key={item?.id} style={{ marginBottom: 16, paddingBottom: 12 }} >
+                                    {renderInputType(item)}
+                                </View>
+                            )
+                        })}
+                    </ScrollView>
+                </View>
+                <View style={{ display: "flex", alignItems: "center", position: 'absolute', left: 0, right: 0, bottom: 12, zIndex: 2 }} >
+                    <CustomButton width='FULL' title={isEditable ? "Save" : "Update"} onPress={handleButtonClick} />
+                </View>
+            </ThemedView>
     );
 };
+
+const styles = StyleSheet.create({
+    container: {
+        paddingHorizontal: 16,
+        paddingTop: 62,
+        height: "100%",
+        position: 'relative'
+    },
+});
 
 export default ClinicDetailsSetting;

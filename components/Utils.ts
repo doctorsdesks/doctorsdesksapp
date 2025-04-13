@@ -238,12 +238,14 @@ export const uploadFile = async (fileUri: any, fileName: string, phoneNumber: st
   }
 
   export const getClinics = async (phone: string) => {
-    const url = URLS.BASE + URLS.GET_CLINICS + "/" + phone;
+    const url = URLS.BASE + URLS.GET_ALL_CLINICS + "/?doctor=" + phone;
+    const authToken = await getSecureKey("userAuthtoken");
     try {
         const response = await axios.get(url,
             {
               headers: {
-                'X-Requested-With': 'doctorsdesks_web_app',
+                'X-Requested-With': 'nirvaanhealth_web_app',
+                "Authorization": `Bearer ${authToken}`
               },
             }
           );
@@ -260,6 +262,7 @@ export const uploadFile = async (fileUri: any, fileName: string, phoneNumber: st
           }
         }
     } catch (error: any) {
+        console.info("as", error?.response?.data?.message)
         return {
           status: "FAILURE",
           error: error?.response?.data?.message
