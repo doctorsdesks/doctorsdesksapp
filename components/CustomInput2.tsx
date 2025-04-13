@@ -135,7 +135,7 @@ const CustomInput2: React.FC<CustomInput2Props> = ({ data, onChange, handleFocus
           <View style={{ position: 'relative' }} >
             <TextInput
               placeholderTextColor={'#8C8C8C'}
-              style={[styles.input, isFocused && styles.inputFocused, isError && styles.inputError, { paddingLeft: data?.inputType === "AMOUNT" ? 44 : 8, color: Colors[colorScheme].text }]}
+              style={[styles.input, isFocused && styles.inputFocused, isError && styles.inputError, { paddingLeft: data?.inputType === "AMOUNT" ? 48 : 8, color: Colors[colorScheme].text }]}
               value={value}
               onChangeText={onLocalChange}
               onBlur={handleBlurLocal}
@@ -150,12 +150,12 @@ const CustomInput2: React.FC<CustomInput2Props> = ({ data, onChange, handleFocus
               }
             />
             {data?.inputType === "AMOUNT" && 
-              <View style={{ height: "100%", backgroundColor: "#A9A9AB", zIndex: 2, width: 40, position: 'absolute', display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', borderBottomLeftRadius: 6, borderTopLeftRadius: 6  }} >
+              <View style={{ height: "100%", backgroundColor: "#2DB9B0", zIndex: 2, width: 40, position: 'absolute', display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', borderBottomLeftRadius: 6, borderTopLeftRadius: 6  }} >
                 <Image source={require('../assets/images/rupee.png')} resizeMode='contain' height={24} width={24} />
               </View>
             }
             {data?.inputType === "PASSWORD" && 
-              <Pressable onPress={() => setShowPassword(!showPassword)} style={{ height: "100%", backgroundColor: "#99E4DF", zIndex: 2, width: 40, position: 'absolute', right:  0, display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', borderBottomRightRadius: 4, borderTopRightRadius: 4  }} >
+              <Pressable onPress={() => setShowPassword(!showPassword)} style={{ height: "100%", backgroundColor: "#2DB9B0", zIndex: 2, width: 40, position: 'absolute', right:  0, display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', borderBottomRightRadius: 4, borderTopRightRadius: 4  }} >
                 {showPassword ? <Ionicons name='eye' size={24} /> : <Ionicons name='eye-off-outline' size={24} />}
               </Pressable>
             }

@@ -262,12 +262,44 @@ export const uploadFile = async (fileUri: any, fileName: string, phoneNumber: st
           }
         }
     } catch (error: any) {
-        console.info("as", error?.response?.data?.message)
         return {
           status: "FAILURE",
           error: error?.response?.data?.message
         }
     }
+  }
+
+  export const updateClinic = async (clinicId: string, payload: any) => {
+    const url = URLS.BASE + URLS.UPDATE_CLINIC + "/"  + clinicId;
+        const authToken = await getSecureKey("userAuthtoken");
+        try {
+            const response = await axios.post(url, payload,
+              {
+                headers: {
+                  'X-Requested-With': 'nirvaanhealth_web_app',
+                  "Authorization": `Bearer ${authToken}`
+                },
+              }
+            );
+            const { data, status } = response;
+            if (status === 201){
+              return {
+                status: "SUCCESS",
+                data: data.data,
+                message: data.message
+              }
+            } else {
+              return {
+                status: "FAILURE",
+                error: "Something wrong. Please try again.",
+              }
+            }
+        } catch (error: any) {
+          return {
+            status: "FAILURE",
+            error: error?.response?.data?.message
+          }
+        }
   }
 
   export const finalText = (text: string, translations: any, selectedLanguage: any) => {  

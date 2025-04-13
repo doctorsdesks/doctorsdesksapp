@@ -416,7 +416,7 @@ const PersonalDetailsSetting = () => {
                                         )
                                     })}
                         </ScrollView>
-                        <View style={{ display: "flex", alignItems: "center", position: 'absolute', bottom: 12, right: 0, left: 0, zIndex: 2 }} >
+                        <View style={{ display: "flex", alignItems: "center", position: 'absolute', bottom: 16, right: 0, left: 0, zIndex: 2 }} >
                             <CustomButton multiLingual={true} width='FULL' title={isEditable ? "Save" : "Update"} onPress={handleButtonClick} />
                         </View>
                     </View>

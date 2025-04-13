@@ -3,12 +3,10 @@ import { useAppContext } from '@/context/AppContext';
 import React, { useEffect, useState } from 'react';
 import { BackHandler, Dimensions, Keyboard, ScrollView, StyleSheet, View } from 'react-native';
 import Toast from 'react-native-toast-message';
-import { getClinics, getSecureKey, getValueById } from '@/components/Utils';
+import { getClinics, getValueById, updateClinic } from '@/components/Utils';
 import CustomInput2 from '@/components/CustomInput2';
 import { signUpDetailsInitial } from '@/context/InitialState';
 import CustomRadio from '@/components/CustomRadio';
-import { URLS } from '@/constants/Urls';
-import axios from 'axios';
 import { router } from 'expo-router';
 import Loader from '@/components/Loader';
 import MainHeader from '@/components/MainHeader';
@@ -109,7 +107,7 @@ const ClinicDetailsSetting = () => {
         }
     },[isEditable])
 
-    const updateClinic = async () => {
+    const updateClinicInfo = async () => {
         const updateData = {
             addressPayload: {
                 clinicName: getValueById(clinicData?.clinicInfo, "clinicName"),
@@ -122,38 +120,19 @@ const ClinicDetailsSetting = () => {
                 }
             }
         }
-        const url = URLS.BASE + URLS.UPDATE_CLINIC + "/" + clinicData?.clinicId;
-        const authToken = await getSecureKey("userAuthtoken");
-        try {
-            const response = await axios.post(url, updateData,
-              {
-                headers: {
-                  'X-Requested-With': 'nirvaanhealth_web_app',
-                  "Authorization": `Bearer ${authToken}`
-                },
-              }
-            );
-            const { data, status } = response;
-            if (status === 201){
-                Toast.show({
-                    type: 'success',  
-                    text1: data.message,
-                    visibilityTime: 3000,
-                });
-                setLoader(false);
-                router.replace("/dashboard/profile");
-            } else {
-                Toast.show({
-                    type: 'error',  
-                    text1: "Something wrong happened. Please try again!",
-                    visibilityTime: 3000,
-                });
-                setLoader(false);
-            }
-        } catch (error: any) {
+        const response: any = await updateClinic(clinicData?.clinicId, updateData);
+        if (response.status === "SUCCESS") {
+            Toast.show({
+                type: 'success',  
+                text1: response.message,
+                visibilityTime: 3000,
+            });
+            setLoader(false);
+            router.replace("/dashboard/profile");
+        } else {
             Toast.show({
                 type: 'error',  
-                text1: error.response.data.message,
+                text1: response.error,
                 visibilityTime: 3000,
             });
             setLoader(false);
@@ -163,7 +142,7 @@ const ClinicDetailsSetting = () => {
     const handleButtonClick = () => {
         if (isEditable) {
             setLoader(true);
-            updateClinic();
+            updateClinicInfo();
         } else {
             setIsEditable(true);
         }
@@ -240,7 +219,7 @@ const ClinicDetailsSetting = () => {
                         })}
                     </ScrollView>
                 </View>
-                <View style={{ display: "flex", alignItems: "center", position: 'absolute', left: 0, right: 0, bottom: 12, zIndex: 2 }} >
+                <View style={{ display: "flex", alignItems: "center", position: 'absolute', left: 16, right: 16, bottom: 16, zIndex: 2 }} >
                     <CustomButton width='FULL' title={isEditable ? "Save" : "Update"} onPress={handleButtonClick} />
                 </View>
             </ThemedView>

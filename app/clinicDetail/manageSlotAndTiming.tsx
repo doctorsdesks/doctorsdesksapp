@@ -4,6 +4,7 @@ import CustomText from '@/components/CustomText';
 import Loader from '@/components/Loader';
 import MainHeader from '@/components/MainHeader';
 import ManageSlotTiming from '@/components/ManageSlotTiming';
+import { ThemedView } from '@/components/ThemedView';
 import { changeTimeToAmPm, changeTimeTwentyFourHours, getClinics } from '@/components/Utils';
 import { StringObject } from '@/constants/Enums';
 import { URLS } from '@/constants/Urls';
@@ -12,7 +13,7 @@ import { Ionicons } from '@expo/vector-icons';
 import axios from 'axios';
 import { router, useLocalSearchParams } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import { BackHandler, Dimensions, Pressable, ScrollView, Text, View } from 'react-native';
+import { BackHandler, Dimensions, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import Toast from 'react-native-toast-message';
 
 const ManageSlotDurationAndTiming = () => {
@@ -161,7 +162,7 @@ const ManageSlotDurationAndTiming = () => {
     }
 
     return (
-        <View style={{ marginHorizontal: 16, marginTop: 52 }} >
+        <ThemedView style={styles.container} >
             <MainHeader selectedNav={ isAddSlots ? 'manageSlotTiming' : 'manageSlotAndTiming'} />
             {!isAddSlots && <View style={{ position: 'relative', height }}>
                 <View style={{ marginTop: 32 }} >
@@ -243,8 +244,17 @@ const ManageSlotDurationAndTiming = () => {
             </View>}
             {isAddSlots && <ManageSlotTiming eachDayChange={eachDayChange} timings={timings} setTimings={(data: any) => handleSetTiming(data)} />}
             {loader && <Loader />}
-        </View>
+        </ThemedView>
     );
 };
+
+const styles = StyleSheet.create({
+    container: {
+        paddingHorizontal: 16,
+        paddingTop: 62,
+        height: "100%",
+        position: 'relative'
+    },
+});
 
 export default ManageSlotDurationAndTiming;
