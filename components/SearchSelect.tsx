@@ -16,7 +16,7 @@ interface SearchSelectProps {
 
 const SearchSelect: React.FC<SearchSelectProps> = ({ data, onChange }) => {
     const { translations, selectedLanguage } = useAppContext();
-    const [searchText, setSearchText] = useState<string>('');
+    const [searchText, setSearchText] = useState<string>(data?.value);
     const [filteredOptions, setFilteredOptions] = useState<string[]>([]);
     const [isFocused, setIsFocused] = useState<boolean>(false);
     const [isError, setIsError] = useState<boolean>(false);
@@ -58,24 +58,34 @@ const SearchSelect: React.FC<SearchSelectProps> = ({ data, onChange }) => {
             <ThemedText style={[styles.label, isFocused && styles.labelFocused, isError && styles.labelError]}>
                 {finalText(data?.label, translations, selectedLanguage)} {data?.isMandatory && !data?.isDisabled && <Text style={styles.labelError}>*</Text>}
             </ThemedText>
-            <Pressable onPress={() => setIsFocused(true)}>
-                <TextInput
-                    placeholderTextColor={'#8C8C8C'}
-                    style={[
-                        styles.input,
-                        { 
-                            backgroundColor: colors.background,
-                            borderColor: colors.borderColor,
-                            color: colors.text
-                        },
-                        isFocused && { borderColor: colors.borderColorSelected },
-                        isError && { borderColor: colors.errorBorder }
-                    ]}
-                    placeholder={data?.placeholder}
-                    value={searchText}
-                    editable={false}
-                />
-            </Pressable>
+            {data?.isDisabled ?
+                <ThemedView
+                    style={[styles.input, { backgroundColor: Colors[colorScheme].cardBackgroud, borderColor: '#ccc' }]}
+                >
+                    <ThemedText>
+                    {data?.value}
+                    </ThemedText>
+                </ThemedView>
+            :
+                <Pressable onPress={() => setIsFocused(true)}>
+                    <TextInput
+                        placeholderTextColor={'#8C8C8C'}
+                        style={[
+                            styles.input,
+                            { 
+                                backgroundColor: colors.background,
+                                borderColor: colors.borderColor,
+                                color: colors.text
+                            },
+                            isFocused && { borderColor: colors.borderColorSelected },
+                            isError && { borderColor: colors.errorBorder }
+                        ]}
+                        placeholder={data?.placeholder}
+                        value={searchText}
+                        editable={false}
+                    />
+                </Pressable>
+            }
             {isError && (
                 <Text style={[
                     styles.errorText,

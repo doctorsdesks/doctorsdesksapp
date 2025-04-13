@@ -350,7 +350,6 @@ export const uploadFile = async (fileUri: any, fileName: string, phoneNumber: st
             }
           );
         const { data, status } = response;
-        console.info("logout", data, status);
         if (status === 201){
             await saveSecureKey("userAuthtoken", "");
             return {
@@ -358,7 +357,6 @@ export const uploadFile = async (fileUri: any, fileName: string, phoneNumber: st
               data: data.data,
             }
         } else {
-          console.info("logout else", data, status);
           await saveSecureKey("userAuthtoken", "");
           return {
             status: "FAILURE",
@@ -366,7 +364,6 @@ export const uploadFile = async (fileUri: any, fileName: string, phoneNumber: st
           }
         }
     } catch (error: any) {
-      console.info("logout error", error?.response?.data?.message);
       await saveSecureKey("userAuthtoken", "");
         return {
           status: "FAILURE",
