@@ -4,7 +4,6 @@ import { Dimensions, Pressable } from 'react-native';
 import CustomText from './CustomText';
 import { router } from 'expo-router';
 import { ThemedView } from './ThemedView';
-import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme.web';
 
 interface MainFooterProps {

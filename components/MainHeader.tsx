@@ -1,10 +1,11 @@
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
-import { Pressable, View } from 'react-native';
-import CustomText from './CustomText';
+import { Pressable, StyleSheet } from 'react-native';
 import { router } from 'expo-router';
 import { useAppContext } from '@/context/AppContext';
 import { finalText } from './Utils';
+import { ThemedView } from './ThemedView';
+import { ThemedText } from './ThemedText';
 
 interface MainHeaderProps {
     selectedNav: string;
@@ -95,13 +96,22 @@ const MainHeader: React.FC<MainHeaderProps> = ({ selectedNav, title = "" }) => {
     }
 
     return (
-        <View style={{ display: 'flex', position: 'relative', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginBottom: 16 }} >
+        <ThemedView style={{ display: 'flex', position: 'relative', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginBottom: 16 }} >
             {selectedNav !== "home" && <Pressable style={{ position: 'absolute', left: 0 }} onPress={handleBackNav}>
                 <Ionicons name="arrow-back" size={24} color="black" style={{ paddingRight: 12 }} />
             </Pressable>}
-            <CustomText text={finalText(showtext(), translations, selectedLanguage)} textStyle={{ fontSize: 16, fontWeight: 600, color: "#32383D", lineHeight: 22, textTransform: title ? "capitalize" : "" }} />
-        </View>
+            <ThemedText style={styles.text} >{finalText(showtext(), translations, selectedLanguage)}</ThemedText>
+        </ThemedView>
     );
 };
+
+const styles = StyleSheet.create({
+    text: { 
+        fontSize: 16, 
+        fontWeight: 600, 
+        lineHeight: 22,
+        textTransform: "capitalize"
+    }
+})
 
 export default MainHeader;

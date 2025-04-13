@@ -68,8 +68,11 @@ export const uploadFile = async (fileUri: any, fileName: string, phoneNumber: st
     return `${hours.toString().padStart(2, "0")}:${minutes.toString().padStart(2, "0")}`;
   }
 
-  export const getAppointments = async (phone: string, date: string) => {
-    const url = URLS.BASE + URLS.GET_APPOINTMENTS + "/?doctor=" + phone + "&date=" + date;
+  export const getAppointments = async (phone: string, date?: string) => {
+    let url = URLS.BASE + URLS.GET_APPOINTMENTS + "/?doctor=" + phone;
+    if (date && date !== "") {
+      url = URLS.BASE + URLS.GET_APPOINTMENTS + "/?doctor=" + phone + "&date=" + date;
+    }
     const authToken = await getSecureKey("userAuthtoken");
     try {
         const response = await axios.get(url,

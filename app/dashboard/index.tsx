@@ -10,14 +10,13 @@ import PatientList from '@/components/PatientList';
 import SearchBar from '@/components/SearchBar';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
-import { finalText, getAppointments, getDfo, getDoctorDetails, getPatientList, getSecureKey, getTranslations } from '@/components/Utils';
+import { finalText, getAppointments, getDfo, getDoctorDetails, getPatientList, getSecureKey } from '@/components/Utils';
 import { Colors } from '@/constants/Colors';
 import { AppointmentStatus, PatientListProps } from '@/constants/Enums';
 import { URLS } from '@/constants/Urls';
 import { useAppContext } from '@/context/AppContext';
 import { textObject } from '@/context/InitialState';
 import { useColorScheme } from '@/hooks/useColorScheme.web';
-import { Ionicons } from '@expo/vector-icons';
 import axios from 'axios';
 import { router } from 'expo-router';
 import React, { useEffect, useState } from 'react';
@@ -259,7 +258,7 @@ const Home = () => {
                 {bannerItems?.map((banner: any) => {
                     if (banner?.isHidden) return <></>;
                     return (
-                        <Banner item={banner} />
+                        <Banner key={banner?.id} item={banner} />
                     )
                 })}
             </View>
