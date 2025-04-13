@@ -30,6 +30,6 @@ export default function () {
 
 const styles = StyleSheet.create({
     icon: {
-        marginLeft: 12,
+        marginLeft: 0,
     },
 });

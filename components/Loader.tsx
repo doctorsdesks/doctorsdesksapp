@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { View, Animated, StyleSheet, Text, Easing, Dimensions } from 'react-native';
+import { ThemedView } from './ThemedView';
 
 const {height, width} = Dimensions.get('window');
 
@@ -34,7 +35,7 @@ const Loader = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <ThemedView style={styles.container}>
       {/* Rotating container for both loader and text */}
       <Animated.View style={[styles.loaderContainer, animatedStyle]}>
         {/* Circular Loader */}
@@ -45,7 +46,7 @@ const Loader = () => {
           <Text style={styles.text}>DD</Text>
         </View>
       </Animated.View>
-    </View>
+    </ThemedView>
   );
 };
 

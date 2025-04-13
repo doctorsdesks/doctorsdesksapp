@@ -1,12 +1,13 @@
 import { StringObject } from '@/constants/Enums';
 import React, { useState, useEffect } from 'react';
-import { View, TextInput, Text, FlatList, Pressable, StyleSheet, Modal } from 'react-native';
+import { View, TextInput, Text, FlatList, Pressable, StyleSheet } from 'react-native';
 import { ThemedView } from './ThemedView';
 import { Colors } from '@/constants/Colors';
 import { ThemedText } from './ThemedText';
 import { finalText } from './Utils';
 import { useAppContext } from '@/context/AppContext';
 import { useColorScheme } from '@/hooks/useColorScheme.web';
+import CustomModal from './CustomModal';
 
 interface SearchSelectProps {
     data: StringObject;
@@ -52,7 +53,6 @@ const SearchSelect: React.FC<SearchSelectProps> = ({ data, onChange }) => {
         }
     },[isFocused])
 
-
     return (
         <ThemedView style={styles.container}>
             <ThemedText style={[styles.label, isFocused && styles.labelFocused, isError && styles.labelError]}>
@@ -84,93 +84,75 @@ const SearchSelect: React.FC<SearchSelectProps> = ({ data, onChange }) => {
                     Please select a valid option.
                 </Text>
             )}
-            <Modal
-                visible={isFocused}
-                transparent={true}
-                animationType="fade"
-                onRequestClose={() => setIsFocused(false)}
-            >
-                <Pressable style={styles.modalOverlay} onPress={() => setIsFocused(false)}>
-                    <Pressable 
-                        style={[
-                            styles.modalContent,
-                            {
-                                backgroundColor: colors.background,
-                                borderColor: colors.borderColorSelected
-                            }
-                        ]}
-                        onPress={e => e.stopPropagation()}
-                    >
-                        <View style={[
-                            styles.modalHeader,
-                            { borderBottomColor: colors.borderColor }
-                        ]}>
-                            <View style={styles.modalHeaderTitle}>
-                                <ThemedText style={[styles.modalTitle, { color: colors.text }]}>
-                                    {data?.label}
-                                </ThemedText>
+            <CustomModal visible={isFocused} onClose={() => setIsFocused(false)}>
+                <View style={[
+                    styles.modalHeader,
+                    { borderBottomColor: colors.borderColor }
+                ]}>
+                    <View style={styles.modalHeaderTitle}>
+                        <Text style={[styles.modalTitle, { color: colors.text }]}>
+                            {data?.label}
+                        </Text>
+                        <Pressable 
+                            onPress={() => setIsFocused(false)}
+                            style={styles.closeButton}
+                        >
+                            <Text style={[styles.closeButtonText, { color: colors.icon }]}>✕</Text>
+                        </Pressable>
+                    </View>
+                    <View style={styles.modalHeaderContent}>
+                        <View style={styles.inputContainer}>
+                            <TextInput
+                                placeholderTextColor={'#8C8C8C'}
+                                style={[
+                                    styles.modalInput,
+                                    {
+                                        backgroundColor: colors.background,
+                                        borderColor: colors.borderColorSelected,
+                                        color: colors.text
+                                    }
+                                ]}
+                                placeholder={data?.placeholder}
+                                value={searchText}
+                                onChangeText={setSearchText}
+                                autoFocus
+                            />
+                            {searchText ? (
                                 <Pressable 
-                                    onPress={() => setIsFocused(false)}
-                                    style={styles.closeButton}
+                                    onPress={handleClear}
+                                    style={styles.clearButton}
                                 >
                                     <Text style={[styles.closeButtonText, { color: colors.icon }]}>✕</Text>
                                 </Pressable>
-                            </View>
-                            <View style={styles.modalHeaderContent}>
-                                <View style={styles.inputContainer}>
-                                    <TextInput
-                                        placeholderTextColor={'#8C8C8C'}
-                                        style={[
-                                            styles.modalInput,
-                                            {
-                                                backgroundColor: colors.background,
-                                                borderColor: colors.borderColorSelected,
-                                                color: colors.text
-                                            }
-                                        ]}
-                                        placeholder={data?.placeholder}
-                                        value={searchText}
-                                        onChangeText={setSearchText}
-                                        autoFocus
-                                    />
-                                    {searchText ? (
-                                        <Pressable 
-                                            onPress={handleClear}
-                                            style={styles.clearButton}
-                                        >
-                                            <Text style={[styles.closeButtonText, { color: colors.icon }]}>✕</Text>
-                                        </Pressable>
-                                    ) : null}
-                                </View>
-                            </View>
+                            ) : null}
                         </View>
-                        <FlatList
-                            data={filteredOptions}
-                            keyExtractor={(item) => item}
-                            keyboardShouldPersistTaps="handled"
-                            renderItem={({ item }) => (
-                                <Pressable 
-                                    onPress={() => handleSelect(item)} 
-                                    style={({ pressed }) => [
-                                        styles.option,
-                                        {
-                                            backgroundColor: colors.background,
-                                            borderColor: colors.borderColor
-                                        },
-                                        pressed && { backgroundColor: colors.backgroundSelected }
-                                    ]}
-                                >
-                                    <Text style={[
-                                        styles.optionText,
-                                        { color: colors.borderColorSelected }
-                                    ]}>{item}</Text>
-                                </Pressable>
-                            )}
-                            style={styles.list}
-                        />
-                    </Pressable>
-                </Pressable>
-            </Modal>
+                    </View>
+                </View>
+                <FlatList
+                    data={filteredOptions}
+                    keyExtractor={(item) => item}
+                    keyboardShouldPersistTaps="handled"
+                    renderItem={({ item }) => (
+                        <Pressable 
+                            onPress={() => handleSelect(item)} 
+                            style={({ pressed }) => [
+                                styles.option,
+                                {
+                                    backgroundColor: colors.background,
+                                    borderColor: colors.borderColor
+                                },
+                                pressed && { backgroundColor: colors.backgroundSelected }
+                            ]}
+                        >
+                            <Text style={[
+                                styles.optionText,
+                                { color: colors.borderColorSelected }
+                            ]}>{item}</Text>
+                        </Pressable>
+                    )}
+                    style={styles.list}
+                />
+            </CustomModal>
         </ThemedView>
     );
 };
@@ -186,27 +168,6 @@ const styles = StyleSheet.create({
     },
     labelError: {
         color: 'red',
-    },
-    modalOverlay: {
-        flex: 1,
-        backgroundColor: 'rgba(0, 0, 0, 0.5)',
-        justifyContent: 'flex-start',
-        paddingTop: 100, // Modal starts 100px from top
-    },
-    modalContent: {
-        marginHorizontal: 16,
-        borderRadius: 12,
-        borderWidth: 1,
-        shadowColor: "#000",
-        shadowOffset: {
-            width: 0,
-            height: 2,
-        },
-        shadowOpacity: 0.25,
-        shadowRadius: 3.84,
-        elevation: 5,
-        maxHeight: '80%',
-        overflow: 'hidden',
     },
     modalHeader: {
         padding: 16,

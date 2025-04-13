@@ -1,27 +1,35 @@
 import CustomText from '@/components/CustomText';
+import Loader from '@/components/Loader';
 import MainFooter from '@/components/MainFooter';
 import MainHeader from '@/components/MainHeader';
-import { saveSecureKey } from '@/components/Utils';
+import { logout } from '@/components/Utils';
 import { useAppContext } from '@/context/AppContext';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { BackHandler, Dimensions, Pressable, View } from 'react-native';
 
 
 const Profile = () => {
-    const { setDoctorDetails } = useAppContext();
+    const { setDoctorDetails, doctorDetails } = useAppContext();
     const { height } = Dimensions.get('window');
+    const [loader, setLoader] = useState<boolean>(false);
 
     const handleLogout = async () => {
+        setLoader(true);
+        const payload = {
+            phone: doctorDetails?.phone,
+            type: "DOCTOR"
+        };
+        await logout(payload);
         setDoctorDetails({});
+        setLoader(false);
         router.replace({
             pathname: "/login",
             params: {
                 allowBack: "false",
             }
         });
-        await saveSecureKey("userAuthtoken", "");
     }
 
     useEffect(() => {
@@ -119,6 +127,7 @@ const Profile = () => {
                 <CustomText textStyle={{ fontSize: 15, lineHeight: 24, fontWeight: 600, color: "#0F1828", marginLeft: 8 }} text="Logout" multiLingual={true} />
            </Pressable>
            <MainFooter selectedNav='profile' />
+           {loader && <Loader />}
         </View>
     )
 };

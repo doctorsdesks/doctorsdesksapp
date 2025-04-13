@@ -129,12 +129,14 @@ export const uploadFile = async (fileUri: any, fileName: string, phoneNumber: st
   }
 
   export const getDoctorDetails = async (phone: string) => {
-    const url = URLS.BASE + URLS.UPDATE_DOCTOR + "/" + phone;
+    const url = URLS.BASE + URLS.UPDATE_DOCTOR + "?phone=" + phone;
+    const authToken = await getSecureKey("userAuthtoken");
     try {
         const response = await axios.get(url,
             {
               headers: {
-                'X-Requested-With': 'doctorsdesks_web_app',
+                'X-Requested-With': 'nirvaanhealth_web_app',
+                "Authorization": `Bearer ${authToken}`
               },
             }
           );
@@ -296,4 +298,73 @@ export const uploadFile = async (fileUri: any, fileName: string, phoneNumber: st
           error: error?.response?.data?.message
         }
     }
+  }
+
+  export const login = async (payload: any) => {
+    const url = URLS.BASE + URLS.LOGIN;
+    try {
+        const response = await axios.post(url, payload,
+            {
+              headers: {
+                'X-Requested-With': 'nirvaanhealth_web_app',
+              },
+            }
+          );
+        const { data, status } = response;
+        if (status === 201){
+            return {
+              status: "SUCCESS",
+              data: data.data,
+            }
+        } else {
+          return {
+            status: "FAILURE",
+            error: "Something wrong. Please try again.",
+          }
+        }
+    } catch (error: any) {
+        return {
+          status: "FAILURE",
+          error: error?.response?.data?.message
+        }
+    }
+  }
+
+  export const logout = async (payload: any) => {
+    const url = URLS.BASE + URLS.LOGOUT;
+    const authToken = await getSecureKey("userAuthtoken");
+    try {
+        const response = await axios.post(url, payload,
+            {
+              headers: {
+                'X-Requested-With': 'nirvaanhealth_web_app',
+                "Authorization": `Bearer ${authToken}`
+              },
+            }
+          );
+        const { data, status } = response;
+        console.info("logout", data, status);
+        if (status === 201){
+            await saveSecureKey("userAuthtoken", "");
+            return {
+              status: "SUCCESS",
+              data: data.data,
+            }
+        } else {
+          console.info("logout else", data, status);
+          await saveSecureKey("userAuthtoken", "");
+          return {
+            status: "FAILURE",
+            error: "Something wrong. Please try again.",
+          }
+        }
+    } catch (error: any) {
+      console.info("logout error", error?.response?.data?.message);
+      await saveSecureKey("userAuthtoken", "");
+        return {
+          status: "FAILURE",
+          error: error?.response?.data?.message
+        }
+    }
+    
   }

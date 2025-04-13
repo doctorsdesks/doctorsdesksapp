@@ -125,7 +125,7 @@ export const signUpDetailsInitial = {
         {
             id: "graduationYear",
             type: "STRING",
-            inputType: "TEXT",
+            inputType: "NUMBER",
             value: "",
             label: "Graduation Year",
             isMandatory: true,
@@ -155,7 +155,7 @@ export const signUpDetailsInitial = {
         {
             id: "specialisationYear",
             type: "STRING",
-            inputType: "TEXT",
+            inputType: "NUMBER",
             value: "",
             label: "Specialisation Year",
             isMandatory: false,

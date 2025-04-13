@@ -13,7 +13,7 @@ import axios from 'axios';
 import Toast from 'react-native-toast-message';
 import Loader from '@/components/Loader';
 import SearchSelect from '@/components/SearchSelect';
-import { getConfig, getValueById, saveSecureKey } from '@/components/Utils';
+import { getConfig, getValueById, login, saveSecureKey } from '@/components/Utils';
 import { signUpDetailsInitial, signUpHeaderDataInitial } from '@/context/InitialState';
 import { ThemedView } from '@/components/ThemedView';
 import { CONFIGS } from '@/constants/Enums';
@@ -141,13 +141,15 @@ const SignUp = () => {
             }
         } else if(step === "IDP"){
             setLoader(true);
-            const phoneOtp = signUpDetails?.phoneOTPDetails;
+            // const phoneOtp = signUpDetails?.phoneOTPDetails;
+            const numPassInfo = signUpDetails?.loginDetails;
             const registrationDetails = idProofData?.find((item: {id: string}) => item?.id === "registration");
             const panDetails = idProofData?.find((item: {id: string}) => item?.id === "panCard");
             const aadharDetails = idProofData?.find((item: {id: string}) => item?.id === "aadharCard");
             const updateData = {
-                phone: phoneOtp.phoneNumber,
+                phone: getValueById(numPassInfo, "number"),
                 imageUrl: signUpDetails?.imageUrl,
+                password: getValueById(numPassInfo, "password"),
                 name: getValueById(personalDetails, "fullName"),
                 gender: getValueById(personalDetails, "gender"),
                 email:  getValueById(personalDetails, "email"),
@@ -197,24 +199,43 @@ const SignUp = () => {
             const response = await axios.post(url, updateData,
               {
                 headers: {
-                  'X-Requested-With': 'doctorsdesks_web_app',
+                  'X-Requested-With': 'nirvaanhealth_web_app',
                 },
               }
             );
             const { data, status } = response;
             if (status === 201){
+                // login user
+                const payload = {
+                    phone: data?.data?.phone,
+                    password: updateData?.password,
+                    type: "DOCTOR"
+                }
+                const loginResponse = await login(payload);
+                if (loginResponse?.status === "SUCCESS") {
+                    setDoctorDetails(data?.data);
+                    setSignUpDetails(signUpDetailsInitial);
+                    saveSecureKey("isUserOnBoarded", "true");
+                    saveSecureKey("userAuthtoken", loginResponse?.data?.user?.authToken);
+                    router.replace("/successSignUp");
+                    setLoader(false);
+                } else {
+                    router.replace({
+                        pathname: "/successSignUp",
+                        params: {
+                            isLoggedFailed: "true",
+                        }
+                    })
+                    setLoader(false);
+                }
+            } else {
                 Toast.show({
-                    type: 'success',  
-                    text1: data.data,
+                    type: 'error',  
+                    text1: "Something wrong. Please try again.",
                     visibilityTime: 3000,
                 });
+                setLoader(false);
             }
-            setLoader(false);
-            setDoctorDetails(updateData);
-            setSignUpDetails(signUpDetailsInitial);
-            saveSecureKey("isUserOnBoarded", "true");
-            saveSecureKey("userAuthtoken", "authtoken");
-            router.replace("/successSignUp");
         } catch (error: any) {
             if (error?.status === 409) {
                 Toast.show({

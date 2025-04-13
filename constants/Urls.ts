@@ -9,5 +9,7 @@ export const URLS = {
     GET_TRANSLATIONS: "/v1/translations",
     GET_PATIENT: "/v1/patient",
     GET_PATIENT_LIST: "/v1/patient/search",
-    GET_CONFIG: "/v1/config"
+    GET_CONFIG: "/v1/config",
+    LOGIN: "/v1/user/login",
+    LOGOUT: "/v1/user/logout",
 }

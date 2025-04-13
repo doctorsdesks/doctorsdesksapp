@@ -77,8 +77,8 @@ const Login = () => {
               );
             const { data } = response;
             if (data.data?.success) {
-                saveSecureKey("patientId", data.data?.user?.phone);
-                saveSecureKey("userAuthtoken", data.data?.user?.authToken);
+                await saveSecureKey("doctorId", data.data?.user?.phone);
+                await saveSecureKey("userAuthtoken", data.data?.user?.authToken);
                 router.replace("/dashboard");
             } else {
                 Toast.show({
