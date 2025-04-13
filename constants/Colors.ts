@@ -39,7 +39,8 @@ export const Colors = {
     subText: "#757575",
     bannerInfoBg: "#FFB73F",
     bannerInfoText: "#32383D",
-    bannerInfoSubText: "#fff"
+    bannerInfoSubText: "#fff",
+    appointmentIcon: "#1EA6D6",
   },
   dark: {
     text: '#ECEDEE',
@@ -73,6 +74,7 @@ export const Colors = {
     crossIcon: "#212B46",
     bannerInfoBg: "#FFB73F",
     bannerInfoText: "#fff",
-    bannerInfoSubText: "#32383D"
+    bannerInfoSubText: "#32383D",
+    appointmentIcon: "#1EA6D6",
   },
 };

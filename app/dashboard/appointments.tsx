@@ -1,10 +1,11 @@
 import AppointmentCardTwo from '@/components/AppointmentCardTwo';
 import AppointmentDateSelector from '@/components/AppointmentDateSelector';
-import CustomText from '@/components/CustomText';
 import Loader from '@/components/Loader';
 import MainFooter from '@/components/MainFooter';
 import MainHeader from '@/components/MainHeader';
 import Navbar, { NavbarObject } from '@/components/Navbar';
+import { ThemedText } from '@/components/ThemedText';
+import { ThemedView } from '@/components/ThemedView';
 import { finalText, formatDateToYYYYMMDD, getAppointments } from '@/components/Utils';
 import { AppointmentStatus, AppointmentType } from '@/constants/Enums';
 import { URLS } from '@/constants/Urls';
@@ -12,7 +13,7 @@ import { useAppContext } from '@/context/AppContext';
 import axios from 'axios';
 import { router } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import { BackHandler, Dimensions, ScrollView, View } from 'react-native';
+import { BackHandler, Dimensions, Image, ScrollView, StyleSheet, View } from 'react-native';
 import Toast from 'react-native-toast-message';
 
 const Appointments = () => {
@@ -54,6 +55,7 @@ const Appointments = () => {
     }, [doctorDetails, selectedDay])
 
     const getAllAppointments = async (date: string) => {
+        setLoader(true);
         const respnose = await getAppointments(doctorDetails?.phone, date);
         if (respnose.status === "SUCCESS") {
             const appointmentsCurrent = respnose.data;
@@ -147,7 +149,7 @@ const Appointments = () => {
     }
 
     return (
-        <View style={{ marginHorizontal: 16, marginTop: 52, position: 'relative', height }} >
+        <ThemedView style={styles.container} >
             <MainHeader selectedNav="appointment" />
             <Navbar data={navData} onClick={handleNavClick} />
             <View style={{ marginTop: 24 }} >
@@ -158,7 +160,10 @@ const Appointments = () => {
                     ref={scrollViewRef} 
                     style={{ marginTop: 20 }}>
                     {filteredAppointments?.length === 0 ?
-                        <CustomText multiLingual={true} textStyle={{ fontSize: 16, lineHeight: 20, fontWeight: 600, color: "#32383D" }} text="No Appointment Today!" />
+                        <View style={{ marginTop: 12, height: 260, display: 'flex', alignItems: 'center' }} >
+                            <Image source={require('../../assets/images/noTasks.png')} style={{ height: 175, width: 200 }} resizeMode='contain' />
+                            <ThemedText style={{ marginTop: 24, fontSize: 18, lineHeight: 18, fontWeight: 700 }} >{finalText(`No ${navData?.filter((item: any) => item?.isActive)[0]?.label?.split(" ")[0]} Appointments`, translations, selectedLanguage)}!</ThemedText>
+                        </View>
                     : 
                         filteredAppointments?.map((appointment: any, index: number) => {
                         return (
@@ -169,8 +174,17 @@ const Appointments = () => {
             </View>
             <MainFooter selectedNav='appointment' />
             {loader && <Loader />}
-        </View>
+        </ThemedView>
     );
 };
+
+const styles = StyleSheet.create({
+    container: {
+        paddingHorizontal: 16,
+        paddingTop: 62,
+        height: "100%",
+        position: 'relative'
+    },
+});
 
 export default Appointments;

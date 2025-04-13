@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
 import { Pressable, View } from 'react-native';
 import { AppointmentStatus } from '@/constants/Enums';
-import CustomText from './CustomText';
-import { changeTimeToAmPm } from './Utils';
+import { changeTimeToAmPm, finalText } from './Utils';
 import { Ionicons } from '@expo/vector-icons';
+import { ThemedView } from './ThemedView';
+import { ThemedText } from './ThemedText';
+import { useColorScheme } from '@/hooks/useColorScheme.web';
+import { useAppContext } from '@/context/AppContext';
 
 interface AppointmentCardTwoProps {
     lastAppointment: boolean;
@@ -16,6 +19,7 @@ interface AppointmentCardTwoProps {
 }
 
 const AppointmentCardTwo: React.FC<AppointmentCardTwoProps> = ({ lastAppointment, firstAppointment, name, number, startTime, status, handleStatusUpdate }) => {
+    const { translations, selectedLanguage } = useAppContext();
     const [parentHeight, setParentHeight] = useState(0);
 
     const handleLayout = (event: any) => {
@@ -26,7 +30,7 @@ const AppointmentCardTwo: React.FC<AppointmentCardTwoProps> = ({ lastAppointment
     const calculatedTop = parentHeight ? (parentHeight / 2) - 10 : 0;
 
     return (
-        <View 
+        <ThemedView 
             style={{ 
                 display: 'flex',
                 flexDirection: 'row',
@@ -71,7 +75,7 @@ const AppointmentCardTwo: React.FC<AppointmentCardTwoProps> = ({ lastAppointment
                     marginLeft: 36,
                 }}
             >
-                <CustomText text={changeTimeToAmPm(startTime)} textStyle={{ fontSize: 14, lineHeight: 16, fontWeight: 600, color: "#32383D" }} />
+                <ThemedText style={{ fontSize: 14, lineHeight: 16, fontWeight: 600 }}>{changeTimeToAmPm(startTime)}</ThemedText>
             </View>
             <View style={{ paddingVertical: 10 }} >
                 <View
@@ -84,11 +88,11 @@ const AppointmentCardTwo: React.FC<AppointmentCardTwoProps> = ({ lastAppointment
                         borderLeftWidth: 8,
                         borderLeftColor: "#2DB9B0",
                         borderRadius: 8,
-                        width: 200
+                        width: 240
                     }}
                 >
-                    <CustomText textStyle={{ fontSize: 14, lineHeight: 16, fontWeight: 600, color: "#32383D" }} text={name} />
-                    <CustomText textStyle={{ fontSize: 11, lineHeight: 16, fontWeight: 400, color: "#32383D", marginTop: 8 }} text={number} />
+                    <ThemedText style={{ fontSize: 14, lineHeight: 16, fontWeight: 600 }} >{name}</ThemedText>
+                    <ThemedText style={{ fontSize: 11, lineHeight: 16, fontWeight: 400, marginTop: 8 }} >{number}</ThemedText>
                     <Pressable
                         style={{
                             borderRadius: 4,
@@ -101,11 +105,11 @@ const AppointmentCardTwo: React.FC<AppointmentCardTwoProps> = ({ lastAppointment
                         }}
                         onPress={() => handleStatusUpdate("COMPLETE")}
                     >
-                        <CustomText multiLingual={true} textStyle={{ fontSize: 14, lineHeight: 16, fontWeight: 600, color: "#2DB9B0" }} text="Complete" />
+                        <ThemedText style={{ fontSize: 14, lineHeight: 16, fontWeight: 600, color: "#2DB9B0" }} >{finalText("Complete", translations, selectedLanguage)}</ThemedText>
                     </Pressable>
                 </View>
             </View>
-        </View>
+        </ThemedView>
     );
 };
 

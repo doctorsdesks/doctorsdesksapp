@@ -4,12 +4,15 @@ import {
   StyleSheet,
   FlatList,
   Pressable,
-  useColorScheme,
 } from 'react-native';
 import CustomText from './CustomText';
 import { Ionicons } from '@expo/vector-icons';
 import { finalText } from './Utils';
 import { useAppContext } from '@/context/AppContext';
+import { ThemedView } from './ThemedView';
+import { ThemedText } from './ThemedText';
+import { Colors } from '@/constants/Colors';
+import { useColorScheme } from '@/hooks/useColorScheme.web';
 
 interface AppointmentDateSelectorProps {
     handleDateChange: (date: string) => void;
@@ -22,7 +25,7 @@ const AppointmentDateSelector: React.FC<AppointmentDateSelectorProps> = ({ handl
   const [selectedDay, setSelectedDay] = useState<string>("");
   const [loader, setLoader] = useState<boolean>(false);
   const flatListRef = useRef<FlatList>(null);
-  const colorSchema = useColorScheme();
+  const colorSchema = useColorScheme() || 'light';
   
   useEffect(() => {
     if (currentMonth) {
@@ -141,26 +144,21 @@ const AppointmentDateSelector: React.FC<AppointmentDateSelectorProps> = ({ handl
 
 
   return (
-    <View>
+    <ThemedView>
         <View style={styles.monthSelector}>
             <Pressable onPress={() => changeMonth('left')}>
-                <Ionicons name='chevron-back-circle-outline' size={32} color={"#1EA6D6"} />
+                <Ionicons name='chevron-back-circle-outline' size={32} color={Colors[colorSchema].appointmentIcon} />
             </Pressable>
             <View style={{ display: 'flex', flexDirection: 'row' }}>
-                <CustomText
-                    textStyle={styles.monthText}
-                    text={finalText(formatMonthYear(currentMonth).split(' ')[0], translations, selectedLanguage)}
-                />
-                <CustomText
-                    textStyle={[styles.monthText, { marginLeft: 8 }]}
-                    text={formatMonthYear(currentMonth).split(' ')[1]}
-                />
+                <ThemedText style={styles.monthText} >{finalText(formatMonthYear(currentMonth).split(' ')[0], translations, selectedLanguage)}</ThemedText>
+                <ThemedText style={[styles.monthText, { marginLeft: 8 }]} >{formatMonthYear(currentMonth).split(' ')[1]}</ThemedText>
             </View>
             <Pressable onPress={() => changeMonth('right')}>
-            <Ionicons name='chevron-forward-circle-outline' size={32} color={"#1EA6D6"} />
+            <Ionicons name='chevron-forward-circle-outline' size={32} color={Colors[colorSchema].appointmentIcon} />
             </Pressable>
         </View>
-        {daysToRender?.length > 0 && <FlatList
+        {daysToRender?.length > 0 && 
+          <FlatList
             ref={flatListRef}
             data={daysToRender}
             horizontal
@@ -190,25 +188,8 @@ const AppointmentDateSelector: React.FC<AppointmentDateSelectorProps> = ({ handl
                         flexDirection: 'column', 
                         alignItems: 'center',
                     }}>
-                        <CustomText
-                            textStyle={{
-                            fontSize: 12,
-                            lineHeight: 12,
-                            fontWeight: '600',
-                            color: item === selectedDay ? '#FCFCFC' : "#32383D",
-                            }}
-                            text={item.split(" ")[0]}
-                        />
-                        <CustomText
-                            textStyle={{
-                            fontSize: 12,
-                            lineHeight: 12,
-                            fontWeight: '600',
-                            color: item === selectedDay ? '#FCFCFC' : "#32383D",
-                            marginTop: 4,
-                            }}
-                            text={item.split(" ")[1]}
-                        />
+                        <ThemedText style={{ fontSize: 12, lineHeight: 12, fontWeight: '600', color: item === selectedDay ? '#FCFCFC' : "#32383D" }}>{item.split(" ")[0]}</ThemedText>
+                        <ThemedText style={{ fontSize: 12, lineHeight: 12, fontWeight: '600', color: item === selectedDay ? '#FCFCFC' : "#32383D", marginTop: 4 }}>{item.split(" ")[1]}</ThemedText>
                     </View>
                 </Pressable>
             )}
@@ -226,9 +207,9 @@ const AppointmentDateSelector: React.FC<AppointmentDateSelectorProps> = ({ handl
                 });
                 }, 500);
             }}
-            
-        />}
-    </View>
+          />
+        }
+    </ThemedView>
   );
 };
 

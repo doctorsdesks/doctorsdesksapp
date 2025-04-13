@@ -300,7 +300,7 @@ const Home = () => {
                     :   
                         <View style={{ marginTop: 12, height: 260, display: 'flex', alignItems: 'center' }} >
                             <Image source={require('../../assets/images/noTasks.png')} style={{ height: 175, width: 200 }} resizeMode='contain' />
-                            <ThemedText style={{ marginTop: 24, fontSize: 18, lineHeight: 18, fontWeight: 700 }} >{finalText("No Appointments today!", translations, selectedLanguage)}</ThemedText>
+                            <ThemedText style={{ marginTop: 24, fontSize: 18, lineHeight: 18, fontWeight: 700 }} >{finalText("No Appointments today", translations, selectedLanguage)}!</ThemedText>
                         </View>
                     }
                 </View>
