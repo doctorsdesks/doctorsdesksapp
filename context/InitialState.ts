@@ -278,3 +278,15 @@ export const signUpDetailsInitial = {
       }
     ]
   }
+
+export const textObject = {
+    id: "number",
+    type: "STRING",
+    inputType: "Text",
+    value: "",
+    label: "Remark",
+    isMandatory: true,
+    errorMessage: "Please provide remark.",
+    placeholder: "Message",
+    isError: false
+};

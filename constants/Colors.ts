@@ -12,6 +12,7 @@ export const Colors = {
     background: '#fff',
     tint: tintColorLight,
     icon: '#687076',
+    crossIcon: "#212B46",
     tabIconDefault: '#687076',
     tabIconSelected: tintColorLight,
     borderColor: "#D9D9D9",
@@ -34,7 +35,11 @@ export const Colors = {
     errorBorder: "#EB3639",
     errorBackground: "#FFE5E5",
     successBorder: "#059286",
-    successBackground: "#99E4DF"
+    successBackground: "#99E4DF",
+    subText: "#757575",
+    bannerInfoBg: "#FFB73F",
+    bannerInfoText: "#32383D",
+    bannerInfoSubText: "#fff"
   },
   dark: {
     text: '#ECEDEE',
@@ -63,6 +68,11 @@ export const Colors = {
     errorBorder: "#EB3639",
     errorBackground: "#FFE5E5",
     successBorder: "#059286",
-    successBackground: "#99E4DF"
+    successBackground: "#99E4DF",
+    subText: "#757575",
+    crossIcon: "#212B46",
+    bannerInfoBg: "#FFB73F",
+    bannerInfoText: "#fff",
+    bannerInfoSubText: "#32383D"
   },
 };

@@ -5,6 +5,7 @@ export const URLS = {
     GET_CLINICS: "/v1/clinic",
     UPDATE_CLINIC: "/v1/clinic/update",
     GET_APPOINTMENTS: "/v1/appointment",
+    UPDATE_APPOINTMENTS: "/v1/appointment/update",
     LOCAL_BASE: "http://localhost:3000",
     GET_TRANSLATIONS: "/v1/translations",
     GET_PATIENT: "/v1/patient",
@@ -12,4 +13,5 @@ export const URLS = {
     GET_CONFIG: "/v1/config",
     LOGIN: "/v1/user/login",
     LOGOUT: "/v1/user/logout",
+    DFO: "/v1/dfo",
 }

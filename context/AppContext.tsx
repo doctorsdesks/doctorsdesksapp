@@ -15,6 +15,8 @@ interface AppContextType {
   setTranslations: (data: any) => void;
   selectedLanguage: string;
   setSelectedLanguage: (language: string) => void;
+  dfo: { [key: string]: any };
+  setDfo: (data: any) => void;
 }
 
 // Create the context with a default value (can be null)
@@ -27,6 +29,7 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
   const [doctorDetails, setDoctorDetails] = React.useState({});
   const [translations, setTranslations] = React.useState<any>({});
   const [selectedLanguage, setSelectedLanguage] = useState<string>("");
+  const [dfo, setDfo] = useState<any>({});
 
   useEffect(() => {
     // Load saved language preference on app start
@@ -73,7 +76,9 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
         translations,
         setTranslations,
         selectedLanguage,
-        setSelectedLanguage
+        setSelectedLanguage,
+        dfo,
+        setDfo
       }}>
       {children}
     </AppContext.Provider>

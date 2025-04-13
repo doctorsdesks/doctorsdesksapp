@@ -3,11 +3,12 @@ import { View, ScrollView, StyleSheet, Pressable } from "react-native";
 import CustomText from "./CustomText";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
+import { ThemedView } from "./ThemedView";
 
 const PatientList = (props: any) => {
     const scrollViewRef = React.useRef(null);
   return (
-    <View style={styles.list}>
+    <ThemedView style={styles.list}>
         <ScrollView
             ref={scrollViewRef}
             showsVerticalScrollIndicator={true}
@@ -33,16 +34,16 @@ const PatientList = (props: any) => {
                 </Pressable>
             ))}
         </ScrollView>
-    </View>
+    </ThemedView>
   );
 };
 
 const styles = StyleSheet.create({
     list: {
         position: 'absolute',
-        top: 76,
-        left: 0,
-        right: 0,
+        top: 116,
+        left: 16,
+        right: 16,
         height: 290,
         backgroundColor: "#fff",
         borderWidth: 1,
