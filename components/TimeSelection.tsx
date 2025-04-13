@@ -1,7 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { View, Text, FlatList, StyleSheet, Dimensions, Pressable } from 'react-native';
 import CustomButton from './CustomButton';
-import CustomText from './CustomText';
+import { ThemedView } from './ThemedView';
+import { ThemedText } from './ThemedText';
+import { finalText } from './Utils';
+import { useAppContext } from '@/context/AppContext';
 
 const { width } = Dimensions.get('window');
 
@@ -13,6 +16,7 @@ interface TimePickerProps {
 }
 
 const TimePicker: React.FC<TimePickerProps> = ({ handleTimeSelection, title, time, closeLoserPanel }) => {
+  const { translations, selectedLanguage } = useAppContext();
   const [selectedHour, setSelectedHour] = useState<string>("12");
   const [selectedMinute, setSelectedMinute] = useState<string>("00");
   const [selectedPeriod, setSelectedPeriod] = useState<string>("AM");
@@ -124,10 +128,9 @@ const TimePicker: React.FC<TimePickerProps> = ({ handleTimeSelection, title, tim
   };
 
   return (
-    <View>
-      <CustomText multiLingual={true} textStyle={{ fontSize: 16, lineHeight: 20, fontWeight: "600", color: "#32383D" }} text={title} />
+    <ThemedView>
+      <ThemedText style={{ fontSize: 16, lineHeight: 20, fontWeight: "600" }} >{finalText(title, translations, selectedLanguage)} </ThemedText>
       <View style={{ flexDirection: 'row', marginTop: 16 }}>
-        {/* Hours List */}
         <FlatList
           ref={hourListRef}
           data={hours}
@@ -141,7 +144,6 @@ const TimePicker: React.FC<TimePickerProps> = ({ handleTimeSelection, title, tim
           style={styles.picker}
           contentContainerStyle={styles.flatListContainer}
         />
-        {/* Minutes List */}
         <FlatList
           ref={minuteListRef}
           data={minutes}
@@ -155,7 +157,6 @@ const TimePicker: React.FC<TimePickerProps> = ({ handleTimeSelection, title, tim
           style={styles.picker}
           contentContainerStyle={styles.flatListContainer}
         />
-        {/* Period List */}
         <FlatList
           ref={periodListRef}
           data={periods}
@@ -170,12 +171,11 @@ const TimePicker: React.FC<TimePickerProps> = ({ handleTimeSelection, title, tim
           contentContainerStyle={[styles.flatListContainer, { paddingTop: 60, paddingBottom: 80 }]}
         />
       </View>
-      {/* Buttons */}
       <View style={styles.buttonContainer}>
         <CustomButton multiLingual={true} width='HALF' title="Cancel" onPress={closeLoserPanel} textColor="#009688" containerStyle={{ backgroundColor: "#fff", borderWidth: 1, borderColor: "#009688" }} />
         <CustomButton multiLingual={true} width='HALF' title="Done" onPress={handleDone} />
       </View>
-    </View>
+    </ThemedView>
   );
 };
 
@@ -206,7 +206,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: "center",
     justifyContent: 'space-between',
-    marginTop: 32,
+    marginTop: 0,
   },
 });
 
