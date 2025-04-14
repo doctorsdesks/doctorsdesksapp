@@ -112,7 +112,7 @@ const Profile = () => {
                             source={require('@/assets/images/clinicIcon.png')}
                             style={styles.icon}
                         /> 
-                        <ThemedText style={{ marginLeft: 8, fontSize: 15, lineHeight: 24, fontWeight: 500 }} >{finalText("Clinic Details", translations, selectedLanguage)} </ThemedText>
+                        <ThemedText style={{ marginLeft: 8, fontSize: 15, lineHeight: 24, fontWeight: 500 }} >{finalText("Clinic Address", translations, selectedLanguage)} </ThemedText>
                     </View>
                     <Pressable
                         onPress={() => {
@@ -131,7 +131,7 @@ const Profile = () => {
                             source={require('@/assets/images/calendarIcon.png')}
                             style={styles.icon}
                         /> 
-                        <ThemedText style={{ marginLeft: 8, fontSize: 15, lineHeight: 24, fontWeight: 500 }} >{finalText("Manage Slots", translations, selectedLanguage)} </ThemedText>
+                        <ThemedText style={{ marginLeft: 8, fontSize: 15, lineHeight: 24, fontWeight: 500 }} >{finalText("Clinic Timings", translations, selectedLanguage)} </ThemedText>
                     </View>
                     <Pressable
                         onPress={() => {
@@ -159,6 +159,23 @@ const Profile = () => {
                         <Ionicons size={24} color={"#0F1828"} name='chevron-forward' />
                     </Pressable>
                 </View>
+                <View style={{ paddingVertical: 8, display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 8 }} >
+                    <View style={{ display: 'flex', alignItems: 'center', flexDirection: 'row' }} >
+                        <Image
+                            source={require('@/assets/images/calendarIcon.png')}
+                            style={styles.icon}
+                        /> 
+                        <ThemedText style={{ marginLeft: 8, fontSize: 15, lineHeight: 24, fontWeight: 500 }} >{finalText("Block Slots", translations, selectedLanguage)} </ThemedText>
+                    </View>
+                    <Pressable
+                        onPress={() => {
+                            router.replace("/clinicDetail/blockSlots");
+                        }}
+                        style={{ paddingHorizontal: 8 }}
+                    >
+                        <Ionicons size={24} color={"#0F1828"} name='chevron-forward' />
+                    </Pressable>
+                </View>
             </View>
             <View style={{ borderRadius: 8, borderColor: "#D9D9D9", borderWidth: 1, display: 'flex', flexDirection: 'column', paddingHorizontal: 16, paddingRight: 8, paddingVertical: 12, width: "100%", marginTop: 16 }} >
                 <View style={{ paddingVertical: 8, display: 'flex', flexDirection:'row', justifyContent: 'space-between', alignItems: 'center' }} >
@@ -178,8 +195,6 @@ const Profile = () => {
                         <Ionicons size={24} color={"#0F1828"} name='chevron-forward' />
                     </Pressable>
                 </View>
-           </View>
-           <View style={{ borderRadius: 8, borderColor: "#D9D9D9", borderWidth: 1, display: 'flex', flexDirection: 'column', paddingHorizontal: 16, paddingRight: 8, paddingVertical: 12, width: "100%", marginTop: 16 }} >
                 <View style={{ paddingVertical: 8, display: 'flex', flexDirection:'row', justifyContent: 'space-between', alignItems: 'center' }} >
                     <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }} >
                         <Image

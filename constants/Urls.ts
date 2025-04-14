@@ -15,4 +15,6 @@ export const URLS = {
     LOGIN: "/v1/user/login",
     LOGOUT: "/v1/user/logout",
     DFO: "/v1/dfo",
+    GET_SLOTS: "/v1/slots",
+    BLOCK_SLOTS: "/v1/appointment/lock",
 }

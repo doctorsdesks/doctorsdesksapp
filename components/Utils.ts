@@ -439,3 +439,67 @@ export const uploadFile = async (fileUri: any, fileName: string, phoneNumber: st
         }
     }
   }
+
+  export const getSlots = async (id: string, date: string) => {
+    const url = URLS.BASE + URLS.GET_SLOTS + "/?clinic=" + id + "&date=" + date;
+    const authToken = await getSecureKey("userAuthtoken");
+    try {
+        const response = await axios.get(url,
+            {
+              headers: {
+                'X-Requested-With': 'nirvaanhealth_web_app',
+                "Authorization": `Bearer ${authToken}`
+              },
+            }
+          );
+        const { data, status } = response;
+        if (status === 200){
+            return {
+              status: "SUCCESS",
+              data: data.data, // {message, slots}
+            }
+        } else {
+          return {
+            status: "FAILURE",
+            error: "Something wrong. Please try again.",
+          }
+        }
+    } catch (error: any) {
+        return {
+          status: "FAILURE",
+          error: error?.response?.data?.message
+        }
+    }
+  }
+
+  export const blockSlots = async (payload: any) => {
+    const url = URLS.BASE + URLS.BLOCK_SLOTS;
+    const authToken = await getSecureKey("userAuthtoken");
+    try {
+        const response = await axios.post(url, payload,
+            {
+              headers: {
+                'X-Requested-With': 'nirvaanhealth_web_app',
+                "Authorization": `Bearer ${authToken}`
+              },
+            }
+          );
+        const { data, status } = response;
+        if (status === 201){
+            return {
+              status: "SUCCESS",
+              data: data.data,
+            }
+        } else {
+          return {
+            status: "FAILURE",
+            error: "Something wrong. Please try again.",
+          }
+        }
+    } catch (error: any) {
+        return {
+          status: "FAILURE",
+          error: error?.response?.data?.message
+        }
+    }
+  }

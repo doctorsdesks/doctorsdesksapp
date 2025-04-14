@@ -279,7 +279,7 @@ const ManageSlotDurationAndTiming = () => {
                                                                             })}
                                                                         </View>
                                                                     </View>
-                                                                    <Pressable onPress={() => handleClickEachDay(timing?.day)} >
+                                                                    <Pressable onPress={() => isEditable && handleClickEachDay(timing?.day)} >
                                                                         <Ionicons size={24} color={"#32383D"} name='chevron-forward' />
                                                                     </Pressable>
                                                                 </View>
@@ -330,7 +330,7 @@ const ManageSlotDurationAndTiming = () => {
                                                                             })}
                                                                         </View>
                                                                     </View>
-                                                                    <Pressable onPress={() => handleClickEachDay(timing?.day)} >
+                                                                    <Pressable onPress={() => isEditable && handleClickEachDay(timing?.day)} >
                                                                         <Ionicons size={24} color={"#32383D"} name='chevron-forward' />
                                                                     </Pressable>
                                                                 </View>
