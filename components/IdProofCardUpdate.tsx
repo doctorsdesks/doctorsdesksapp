@@ -1,6 +1,8 @@
 import { CardProps } from '@/constants/Enums';
 import React from 'react';
 import { Text, View } from 'react-native';
+import { ThemedText } from './ThemedText';
+import { ThemedView } from './ThemedView';
 
 interface IdProofCardUpdateProps {
     data: CardProps;
@@ -9,11 +11,11 @@ interface IdProofCardUpdateProps {
 const IdProofCardUpdate: React.FC<IdProofCardUpdateProps> = ({ data }) => {
 
     return (
-        <View>
-            <Text>
+        <ThemedView>
+            <ThemedText>
                 {data.label}
-            </Text>
-        </View>
+            </ThemedText>
+        </ThemedView>
     )
 };
 

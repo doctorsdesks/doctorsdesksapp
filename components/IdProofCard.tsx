@@ -3,6 +3,7 @@ import React from 'react';
 import { Image, Text, View } from 'react-native';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import { CardProps } from '@/constants/Enums';
+import { ThemedText } from './ThemedText';
 
 interface IdProofCardProps {
     data: CardProps;
@@ -28,9 +29,9 @@ const IdProofCard: React.FC<IdProofCardProps> = ({ data }) => {
         >
             <View style={{ display: 'flex', justifyContent: 'flex-start', flexDirection: 'row', alignItems: 'center' }} >
                 {data?.docIcon && data?.docIcon !== "" && <Image source={data?.docIcon} resizeMode='contain' height={32} width={32} />}
-                <Text style={{ marginLeft: 12, color: "#32383D", fontSize: 14, fontWeight: 600 }} >
+                <ThemedText style={{ marginLeft: 12, color: "#32383D", fontSize: 14, fontWeight: 600 }} >
                     {data?.label}
-                </Text>
+                </ThemedText>
             </View>
             {data?.isUploaded ? 
                 <AntDesign name="checkcircle" size={32} color="#2DB9B0" />

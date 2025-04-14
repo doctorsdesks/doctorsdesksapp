@@ -43,7 +43,7 @@ const ManageSlotDurationAndTiming = () => {
         isDisabled: true,
     })
     const [isEditable, setIsEditable] = useState<boolean>(isEditablePath && isEditablePath === "true" ? true : false);
-    const [loader, setLoader] = useState<boolean>(false);
+    const [loader, setLoader] = useState<boolean>(true);
     const [timings, setTimings] = useState<any>([]);
     const [timingsEmergency, setTimingsEmergency] = useState<any>([]);
     const [clinicId, setClinicId] = useState<string>("");

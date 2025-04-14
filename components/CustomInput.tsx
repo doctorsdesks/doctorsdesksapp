@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, TextInput, StyleSheet, Platform } from 'react-native';
+import { ThemedText } from './ThemedText';
 
 interface CustomInputProps {
   data: {
@@ -43,9 +44,9 @@ const CustomInput: React.FC<CustomInputProps> = ({ data, onChange }) => {
     <View style={styles.container}>
       <View style={styles.inputWrapper}>
         {/* Label */}
-        <Text style={[styles.label, isLabelInside ? styles.labelInside : styles.labelTop, isFocused && styles.labelFocused, isError && styles.labelError]}>
-          {label} {isMandatory && <Text style={styles.mandatory}>*</Text>}
-        </Text>
+        <ThemedText style={[styles.label, isLabelInside ? styles.labelInside : styles.labelTop, isFocused && styles.labelFocused, isError && styles.labelError]}>
+          {label} {isMandatory && <ThemedText style={styles.mandatory}>*</ThemedText>}
+        </ThemedText>
 
         {/* Input */}
         <TextInput
@@ -61,7 +62,7 @@ const CustomInput: React.FC<CustomInputProps> = ({ data, onChange }) => {
       </View>
 
       {/* Error Message */}
-      {isError && errorMessage && <Text style={styles.error}>{errorMessage}</Text>}
+      {isError && errorMessage && <ThemedText style={styles.error}>{errorMessage}</ThemedText>}
     </View>
   );
 };

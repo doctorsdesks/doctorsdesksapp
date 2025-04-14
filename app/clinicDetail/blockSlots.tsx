@@ -30,7 +30,7 @@ const BlockSlots = () => {
     ]);
     const [slots, setSlots] = useState<any>({});
     const [slotsToShow, setSlotsToShow] = useState<Array<any>>([]);
-    const [loader, setLoader] = useState<boolean>(false);
+    const [loader, setLoader] = useState<boolean>(true);
     const [clinicId, setClinicId] = useState<string>("");
 
     useEffect(() => {
@@ -192,7 +192,7 @@ const BlockSlots = () => {
                             <ThemedText style={{ marginTop: 24, fontSize: 18, lineHeight: 18, fontWeight: 700 }} >{finalText(`No ${navData?.filter((item: any) => item?.isActive)[0]?.label?.split(" ")[0]} Appointments`, translations, selectedLanguage)}!</ThemedText>
                         </View>
                     : 
-                    <View  style={{ marginTop: 12, marginBottom: 12, display:'flex', flexDirection: 'row', flexWrap: 'wrap', gap: 12 }}>
+                    <View  style={{ marginTop: 12, marginBottom: 12, display:'flex', flexDirection: 'row', flexWrap: 'wrap', gap: 18 }}>
                         {slotsToShow?.map((slot: any) => {
                             return (
                                 <Slot key={slot?.startTime} isSelected={slot?.isSelected} slot={slot} onSelectSlot={handleSelect} />

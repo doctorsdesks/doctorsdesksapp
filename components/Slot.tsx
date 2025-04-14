@@ -4,6 +4,7 @@ import { ThemedText } from "./ThemedText";
 import React from "react";
 import { useColorScheme } from "@/hooks/useColorScheme.web";
 import { Colors } from "@/constants/Colors";
+import { Ionicons } from "@expo/vector-icons";
 
 interface SlotProps {
     slot: Slot;
@@ -40,9 +41,9 @@ const Slot: React.FC<SlotProps> = ({ slot, onSelectSlot, isSelected }) => {
 
     const getBgColor = () => {
         if (slot?.slotStatus === "LOCKED") {
-            return "#FFCB2D";
+            return Colors[colorSchema].slotLockedBg;
         } else if (slot?.slotStatus === "BOOKED") {
-            return "#14534F";
+            return Colors[colorSchema].slotBookedBg;
         } else if (isSelected) {
             return Colors[colorSchema].slotBackgroundSelected;
         } else {
@@ -50,16 +51,51 @@ const Slot: React.FC<SlotProps> = ({ slot, onSelectSlot, isSelected }) => {
         }
     }
 
+    const getTextColor = () => {
+        if (slot?.slotStatus === "LOCKED") {
+            return Colors[colorSchema].slotLockedText;
+        } else if (slot?.slotStatus === "BOOKED") {
+            return Colors[colorSchema].slotBookedText;
+        } else if (isSelected) {
+            return "#fff";
+        } else {
+            return "#000";
+        }
+    }
+
+    const getBorderColor = () => {
+        if (slot?.slotStatus === "LOCKED") {
+            return Colors[colorSchema].slotLockedBg;
+        } else if (slot?.slotStatus === "BOOKED") {
+            return Colors[colorSchema].slotBookedBg;
+        } else if (isSelected) {
+            return Colors[colorSchema].slotBackgroundSelected;
+        } else {
+            return Colors[colorSchema].borderColor;
+        }
+    }
+
+    const getIcon = () => {
+        if (slot?.slotStatus === "LOCKED" || isSelected) {
+            return <Ionicons name='lock-closed' size={12} style={{ marginRight: 8, color: getTextColor() }} />
+        } else if (slot?.slotStatus === "BOOKED") {
+            return <Ionicons name='checkmark-circle-sharp' size={12} style={{ marginRight: 8, color: getTextColor() }} />
+        } else {
+            return <Ionicons name='lock-open-outline' size={12} style={{ marginRight: 8, color: getTextColor() }} />
+        }
+    }
+
     return (
         <ThemedView style={styles.container} >
             <Pressable
                 style={[styles.slot, { 
-                    borderColor: isSelected ? Colors[colorSchema].slotBorderSelected : Colors[colorSchema].borderColor, 
+                    borderColor: getBorderColor(), 
                     backgroundColor: getBgColor()
                 }]}
                 onPress={() => slot?.slotStatus === "OPEN" && onSelectSlot(slot)}
             >
-                <ThemedText style={{ fontSize: 12, lineHeight: 12, fontWeight: 600 }} lightColor={isSelected ? "#fff" : "#000"} darkColor="#fff" >{getSlotTime()}</ThemedText>
+                {getIcon()}
+                <ThemedText style={{ fontSize: 12, lineHeight: 12, fontWeight: 600, color: getTextColor() }} >{getSlotTime()}</ThemedText>
             </Pressable>
         </ThemedView>
     )
@@ -67,13 +103,16 @@ const Slot: React.FC<SlotProps> = ({ slot, onSelectSlot, isSelected }) => {
 
 const styles = StyleSheet.create({
     container: {
-        width: 79,
+        width: 102,
     },
     slot: {
         paddingHorizontal: 12,
         paddingVertical: 10,
         borderWidth: 1,
         borderRadius: 8,
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center'
     }
 });
 
