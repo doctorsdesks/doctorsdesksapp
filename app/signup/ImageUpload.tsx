@@ -6,6 +6,8 @@ import Loader from '@/components/Loader';
 import { useAppContext } from '@/context/AppContext';
 import { uploadFile } from '@/components/Utils';
 import ViewImage from '@/components/ViewImage';
+import { ThemedView } from '@/components/ThemedView';
+import { ThemedText } from '@/components/ThemedText';
 
 interface ImageUploadProps {
 }
@@ -81,12 +83,12 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ }) => {
     }
 
     return (
-        <View style={{display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: 24 }} >
-            <Text style={{ color: "#32383D", fontSize: 20, lineHeight: 24, fontWeight: 600 }} >
+        <ThemedView style={{display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: 24 }} >
+            <ThemedText style={{ fontSize: 20, lineHeight: 24, fontWeight: 600 }} >
                 Let's set up your profile
-            </Text>
+            </ThemedText>
             <View style={{marginTop: 12, display: 'flex', alignItems: 'center' }} >
-                <Text style={{ color: "#32383D", fontSize: 12, lineHeight: 14, fontWeight: 600 }} >Your Profile Picture</Text>
+                <ThemedText style={{ fontSize: 12, lineHeight: 14, fontWeight: 600 }} >Your Profile Picture</ThemedText>
                 {imageUrl === "" || imageUrl === null ?
                     <View style={{ marginTop: 8, height: 100, width: 100, borderColor: "#CFD8DC", backgroundColor: "#CFD8DC", borderRadius: 100 }}  />
                 :
@@ -94,14 +96,14 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ }) => {
                 }
                 {imageUrl === "" && 
                     <Pressable onPress={pickImage} style={{ borderBottomWidth: 1, borderBottomColor: "#1EA6D6", marginTop: 12}}>
-                        <Text style={{ color: "#1EA6D6"}} >
+                        <ThemedText style={{ color: "#1EA6D6"}} >
                             Upload Photo
-                        </Text>
+                        </ThemedText>
                     </Pressable>
                 }
             </View>
             {loader && <Loader />}
-        </View>
+        </ThemedView>
     )
 }
 

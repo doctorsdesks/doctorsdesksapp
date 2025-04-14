@@ -5,6 +5,8 @@ import CustomButton from "./CustomButton";
 import { router } from "expo-router";
 import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme.web";
+import { ThemedView } from "./ThemedView";
+import { ThemedText } from "./ThemedText";
 
 interface BannerProps {
     item: any;
@@ -29,16 +31,16 @@ const Banner: React.FC<BannerProps> = ({ item }) => {
     };
 
     return (
-        <View style={[styles.banner, { backgroundColor: getBackGroundColor[item?.bannerType] }]}>
+        <ThemedView style={[styles.banner, { backgroundColor: getBackGroundColor[item?.bannerType] }]}>
             <Image source={getImage[item?.bannerType]} style={styles.image} resizeMode='contain' />
             <View style={styles.contentContainer}>
-                <Text style={[styles.labelText, { color: Colors[colorSchema].bannerInfoText }]}>
+                <ThemedText style={[styles.labelText, { color: Colors[colorSchema].bannerInfoText }]}>
                     {finalText(item?.label, translations, selectedLanguage)}
-                </Text>
+                </ThemedText>
                 <View style={styles.rowContainer}>
-                    <Text style={[styles.subLabelText, { color: Colors[colorSchema].bannerInfoSubText }]}>
+                    <ThemedText style={[styles.subLabelText, { color: Colors[colorSchema].bannerInfoSubText }]}>
                         {finalText(item?.subLabel, translations, selectedLanguage)}
-                    </Text>
+                    </ThemedText>
                     {item?.buttonData && !item?.buttonData?.isHidden && 
                         <View style={styles.buttonContainer}>
                             <CustomButton 
@@ -57,7 +59,7 @@ const Banner: React.FC<BannerProps> = ({ item }) => {
                     }
                 </View>
             </View>
-        </View>
+        </ThemedView>
     );
 };
 

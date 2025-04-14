@@ -1,6 +1,6 @@
 import CustomButton from '@/components/CustomButton';
 import React, { useEffect } from 'react';
-import { BackHandler, Pressable, StyleSheet, View } from 'react-native';
+import { BackHandler, Keyboard, Pressable, StyleSheet, View } from 'react-native';
 import { router } from 'expo-router';
 import Toast from 'react-native-toast-message';
 import Loader from '@/components/Loader';
@@ -14,7 +14,7 @@ import { ThemedText } from '@/components/ThemedText';
 const Login = () => {
     const { signUpDetails } = useAppContext();
     const [loginDetails, setLoginDetails] = React.useState<any>([]);
-
+    const [isKeyboardOpen, setIsKeyboardOpen] = React.useState<boolean>(false);
     const [loader, setLoader] = React.useState<boolean>(false);
 
     useEffect(() => {
@@ -32,6 +32,12 @@ const Login = () => {
         };
 
         const backHandler = BackHandler.addEventListener("hardwareBackPress", backAction);
+        const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () =>
+            setIsKeyboardOpen(true)
+        );
+        const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () =>
+           setIsKeyboardOpen(false)
+        );
 
         return () => backHandler.remove();
     }, []);
@@ -55,6 +61,9 @@ const Login = () => {
     }
 
     const handleLogin = async () => {
+        if (isKeyboardOpen) {
+            Keyboard.dismiss();
+        }
         setLoader(true);
         
         const phone = loginDetails?.find((item: { id: string }) => item?.id === "number")?.value;

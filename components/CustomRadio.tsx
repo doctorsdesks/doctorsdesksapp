@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, Pressable } from 'react-native';
 import { finalText } from './Utils';
 import { useAppContext } from '@/context/AppContext';
+import { ThemedText } from './ThemedText';
 
 interface CustomRadioProps {
   data: {
@@ -30,9 +31,9 @@ const CustomRadio: React.FC<CustomRadioProps> = ({ data, onChange }) => {
 
   return (
     <View>
-      <Text style={[styles.label]}>
-        {finalText(label, translations, selectedLanguage)} {isMandatory && !isDisabled && <Text style={styles.mandatory}>*</Text>}
-      </Text>
+      <ThemedText style={[styles.label]}>
+        {finalText(label, translations, selectedLanguage)} {isMandatory && !isDisabled && <ThemedText style={styles.mandatory}>*</ThemedText>}
+      </ThemedText>
       <View style={styles.optionsContainer}>
         {options.map((option) => (
           <View
@@ -54,14 +55,14 @@ const CustomRadio: React.FC<CustomRadioProps> = ({ data, onChange }) => {
                 onPress={() => !isDisabled && handleSelect(option)}
             />
             <Pressable onPress={() => !isDisabled && handleSelect(option)}>
-              <Text
+              <ThemedText
                 style={[
                   styles.optionText,
                   selectedValue === option && styles.optionTextSelected,
                 ]}
               >
                 {option}
-              </Text>
+              </ThemedText>
             </Pressable>
           </View>
         ))}

@@ -1,13 +1,15 @@
 import CustomText from '@/components/CustomText';
 import MainHeader from '@/components/MainHeader';
+import { ThemedText } from '@/components/ThemedText';
+import { ThemedView } from '@/components/ThemedView';
+import { finalText } from '@/components/Utils';
 import { useAppContext } from '@/context/AppContext';
 import { router } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import { BackHandler, Dimensions, Pressable, View } from 'react-native';
+import { BackHandler, Pressable, StyleSheet, View } from 'react-native';
 
 const AppLanguage = () => {
     const { translations, selectedLanguage, setSelectedLanguage } = useAppContext();
-    const { height } = Dimensions.get('window');
     const [languages, setLanguages] = useState<Array<any>>([]);
 
     useEffect(() => {
@@ -34,9 +36,9 @@ const AppLanguage = () => {
     }
 
     return (
-        <View style={{ marginHorizontal: 16, marginTop: 52, position: 'relative', height }} >
+        <ThemedView style={styles.container} >
             <MainHeader selectedNav='appLanguage' />
-            <CustomText text="Select Language" textStyle={{ fontSize: 16, marginTop: 32, lineHeight: 20, fontWeight: 600, color: "#32383D" }} multiLingual={true} />
+            <ThemedText  style={{ fontSize: 16, marginTop: 32, lineHeight: 20, fontWeight: 600 }} >{finalText("Select Language", translations, selectedLanguage)} </ThemedText>
             <View style={{ 
                     display: 'flex',
                     flex: 1,
@@ -55,13 +57,22 @@ const AppLanguage = () => {
                             height: 34,
                             backgroundColor: language === selectedLanguage ? "#2DB9B0" : "#fff",
                         }} onPress={() => handleValueChange(language)}>
-                            <CustomText text={language} textStyle={{ color: language === selectedLanguage ? "#fff" : "#2DB9B0", fontSize: 14, lineHeight: 20, fontWeight: 600 }} multiLingual={true} />
+                            <ThemedText style={{ color: language === selectedLanguage ? "#fff" : "#2DB9B0", fontSize: 14, lineHeight: 20, fontWeight: 600 }} >{finalText(language, translations, selectedLanguage)} </ThemedText>
                         </Pressable>
                     )
                 })}
             </View>
-        </View>
+        </ThemedView>
     );
 };
+
+const styles = StyleSheet.create({
+    container: {
+        paddingHorizontal: 16,
+        paddingTop: 62,
+        height: "100%",
+        position: 'relative'
+    },
+});
 
 export default AppLanguage;

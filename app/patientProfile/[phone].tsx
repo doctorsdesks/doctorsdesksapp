@@ -1,11 +1,14 @@
 import { useLocalSearchParams } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, Dimensions, Image, Pressable } from 'react-native';
-import { getPatient } from '@/components/Utils';
+import { finalText, getPatient } from '@/components/Utils';
 import Toast from 'react-native-toast-message';
 import CustomText from '@/components/CustomText';
 import MainHeader from '@/components/MainHeader';
 import { Ionicons } from '@expo/vector-icons';
+import { ThemedView } from '@/components/ThemedView';
+import { ThemedText } from '@/components/ThemedText';
+import { useAppContext } from '@/context/AppContext';
 
 interface PatientDetails {
     imageUrl: string;
@@ -18,15 +21,17 @@ interface PatientDetails {
     maritalStatus: string;
     emailId: string;
     address: any;
+    familyMemberOf?: string;
 }
 
 const PatientProfile = () => {
+    const { translations, selectedLanguage } = useAppContext();
     const { phone } = useLocalSearchParams();
     const [patientDetails, setPatientDetails] = useState<PatientDetails | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [showMore, setShowMore] = useState(false);
-    const { width, height } = Dimensions.get('window');
+    const { width } = Dimensions.get('window');
 
     useEffect(() => {
         const fetchPatientDetails = async () => {
@@ -61,19 +66,19 @@ const PatientProfile = () => {
 
     if (loading) {
         return (
-            <View style={{ marginHorizontal: 16, marginTop: 52, height }} >
+            <ThemedView style={styles.container} >
                 <MainHeader selectedNav="patientProfile" />
-                <CustomText multiLingual={true} text="Loading..." textStyle={styles.loadingText} />
-            </View>
+                <ThemedText style={styles.loadingText} >{finalText("Loading", translations, selectedLanguage)}...</ThemedText>
+            </ThemedView>
         );
     }
 
     if (error || !patientDetails) {
         return (
-            <View style={{ marginHorizontal: 16, marginTop: 52, height }} >
+            <ThemedView style={styles.container} >
                 <MainHeader selectedNav="patientProfile" />
-                <CustomText multiLingual={true} text={error || 'Patient not found'} textStyle={styles.errorText} />
-            </View>
+                <ThemedText  style={styles.errorText} >{finalText(error || 'Patient not found', translations, selectedLanguage)} </ThemedText>
+            </ThemedView>
         );
     }
 
@@ -83,9 +88,9 @@ const PatientProfile = () => {
     }
 
     return (
-        <View style={{ marginHorizontal: 16, marginTop: 52, height }} >
+        <ThemedView style={styles.container} >
             <MainHeader selectedNav="patientProfile" title={patientDetails?.name} />
-            <View style={[styles.profileCard, { width: width - 32 }]}>
+            <View style={[styles.profileCard, { width: width }]}>
                 <View style={styles.profileHeader}>
                     {patientDetails?.imageUrl !== "" ? 
                         <Image 
@@ -102,103 +107,117 @@ const PatientProfile = () => {
                         />
                     }
                     <View style={styles.headerInfo}>
-                        <CustomText text={patientDetails?.name} textStyle={styles.nameText} />
+                        <ThemedText style={styles.nameText} >{finalText(patientDetails?.name, translations, selectedLanguage)} </ThemedText>
                         <View style={styles.infoRow}>
-                            <CustomText multiLingual={true} text={patientDetails?.gender} textStyle={styles.infoText} />
+                            <ThemedText style={[styles.infoText, { textTransform: 'capitalize' }]} >{finalText(patientDetails?.gender, translations, selectedLanguage)} </ThemedText>
                             <View style={styles.dot} />
                             <View style={{ display: 'flex', flexDirection: 'row' }}>
-                                <CustomText textStyle={styles.infoText}  text={patientDetails?.age}/>
-                                <CustomText multiLingual={true} textStyle={[styles.infoText, { marginLeft: 4 }]} text="years"/>
+                                <ThemedText style={styles.infoText} >{finalText(patientDetails?.age, translations, selectedLanguage)} </ThemedText>
+                                <ThemedText style={[styles.infoText, { marginLeft: 4 }]} >{finalText("years", translations, selectedLanguage)} </ThemedText>
                             </View>
                         </View>
                         <View style={styles.phoneContainer}>
                             <Ionicons name="call" size={16} color="#fff" />
-                            <CustomText text={patientDetails?.phone} textStyle={styles.phoneText} />
+                            <ThemedText style={styles.phoneText} >{finalText(patientDetails?.phone, translations, selectedLanguage)} </ThemedText>
                         </View>
                     </View>
                 </View>
-
-                <Pressable onPress={() => setShowMore(!showMore)} style={styles.moreButton}>
-                    <CustomText multiLingual={true} text={showMore ? "Less Details" :"More Details"} textStyle={styles.moreText} />
-                    <Ionicons 
-                        name={showMore ? "chevron-up" : "chevron-down"} 
-                        size={24} 
-                        color="#fff" 
-                    />
-                </Pressable>
-
                 {showMore && (
                     <View style={styles.detailsContainer}>
                         <View style={styles.detailRow}>
                             <View style={styles.detailItem}>
-                                <View style={styles.iconContainer}>
-                                    <Ionicons name="call" size={20} color="#fff" />
-                                </View>
+                                <Image
+                                    source={require('@/assets/images/alternatePhoneIcon.png')}
+                                    style={styles.moreDetailsIcon}
+                                />
                                 <View>
-                                    <CustomText multiLingual={true} text="Alternate No." textStyle={styles.labelText} />
-                                    <CustomText text={patientDetails?.alternatePhone || '-'} textStyle={styles.valueText} />
+                                    <ThemedText style={styles.labelText} >{finalText("Alternate No", translations, selectedLanguage)}.</ThemedText>
+                                    <ThemedText style={styles.valueText} >{finalText(patientDetails?.alternatePhone || '-', translations, selectedLanguage)} </ThemedText>
                                 </View>
                             </View>
                             <View style={styles.detailItem}>
-                                <View style={styles.iconContainer}>
-                                    <Ionicons name="water" size={20} color="#fff" />
-                                </View>
+                                <Image
+                                    source={require('@/assets/images/bloodGroupIcon.png')}
+                                    style={styles.moreDetailsIcon}
+                                />
                                 <View>
-                                    <CustomText multiLingual={true} text="Blood Group" textStyle={styles.labelText} />
-                                    <CustomText text={patientDetails?.bloodGroup || '-'} textStyle={styles.valueText} />
+                                    <ThemedText style={styles.labelText} >{finalText("Blood Group", translations, selectedLanguage)} </ThemedText>
+                                    <ThemedText style={styles.valueText} >{finalText(patientDetails?.bloodGroup || '-', translations, selectedLanguage)} </ThemedText>
                                 </View>
                             </View>
                         </View>
 
                         <View style={styles.detailRow}>
                             <View style={styles.detailItem}>
-                                <View style={styles.iconContainer}>
-                                    <Ionicons name="heart" size={20} color="#fff" />
-                                </View>
+                                <Image
+                                    source={require('@/assets/images/maritalStatusIcon.png')}
+                                    style={styles.moreDetailsIcon}
+                                />
                                 <View>
-                                    <CustomText multiLingual={true} text="Marital Status" textStyle={styles.labelText} />
-                                    <CustomText text={patientDetails?.maritalStatus || '-'} textStyle={styles.valueText} />
+                                    <ThemedText style={styles.labelText} >{finalText("Marital Status", translations, selectedLanguage)} </ThemedText>
+                                    <ThemedText style={styles.valueText} >{finalText(patientDetails?.maritalStatus || '-', translations, selectedLanguage)} </ThemedText>
                                 </View>
                             </View>
-                            {/* <View style={styles.detailItem}>
-                                <View style={styles.iconContainer}>
-                                    <Ionicons name="person" size={20} color="#fff" />
+                            <View style={styles.detailItem}>
+                                <Image
+                                    source={require('@/assets/images/personIcon.png')}
+                                    style={styles.moreDetailsIcon}
+                                />
+                                <View>
+                                    <ThemedText style={styles.labelText} >{finalText("Primary User", translations, selectedLanguage)} </ThemedText>
+                                    <ThemedText style={styles.valueText} >{finalText(patientDetails?.familyMemberOf || '-', translations, selectedLanguage)} </ThemedText>
                                 </View>
-                            </View> */}
+                            </View>
                         </View>
 
                         <View style={styles.detailRow}>
                             <View style={styles.detailItem}>
-                                <View style={styles.iconContainer}>
-                                    <Ionicons name="mail" size={20} color="#fff" />
-                                </View>
+                                <Image
+                                    source={require('@/assets/images/emailIcon.png')}
+                                    style={styles.moreDetailsIcon}
+                                />
                                 <View>
-                                    <CustomText text="Email ID" textStyle={styles.labelText} />
-                                    <CustomText text={patientDetails?.emailId || '-'} textStyle={styles.valueText} />
+                                    <ThemedText style={styles.labelText} >{finalText("Email ID", translations, selectedLanguage)} </ThemedText>
+                                    <ThemedText style={styles.valueText} >{finalText(patientDetails?.emailId || '-', translations, selectedLanguage)} </ThemedText>
                                 </View>
                             </View>
                             <View style={styles.detailItem}>
-                                <View style={styles.iconContainer}>
-                                    <Ionicons name="location" size={20} color="#fff" />
-                                </View>
+                                <Image
+                                    source={require('@/assets/images/locationIcon.png')}
+                                    style={styles.moreDetailsIcon}
+                                />
                                 <View>
-                                    <CustomText multiLingual={true} text="Address" textStyle={styles.labelText} />
-                                    <CustomText text={patientDetails?.address?.addressLine ? getAddress(patientDetails?.address) : '-'} textStyle={styles.valueText} />
+                                    <ThemedText style={styles.labelText} >{finalText("Address", translations, selectedLanguage)} </ThemedText>
+                                    <ThemedText style={styles.valueText} >{finalText(patientDetails?.address?.addressLine ? getAddress(patientDetails?.address) : '-', translations, selectedLanguage)} </ThemedText>
                                 </View>
                             </View>
                         </View>
                     </View>
                 )}
+                <Pressable onPress={() => setShowMore(!showMore)} style={styles.moreButton}>
+                    {showMore ?
+                        <Image
+                            source={require('@/assets/images/chevronUpIcon.png')}
+                            style={styles.icon}
+                        />
+                    :
+                        <Image
+                            source={require('@/assets/images/chevronDownIcon.png')}
+                            style={styles.icon}
+                        />
+                    }
+                </Pressable>
             </View>
-        </View>
+        </ThemedView>
     );
 };
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
-        backgroundColor: '#fff',
-        alignItems: 'center',
+        paddingHorizontal: 16,
+        paddingTop: 62,
+        height: "100%",
+        position: 'relative',
     },
     profileCard: {
         marginTop: 20,
@@ -207,6 +226,8 @@ const styles = StyleSheet.create({
         borderTopLeftRadius: 0,
         borderTopRightRadius: 0,
         overflow: 'hidden',
+        marginLeft: -16,
+        marginRight: -16,
     },
     profileHeader: {
         flexDirection: 'row',
@@ -214,18 +235,20 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     profileImage: {
-        width: 80,
-        height: 80,
-        borderRadius: 40,
+        width: 100,
+        height: 100,
+        borderRadius: 100,
         marginRight: 16,
+        borderWidth: 2, 
+        borderColor: "#FFFFFF",
     },
     headerInfo: {
         flex: 1,
     },
     nameText: {
-        fontSize: 24,
-        fontWeight: '600',
-        color: '#fff',
+        fontSize: 16,
+        fontWeight: '500',
+        color: '#FCFCFC',
         marginBottom: 4,
     },
     infoRow: {
@@ -234,14 +257,15 @@ const styles = StyleSheet.create({
         marginBottom: 8,
     },
     infoText: {
-        fontSize: 16,
-        color: '#fff',
+        fontSize: 14,
+        fontWeight: 400,
+        color: '#FCFCFC',
     },
     dot: {
         width: 4,
         height: 4,
         borderRadius: 2,
-        backgroundColor: '#fff',
+        backgroundColor: '#FCFCFC',
         marginHorizontal: 8,
     },
     phoneContainer: {
@@ -255,25 +279,19 @@ const styles = StyleSheet.create({
     },
     phoneText: {
         fontSize: 16,
-        color: '#fff',
+        color: '#FCFCFC',
         marginLeft: 8,
     },
     moreButton: {
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',
-        paddingVertical: 12,
-        borderTopWidth: 1,
-        borderTopColor: 'rgba(255, 255, 255, 0.2)',
-    },
-    moreText: {
-        fontSize: 16,
-        color: '#fff',
-        marginRight: 8,
+        paddingBottom: 12,
     },
     detailsContainer: {
-        padding: 16,
-        backgroundColor: 'rgba(255, 255, 255, 0.1)',
+        paddingVertical: 16,
+        paddingHorizontal: 24,
+        backgroundColor: '#2DB9B0',
     },
     detailRow: {
         flexDirection: 'row',
@@ -285,24 +303,18 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         flex: 1,
     },
-    iconContainer: {
-        width: 40,
-        height: 40,
-        borderRadius: 20,
-        backgroundColor: 'rgba(255, 255, 255, 0.2)',
-        alignItems: 'center',
-        justifyContent: 'center',
-        marginRight: 12,
-    },
     labelText: {
-        fontSize: 12,
-        color: 'rgba(255, 255, 255, 0.8)',
-        marginBottom: 2,
+        fontSize: 11,
+        lineHeight: 11,
+        fontWeight: 400,
+        color: '#FCFCFC',
     },
     valueText: {
-        fontSize: 12,
-        color: '#fff',
-        fontWeight: '500',
+        fontSize: 14,
+        marginTop: 8,
+        lineHeight: 14,
+        color: '#FCFCFC',
+        fontWeight: '600',
         width: 100,
     },
     loadingText: {
@@ -315,6 +327,15 @@ const styles = StyleSheet.create({
         fontSize: 16,
         color: '#FF4444',
     },
+    icon: {
+        width: 30,
+        height: 24
+    },
+    moreDetailsIcon: {
+        width: 32,
+        height: 32,
+        marginRight: 12,
+    }
 });
 
 export default PatientProfile;

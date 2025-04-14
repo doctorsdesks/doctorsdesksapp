@@ -1,5 +1,5 @@
 import { useAppContext } from '@/context/AppContext';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { finalText } from './Utils';
 import { ThemedView } from './ThemedView';
@@ -21,12 +21,18 @@ interface CustomInputBoxesProps {
 
 const CustomInputBoxes: React.FC<CustomInputBoxesProps> = ({ data, onChange }) => {
   const { translations, selectedLanguage } = useAppContext();
-    const languages = ["Hindi", "English", "Haryanvi"]
+  const [languages, setLanguages] = useState<Array<any>>([]);
+  useEffect(() => {
+    if (translations) {
+        const currentLanguages = Object.keys(translations);
+        setLanguages(currentLanguages)
+    }
+},[translations])
 
     return (
         <ThemedView style={{ marginBottom: 16}} >
             <ThemedText style={styles.label}>
-                {finalText(data?.label, translations, selectedLanguage)} {data?.isMandatory && <Text style={styles.mandatory}>*</Text>}
+                {finalText(data?.label, translations, selectedLanguage)} {data?.isMandatory && <ThemedText style={styles.mandatory}>*</ThemedText>}
             </ThemedText>
             <View 
                 style={{ 
@@ -55,14 +61,14 @@ const CustomInputBoxes: React.FC<CustomInputBoxesProps> = ({ data, onChange }) =
                                 onChange(language, data?.id, "ADD")
                             }}
                         >
-                            <Text style={{ color: data?.value?.find((item) => item === language) ? "#fff" : "#2DB9B0"}} >{language}</Text>
+                            <ThemedText style={{ color: data?.value?.find((item) => item === language) ? "#fff" : "#2DB9B0"}} >{language}</ThemedText>
                         </Pressable>
                     )
                 })}
             </View>
-            <Text style={{ marginTop: 8, fontWeight: 400, fontSize: 12, color: "#757575"}} >
+            <ThemedText style={{ marginTop: 8, fontWeight: 400, fontSize: 12, color: "#757575"}} >
                 {data?.placeholder}
-            </Text>
+            </ThemedText>
         </ThemedView>
     )
 };

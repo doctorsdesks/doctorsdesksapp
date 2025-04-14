@@ -17,7 +17,7 @@ const ClinicDetailsSetting = () => {
     const { doctorDetails } = useAppContext();
     const scrollViewRef = React.useRef(null);
     const [clinicData, setClinicData] = useState<any>();
-    const [loader, setLoader] = useState<boolean>(false);
+    const [loader, setLoader] = useState<boolean>(true);
     const [isEditable, setIsEditable] = useState<boolean>(false);
     const [isKeyboardOpen, setIsKeyboardOpen] = useState<boolean>(false);
 

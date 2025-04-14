@@ -125,7 +125,7 @@ const CustomInput2: React.FC<CustomInput2Props> = ({ data, onChange, handleFocus
         : inputType === 'DATE' ? (
           <>
             <Pressable onPress={() => setShowDatePicker(true)} style={[styles.input, isFocused && styles.inputFocused, isError && styles.inputError]}>
-              <Text style={{ color: value ? Colors[colorScheme].text : "#8C8C8C"}} >{value || placeholder}</Text>
+              <ThemedText style={{ color: value ? Colors[colorScheme].text : "#8C8C8C"}} >{value || placeholder}</ThemedText>
             </Pressable>
             {showDatePicker && (
               <DateTimePicker value={value ? new Date(value.split('-').reverse().join('-')) : new Date()} mode="date" display="default" onChange={handleDateChange} />

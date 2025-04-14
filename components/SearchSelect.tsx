@@ -87,12 +87,12 @@ const SearchSelect: React.FC<SearchSelectProps> = ({ data, onChange }) => {
                 </Pressable>
             }
             {isError && (
-                <Text style={[
+                <ThemedText style={[
                     styles.errorText,
                     { color: colors.errorBorder }
                 ]}>
                     Please select a valid option.
-                </Text>
+                </ThemedText>
             )}
             <CustomModal visible={isFocused} onClose={() => setIsFocused(false)}>
                 <View style={[
@@ -100,14 +100,14 @@ const SearchSelect: React.FC<SearchSelectProps> = ({ data, onChange }) => {
                     { borderBottomColor: colors.borderColor }
                 ]}>
                     <View style={styles.modalHeaderTitle}>
-                        <Text style={[styles.modalTitle, { color: colors.text }]}>
+                        <ThemedText style={[styles.modalTitle, { color: colors.text }]}>
                             {data?.label}
-                        </Text>
+                        </ThemedText>
                         <Pressable 
                             onPress={() => setIsFocused(false)}
                             style={styles.closeButton}
                         >
-                            <Text style={[styles.closeButtonText, { color: colors.icon }]}>✕</Text>
+                            <ThemedText style={[styles.closeButtonText, { color: colors.icon }]}>✕</ThemedText>
                         </Pressable>
                     </View>
                     <View style={styles.modalHeaderContent}>
@@ -132,7 +132,7 @@ const SearchSelect: React.FC<SearchSelectProps> = ({ data, onChange }) => {
                                     onPress={handleClear}
                                     style={styles.clearButton}
                                 >
-                                    <Text style={[styles.closeButtonText, { color: colors.icon }]}>✕</Text>
+                                    <ThemedText style={[styles.closeButtonText, { color: colors.icon }]}>✕</ThemedText>
                                 </Pressable>
                             ) : null}
                         </View>
@@ -154,10 +154,10 @@ const SearchSelect: React.FC<SearchSelectProps> = ({ data, onChange }) => {
                                 pressed && { backgroundColor: colors.backgroundSelected }
                             ]}
                         >
-                            <Text style={[
+                            <ThemedText style={[
                                 styles.optionText,
                                 { color: colors.borderColorSelected }
-                            ]}>{item}</Text>
+                            ]}>{item}</ThemedText>
                         </Pressable>
                     )}
                     style={styles.list}

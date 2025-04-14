@@ -13,7 +13,7 @@ import Toast from 'react-native-toast-message';
 
 const ConsultationFee = () => {
     const { doctorDetails } = useAppContext();
-    const [loader, setLoader] = useState<boolean>(false);
+    const [loader, setLoader] = useState<boolean>(true);
     const [isEditable, setIsEditable] = useState<boolean>(false);
     const [data, setData] = useState<Array<StringObject>>([
         {

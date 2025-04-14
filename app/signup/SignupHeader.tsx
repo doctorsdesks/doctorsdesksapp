@@ -1,3 +1,4 @@
+import { ThemedText } from '@/components/ThemedText';
 import React from 'react';
 import { View, Text, StyleSheet, Dimensions } from 'react-native';
 
@@ -15,7 +16,7 @@ const SignUpHeader: React.FC<SignUpHeaderProps>  = ({data}) => {
                 const eachItemWidth = (width - 54) / data.length;
                 return (
                     <View key={index} style={{ display: "flex", alignItems: "center", width: eachItemWidth }} >
-                        <Text 
+                        <ThemedText 
                             style={{ 
                                 color: item?.status === "NOT_STARTED" ? "#A9A9AB" : "#1EA6D6", 
                                 fontWeight: 600, 
@@ -23,7 +24,7 @@ const SignUpHeader: React.FC<SignUpHeaderProps>  = ({data}) => {
                             }}
                         >
                             {item.label}
-                        </Text>
+                        </ThemedText>
                         <View style={{ position: 'relative', width: '100%' }} >
                             <View 
                                 style={{ 

@@ -198,12 +198,14 @@ export const uploadFile = async (fileUri: any, fileName: string, phoneNumber: st
   }
 
   export const getPatient = async (phone: any) => {
-    const url = URLS.BASE + URLS.GET_PATIENT + "/" + phone;
+    const url = URLS.BASE + URLS.GET_PATIENT + "?phone=" + phone;
+    const authToken = await getSecureKey("userAuthtoken");
     try {
         const response = await axios.get(url,
             {
               headers: {
-                'X-Requested-With': 'doctorsdesks_web_app',
+                'X-Requested-With': 'nirvaanhealth_web_app',
+                "Authorization": `Bearer ${authToken}`
               },
             }
           );

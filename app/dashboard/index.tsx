@@ -44,18 +44,6 @@ const Home = () => {
     const colors = Colors[colorScheme];
 
     useEffect(() => {
-        // const getLanguages = async () => {
-        //     const response = await getTranslations();
-        //     if (response?.status === "SUCCESS") {
-        //         setTranslations(response?.data || {})
-        //     } else {
-        //         Toast.show({
-        //             type: 'error',  
-        //             text1: response?.data,
-        //             visibilityTime: 3000,
-        //         });
-        //     }
-        // }
         const getDoctorId =  async () => {
             const value = await getSecureKey("doctorId");
             if (value) {
@@ -63,7 +51,6 @@ const Home = () => {
             }
         }
         getDoctorId();
-        // getLanguages();
     },[])
 
     useEffect(() => {

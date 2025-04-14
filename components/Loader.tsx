@@ -1,28 +1,36 @@
 import React, { useEffect, useRef } from 'react';
-import { View, Animated, StyleSheet, Text, Easing, Dimensions } from 'react-native';
+import { View, Animated, StyleSheet, Text, Easing, Dimensions, Image } from 'react-native';
 import { ThemedView } from './ThemedView';
 
 const {height, width} = Dimensions.get('window');
 
 const Loader = () => {
-  // Create an animated value to rotate the loader
   const rotateValue = useRef(new Animated.Value(0)).current;
+  const scaleValue = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
-    // Define the animation: rotating from 0 to 1 (equivalent to 0 to 360 degrees)
+    // Scale animation from center
+    Animated.spring(scaleValue, {
+      toValue: 1,
+      useNativeDriver: true,
+      tension: 50,
+      friction: 7
+    }).start();
+
+    // Continuous rotation animation
     const startRotation = () => {
       Animated.loop(
         Animated.timing(rotateValue, {
-          toValue: 1, // This corresponds to 360 degrees
-          duration: 3000, // Animation duration (1 second)
-          useNativeDriver: true, // Improves performance
-          easing: Easing.linear, // Smooth linear motion
+          toValue: 1,
+          duration: 2000,
+          useNativeDriver: true,
+          easing: Easing.bezier(0.45, 0, 0.55, 1),
         })
       ).start();
     };
 
     startRotation();
-  }, [rotateValue]);
+  }, [rotateValue, scaleValue]);
 
   // Interpolate rotation value to degrees
   const rotateInterpolate = rotateValue.interpolate({
@@ -31,19 +39,22 @@ const Loader = () => {
   });
 
   const animatedStyle = {
-    transform: [{ rotate: rotateInterpolate }],
+    transform: [
+      { scale: scaleValue },
+      { rotate: rotateInterpolate }
+    ],
   };
 
   return (
     <ThemedView style={styles.container}>
-      {/* Rotating container for both loader and text */}
       <Animated.View style={[styles.loaderContainer, animatedStyle]}>
-        {/* Circular Loader */}
         <View style={styles.loader} />
-        
-        {/* "DD" text in the center */}
         <View style={styles.textWrapper}>
-          <Text style={styles.text}>DD</Text>
+          <Image 
+            source={require('../assets/images/loaderImage.png')} 
+            style={styles.image} 
+            resizeMode='contain' 
+          />
         </View>
       </Animated.View>
     </ThemedView>
@@ -61,31 +72,31 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     flex: 1,
+    backgroundColor: 'rgba(255, 255, 255, 0.9)'
   },
   loaderContainer: {
     justifyContent: 'center',
     alignItems: 'center',
   },
   loader: {
-    width: 80, // Set your desired size
+    width: 80,
     height: 80,
-    borderRadius: 40, // Half of width and height to make it circular
-    borderWidth: 5, // The thickness of the loader
-    borderColor: '#2DB9B0', // The color of the loader
-    borderTopColor: 'transparent', // Making it look like a circular arc
-    position: 'absolute', // Position it absolutely to center it
+    borderRadius: 40,
+    borderWidth: 5,
+    borderColor: '#2DB9B0',
+    borderTopColor: 'transparent',
+    position: 'absolute',
   },
   textWrapper: {
     justifyContent: 'center',
     alignItems: 'center',
-    width: 80, // Same size as loader
+    width: 80,
     height: 80,
   },
-  text: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#2DB9B0', // Text color
-  },
+  image: {
+    height: 175,
+    width: 200
+  }
 });
 
 export default Loader;

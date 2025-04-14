@@ -117,7 +117,7 @@ const TimePicker: React.FC<TimePickerProps> = ({ handleTimeSelection, title, tim
     const isSelected = item === selectedItem;
     return (
       <Pressable onPress={() => handleItemPressed(type, item)} style={styles.item}>
-        <Text style={[styles.text, isSelected && styles.selectedText]}>{item}</Text>
+        <ThemedText style={[styles.text, isSelected && styles.selectedText]}>{item}</ThemedText>
       </Pressable>
     );
   };
