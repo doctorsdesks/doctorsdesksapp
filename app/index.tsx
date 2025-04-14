@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { View } from 'react-native';
 import Onboarding from '../components/Onboarding';
-import { getSecureKey } from '@/components/Utils';
+import { getSecureKey, getTranslations } from '@/components/Utils';
 import { router } from 'expo-router';
 import { useAppContext } from '@/context/AppContext';
 import Loader from '@/components/Loader';
+import Toast from 'react-native-toast-message';
+import { ThemedView } from '@/components/ThemedView';
 
 const OnboardingScreen = () => {
-    const { setSelectedLanguage } = useAppContext();
+    const { setSelectedLanguage, setTranslations } = useAppContext();
     const [isReady, setIsReady] = useState<boolean>(false);
     const [loader, setLoader] = useState<boolean>(false);
 
@@ -17,6 +19,19 @@ const OnboardingScreen = () => {
             setLoader(true);
             await checkForLogin();
         };
+        const getLanguages = async () => {
+            const response = await getTranslations();
+            if (response?.status === "SUCCESS") {
+                setTranslations(response?.data || {})
+            } else {
+                Toast.show({
+                    type: 'error',  
+                    text1: response?.error,
+                    visibilityTime: 3000,
+                });
+            }
+        }
+        getLanguages();
         initialize();
     },[])
 
@@ -30,8 +45,8 @@ const OnboardingScreen = () => {
     }
 
     const checkForLogin = async () => {
-        const value = await getSecureKey("isUserLoggedIn");
-        if (value === "true") {
+        const value = await getSecureKey("userAuthtoken");
+        if (value && value !== "") {
             router.replace("/dashboard");
         } else {
             checkForOnBoarding();
@@ -51,9 +66,9 @@ const OnboardingScreen = () => {
     return (
         loader ? <Loader />
         :
-            <View>
+            <ThemedView>
                 <Onboarding />
-            </View>
+            </ThemedView>
     );
 };
 

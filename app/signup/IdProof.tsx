@@ -1,5 +1,6 @@
 import Header from '@/components/Header';
 import IdProofCard from '@/components/IdProofCard';
+import { ThemedView } from '@/components/ThemedView';
 import { router } from 'expo-router';
 import React from 'react';
 import { Pressable, Text, View } from 'react-native';
@@ -11,7 +12,7 @@ interface IdProofProps {
 const IdProof: React.FC<IdProofProps> = ({ idProofData }) => {
 
     return (
-        <View 
+        <ThemedView 
             style={{ 
                 display: 'flex',
             }} 
@@ -63,7 +64,7 @@ const IdProof: React.FC<IdProofProps> = ({ idProofData }) => {
                 </Pressable>
             </View>
             
-        </View>
+        </ThemedView>
     )
 }
 

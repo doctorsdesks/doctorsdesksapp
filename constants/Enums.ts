@@ -59,3 +59,7 @@ export interface PatientListProps {
     age: string;
     phone: string;
 }
+
+export const CONFIGS = {
+    SPECIALISATION: "SPECIALISATION"
+}

@@ -1,16 +1,18 @@
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
-import { Dimensions, Pressable, useColorScheme, View } from 'react-native';
+import { Dimensions, Pressable } from 'react-native';
 import CustomText from './CustomText';
 import { router } from 'expo-router';
+import { ThemedView } from './ThemedView';
+import { useColorScheme } from '@/hooks/useColorScheme.web';
 
 interface MainFooterProps {
     selectedNav: string;
 }
 
 const MainFooter: React.FC<MainFooterProps> = ({ selectedNav }) => {
-    const { width, height } = Dimensions.get('window');
-    const colorSchema = useColorScheme();
+    const { width } = Dimensions.get('window');
+    const colorSchema = useColorScheme() ?? 'light';
 
     const handleClick = (value: string) => {
         switch (value) {
@@ -31,12 +33,11 @@ const MainFooter: React.FC<MainFooterProps> = ({ selectedNav }) => {
     }
 
     return (
-        <View style={{ 
-            width: width - 8,
-            marginLeft: -12,
-            marginRight: 4,
+        <ThemedView style={{ 
+            width: width,
+            paddingHorizontal: 16,
             position: 'absolute', 
-            bottom: 12,
+            bottom: 0,
             display: 'flex', 
             flexDirection: 'row', 
             justifyContent: 'space-between',
@@ -58,7 +59,7 @@ const MainFooter: React.FC<MainFooterProps> = ({ selectedNav }) => {
                 <Ionicons name='person-outline' size={24} color={selectedNav === "profile" ? "#5257E9" : "#A9A9AB" } />
                 <CustomText text="Profile" textStyle={{ fontSize: 10, lineHeight: 14, fontWeight: 600, color: selectedNav === "profile" ? "#5257E9" : "#A9A9AB", marginTop: 4 }} />
             </Pressable>
-        </View>
+        </ThemedView>
     );
 };
 

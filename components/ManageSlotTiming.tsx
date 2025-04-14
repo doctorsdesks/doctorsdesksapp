@@ -5,9 +5,12 @@ import TimeSelection from '@/components/TimeSelection';
 import CustomSwitch from '@/components/CustomSwitch';
 import { router } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import { BackHandler, Dimensions, Pressable, Text, View } from 'react-native';
+import { BackHandler, Dimensions, Pressable, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import CustomText from '@/components/CustomText';
+import { ThemedView } from './ThemedView';
+import { ThemedText } from './ThemedText';
+import { finalText } from './Utils';
+import { useAppContext } from '@/context/AppContext';
 
 export interface ManageSlotTimingProps {
     timings: any[];
@@ -16,6 +19,7 @@ export interface ManageSlotTimingProps {
 }
 
 const ManageSlotTiming: React.FC<ManageSlotTimingProps> = ({ timings, setTimings, eachDayChange }) => {
+    const { translations, selectedLanguage } = useAppContext();
     const { height, width } = Dimensions.get('window');
     const [allDaysSelected, setAllDaysSelected] = useState<boolean>(false);
     const [days, setDays] = useState<Array<DaysForSlot>>([
@@ -182,12 +186,12 @@ const ManageSlotTiming: React.FC<ManageSlotTimingProps> = ({ timings, setTimings
     }
 
     return (
-        <View >
+        <ThemedView>
             <View style={{ marginTop: 24, marginHorizontal: 16, height, position: 'relative' }} >
                 <View style={{ borderWidth: 1, borderColor: "#DDDDDDDD", borderRadius: 8, backgroundColor: "#F9F9F9", padding: 16 }} >
                     <View>
                         <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }} >
-                            <CustomText multiLingual={true} textStyle={{ fontSize: 16, fontWeight: 600, color: "#32383D" }} text="Select Week Days" />
+                            <ThemedText style={{ fontSize: 16, fontWeight: 600 }} >{finalText("Select Week Days", translations, selectedLanguage)} </ThemedText>
                             <CustomSwitch isDisabled={eachDayChange ? true : false} isActive={allDaysSelected} onClick={handleAllDays} />
                         </View>
                         <View style={{ display: 'flex', flexDirection: "row", alignItems: 'center', justifyContent: 'space-between', marginTop: 24 }} >
@@ -199,46 +203,48 @@ const ManageSlotTiming: React.FC<ManageSlotTimingProps> = ({ timings, setTimings
                                         style={{ height: 32, width: 32, display: 'flex', alignItems: "center", justifyContent: 'center', borderColor: "#2DB9B0", borderWidth: 1, borderRadius: 32, backgroundColor: day?.isSelected ? "#2DB9B0" : "#F9F9F9" }}
                                         onPress={() => !eachDayChange && handleDaySelect(day?.day)}
                                     >
-                                        <CustomText multiLingual={true} textStyle={{ fontSize: 14, lineHeight: 19, fontWeight: day?.isSelected ? 700 : 600, color: day?.isSelected ? "#FFFFFF" : "#32383D" }} text={day?.label} />
+                                        <ThemedText style={{ fontSize: 14, lineHeight: 19, fontWeight: day?.isSelected ? 700 : 600, color: day?.isSelected ? "#FFFFFF" : "#32383D" }} >{finalText(day?.label, translations, selectedLanguage)} </ThemedText>
                                     </Pressable>
                                 )
                             })}
                         </View>
                     </View>
                     <View style={{ marginTop: 24 }} >
-                        <CustomText multiLingual={true} textStyle={{ fontSize: 16, fontWeight: 600, color: "#32383D" }} text="Sessions" />
-                        <View style={{ marginTop: 16 }} >
-                            {sessions?.map((session: {[key: string]: string}, index: number) => {
-                                return(
-                                    <View key={session?.startTime} style={{ marginBottom: 12, display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}} >
-                                        <View style={{ paddingHorizontal: 16, paddingVertical: 12, borderWidth: 1, borderRadius: 8, borderColor: "#D9D9D9", display: 'flex', flexDirection: 'row' }} >
-                                            <View style={{ display:'flex', flexDirection: 'row' }} >
-                                                <CustomText multiLingual={true} textStyle={{ fontSize: 14, lineHeight: 20, fontWeight: 600, color: "#1EA6D6" }} text="Session" />
-                                                <Text style={{ marginLeft: 4, fontSize: 14, lineHeight: 20, fontWeight: 600, color: "#1EA6D6" }} >{index+1}</Text>
+                        <ThemedText style={{ fontSize: 16, fontWeight: 600 }} >{finalText("Sessions", translations, selectedLanguage)} </ThemedText>
+                        {sessions?.length > 0 && 
+                            <View style={{ marginTop: 16 }} >
+                                {sessions?.map((session: {[key: string]: string}, index: number) => {
+                                    return(
+                                        <View key={session?.startTime} style={{ marginBottom: 12, display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}} >
+                                            <View style={{ paddingHorizontal: 16, paddingVertical: 12, borderWidth: 1, borderRadius: 8, borderColor: "#D9D9D9", display: 'flex', flexDirection: 'row' }} >
+                                                <View style={{ display:'flex', flexDirection: 'row' }} >
+                                                    <ThemedText style={{ fontSize: 14, lineHeight: 20, fontWeight: 600, color: "#1EA6D6" }} >{finalText("Session", translations, selectedLanguage)} </ThemedText>
+                                                    <ThemedText style={{ marginLeft: 4, fontSize: 14, lineHeight: 20, fontWeight: 600, color: "#1EA6D6" }} >{index+1}</ThemedText>
+                                                </View>
+                                                <View  style={{ marginLeft: 16, marginRight: 12, height: 20, width: 2, backgroundColor: "#D9D9D9" }} />
+                                                <ThemedText style={{ fontSize: 14, lineHeight: 20, fontWeight: 400, color: "#32383D" }} >{session?.startTime} - {session?.endTime} </ThemedText>
                                             </View>
-                                            <View  style={{ marginLeft: 16, marginRight: 12, height: 20, width: 2, backgroundColor: "#D9D9D9" }} />
-                                            <Text style={{ fontSize: 14, lineHeight: 20, fontWeight: 400, color: "#32383D" }} >{session?.startTime} - {session?.endTime} </Text>
+                                            <Pressable onPress={() => handleDeleteSession(index)} >
+                                                <Ionicons size={24} color={"#757575"} name='remove-circle' />
+                                            </Pressable>
                                         </View>
-                                        <Pressable onPress={() => handleDeleteSession(index)} >
-                                            <Ionicons size={24} color={"#757575"} name='remove-circle' />
-                                        </Pressable>
-                                    </View>
-                                )
-                            })}
-                        </View>
+                                    )
+                                })}
+                            </View>
+                        }
                         <View style={{ marginTop: 16, display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
                             <View style={{ display: 'flex', flexDirection: 'column' }}>
-                                <CustomText multiLingual={true} textStyle={{ fontSize: 11, lineHeight: 15, fontWeight: 600, color: "#32383D" }} text="Start Time" />
+                                <ThemedText style={{ fontSize: 11, lineHeight: 15, fontWeight: 600 }} >{finalText("Start Time", translations, selectedLanguage)} </ThemedText>
                                 <Pressable 
                                     style={{ borderWidth: 1, borderRadius: 8, borderColor: "#D9D9D9", backgroundColor: "#FFFFFF", paddingHorizontal: 14, paddingVertical: 12, display: 'flex', flexDirection: 'row', alignItems: 'center', marginTop: 8 }} 
                                     onPress={() => handleOpenTime("start")}
                                 >
                                     {startTime === "" ? 
-                                        <CustomText multiLingual={true} textStyle={{ fontSize: 14, lineHeight: 19, fontWeight: 400, color: "#757575" }} text="Select Time" />
+                                        <ThemedText style={{ fontSize: 14, lineHeight: 19, fontWeight: 400, color: "#757575" }} >{finalText("Select Time", translations, selectedLanguage)} </ThemedText>
                                     :
-                                        <Text style={{ fontSize: 14, lineHeight: 19, fontWeight: 400, color: "#757575" }} >
+                                        <ThemedText style={{ fontSize: 14, lineHeight: 19, fontWeight: 400, color: "#757575" }} >
                                             {startTime}
-                                        </Text>
+                                        </ThemedText>
                                     }
                                     <View style={{ marginLeft: 8 }} >
                                         <Ionicons size={18} color={"#757575"} name='time-outline' />
@@ -246,17 +252,17 @@ const ManageSlotTiming: React.FC<ManageSlotTimingProps> = ({ timings, setTimings
                                 </Pressable>
                             </View>
                             <View style={{ display: 'flex', flexDirection: 'column' }}>
-                                <CustomText multiLingual={true} textStyle={{ fontSize: 11, lineHeight: 15, fontWeight: 600, color: "#32383D" }} text="End Time" />
+                                <ThemedText style={{ fontSize: 11, lineHeight: 15, fontWeight: 600 }} >{finalText("End Time", translations, selectedLanguage)} </ThemedText>
                                 <Pressable 
                                     style={{ borderWidth: 1, borderRadius: 8, borderColor: "#D9D9D9", backgroundColor: "#FFFFFF", paddingHorizontal: 14, paddingVertical: 12, display: 'flex', flexDirection: 'row', alignItems: 'center', marginTop: 8 }}
                                     onPress={() => handleOpenTime("end")}
                                 >
                                     {endTime === "" ? 
-                                        <CustomText multiLingual={true} textStyle={{ fontSize: 14, lineHeight: 19, fontWeight: 400, color: "#757575" }} text="Select Time" />
+                                        <ThemedText style={{ fontSize: 14, lineHeight: 19, fontWeight: 400, color: "#757575" }} >{finalText("Select Time", translations, selectedLanguage)} </ThemedText>
                                     :
-                                        <Text style={{ fontSize: 14, lineHeight: 19, fontWeight: 400, color: "#757575" }} >
+                                        <ThemedText style={{ fontSize: 14, lineHeight: 19, fontWeight: 400, color: "#757575" }} >
                                             {endTime}
-                                        </Text>
+                                        </ThemedText>
                                     }
                                     <View style={{ marginLeft: 8 }} >
                                         <Ionicons size={18} color={"#757575"} name='time-outline' />
@@ -269,12 +275,12 @@ const ManageSlotTiming: React.FC<ManageSlotTimingProps> = ({ timings, setTimings
                         </View>
                     </View>
                 </View>
-                <View style={{ display: "flex", alignItems: "center", marginTop: 24, position: 'absolute', bottom: 100, width: width - 32, right: -16 }} >
+                <View style={{ display: "flex", alignItems: "center", marginTop: 24, position: 'absolute', bottom: 140, right: -16, left: -16 }} >
                         <CustomButton  multiLingual={true} width='FULL' title="Add" onPress={handleAddFinal} isDisabled={handleDisable()} />
                 </View>
             </View>
             {lowerPanel && <LowerPanel children={lowerPanelChild} closeLoserPanel={() => setLowerPanel(false)} />}
-        </View>
+        </ThemedView>
     );
 };
 

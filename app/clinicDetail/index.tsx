@@ -1,17 +1,16 @@
 import CustomButton from '@/components/CustomButton';
 import { useAppContext } from '@/context/AppContext';
 import React, { useEffect, useState } from 'react';
-import { BackHandler, Dimensions, Keyboard, ScrollView, View } from 'react-native';
+import { BackHandler, Dimensions, Keyboard, ScrollView, StyleSheet, View } from 'react-native';
 import Toast from 'react-native-toast-message';
-import { getClinics, getValueById } from '@/components/Utils';
+import { getClinics, getValueById, updateClinic } from '@/components/Utils';
 import CustomInput2 from '@/components/CustomInput2';
 import { signUpDetailsInitial } from '@/context/InitialState';
 import CustomRadio from '@/components/CustomRadio';
-import { URLS } from '@/constants/Urls';
-import axios from 'axios';
 import { router } from 'expo-router';
 import Loader from '@/components/Loader';
 import MainHeader from '@/components/MainHeader';
+import { ThemedView } from '@/components/ThemedView';
 
 const ClinicDetailsSetting = () => {
     const { height } = Dimensions.get('window');
@@ -108,7 +107,7 @@ const ClinicDetailsSetting = () => {
         }
     },[isEditable])
 
-    const updateClinic = async () => {
+    const updateClinicInfo = async () => {
         const updateData = {
             addressPayload: {
                 clinicName: getValueById(clinicData?.clinicInfo, "clinicName"),
@@ -121,31 +120,21 @@ const ClinicDetailsSetting = () => {
                 }
             }
         }
-        const url = URLS.BASE + URLS.UPDATE_CLINIC + "/" + doctorDetails?.phone + "/" + clinicData?.clinicId;
-        try {
-            const response = await axios.post(url, updateData,
-              {
-                headers: {
-                  'X-Requested-With': 'doctorsdesks_web_app',
-                },
-              }
-            );
-            const { data, status } = response;
-            if (status === 201){
-                Toast.show({
-                    type: 'success',  
-                    text1: data.message,
-                    visibilityTime: 3000,
-                });
-            }
+        const response: any = await updateClinic(clinicData?.clinicId, updateData);
+        if (response.status === "SUCCESS") {
+            Toast.show({
+                type: 'success',  
+                text1: response.message,
+                visibilityTime: 3000,
+            });
             setLoader(false);
             router.replace("/dashboard/profile");
-        } catch (error: any) {
-                Toast.show({
-                    type: 'error',  
-                    text1: error.response.data.message,
-                    visibilityTime: 3000,
-                });
+        } else {
+            Toast.show({
+                type: 'error',  
+                text1: response.error,
+                visibilityTime: 3000,
+            });
             setLoader(false);
         }
     }
@@ -153,7 +142,7 @@ const ClinicDetailsSetting = () => {
     const handleButtonClick = () => {
         if (isEditable) {
             setLoader(true);
-            updateClinic();
+            updateClinicInfo();
         } else {
             setIsEditable(true);
         }
@@ -202,39 +191,48 @@ const ClinicDetailsSetting = () => {
         }
     }
 
-    return (
-        <View style={{ marginHorizontal: 16, marginTop: 52, position: 'relative', height }} >
-            <MainHeader selectedNav='clinicDetails' />
-            <View style={{ height: height - 100 }} >
-                <ScrollView
-                    ref={scrollViewRef}
-                    style={{ 
-                        display: 'flex',
-                        backgroundColor: "#F9F9F9",
-                        borderRadius: 8,
-                        borderColor: "#DDDDDD",
-                        marginTop: 20,
-                        borderWidth: 1,
-                        paddingHorizontal: 12,
-                        paddingVertical: 16,
-                        maxHeight: isEditable ? isKeyboardOpen ? height - 400 : height - 160 : height -  200,
-                    }}
-                >
-                    {clinicData?.clinicInfo?.map((item: any) => {
-                        return (
-                            <View key={item?.id} style={{ marginBottom: 16, paddingBottom: 12 }} >
-                                {renderInputType(item)}
-                            </View>
-                        )
-                    })}
-                </ScrollView>
-            </View>
-            <View style={{ display: "flex", alignItems: "center", position: 'absolute', left: 0, right: 0, top: height - 76 }} >
-                <CustomButton width='FULL' title={isEditable ? "Save" : "Update"} onPress={handleButtonClick} />
-            </View>
-            {loader && <Loader />}
-        </View>
+    return (loader ?
+            <Loader />
+        :
+            <ThemedView style={styles.container} >
+                <MainHeader selectedNav='clinicDetails' />
+                <View style={{ height: height - 100 }} >
+                    <ScrollView
+                        ref={scrollViewRef}
+                        style={{ 
+                            display: 'flex',
+                            borderRadius: 8,
+                            borderColor: "#DDDDDD",
+                            marginTop: 20,
+                            borderWidth: 1,
+                            paddingHorizontal: 12,
+                            paddingVertical: 16,
+                            maxHeight: isKeyboardOpen ? height - 460 : height - 160,
+                        }}
+                    >
+                        {clinicData?.clinicInfo?.map((item: any) => {
+                            return (
+                                <View key={item?.id} style={{ marginBottom: 16, paddingBottom: 12 }} >
+                                    {renderInputType(item)}
+                                </View>
+                            )
+                        })}
+                    </ScrollView>
+                </View>
+                <View style={{ display: "flex", alignItems: "center", position: 'absolute', left: 16, right: 16, bottom: 16, zIndex: 2 }} >
+                    <CustomButton width='FULL' title={isEditable ? "Save" : "Update"} onPress={handleButtonClick} />
+                </View>
+            </ThemedView>
     );
 };
+
+const styles = StyleSheet.create({
+    container: {
+        paddingHorizontal: 16,
+        paddingTop: 62,
+        height: "100%",
+        position: 'relative'
+    },
+});
 
 export default ClinicDetailsSetting;

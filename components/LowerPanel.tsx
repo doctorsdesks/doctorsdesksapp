@@ -1,5 +1,5 @@
 import React from 'react';
-import { Dimensions, Pressable, View } from 'react-native';
+import { Dimensions, Pressable } from 'react-native';
 
 interface LowerPanelProps {
     children: React.JSX.Element;
@@ -12,11 +12,11 @@ const LowerPanel: React.FC<LowerPanelProps> = ({ children, closeLoserPanel }) =>
 
     return (
         <Pressable 
-            style={{ position: 'absolute', height, zIndex: 9, backgroundColor: "rgba(110, 114, 118, 0.3)", top: -64, width, marginLeft: -16 }}
+            style={{ position: 'absolute', height, zIndex: 9, backgroundColor: "rgba(110, 114, 118, 0.3)", top: -44, width, marginLeft: -16 }}
             onPress={closeLoserPanel}
         >
             <Pressable 
-                style={{ position: 'absolute', zIndex: 10, bottom: 0, borderTopLeftRadius: 32, borderTopRightRadius: 32, paddingHorizontal: 20, paddingVertical: 24, backgroundColor: "#fff", width, height: "50%" }} 
+                style={{ position: 'absolute', zIndex: 10, bottom: 32, borderTopLeftRadius: 32, borderTopRightRadius: 32, paddingHorizontal: 20, paddingVertical: 24, backgroundColor: "#fff", width, height: "50%" }} 
                 onPress={(e) => e.preventDefault()}
             >
                 {children}

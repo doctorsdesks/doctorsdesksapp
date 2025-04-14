@@ -7,11 +7,16 @@ import IdProofUploadCard from './IdProofUploadCard';
 import CustomButton from '@/components/CustomButton';
 import Toast from 'react-native-toast-message';
 import Loader from '@/components/Loader';
-import { uploadFile } from '@/components/Utils';
+import { finalText, uploadFile } from '@/components/Utils';
+import { ThemedView } from '@/components/ThemedView';
+import { ThemedText } from '@/components/ThemedText';
+import { Colors } from '@/constants/Colors';
+import { useColorScheme } from '@/hooks/useColorScheme.web';
 
 const UploadCard = () => {
-    const { signUpDetails, setSignUpDetails } = useAppContext();
+    const { signUpDetails, setSignUpDetails, translations, selectedLanguage } = useAppContext();
     const { docId, docType } = useLocalSearchParams();
+    const colorScheme = useColorScheme() || 'light';
 
     const [currentData, setCurrentData] = useState<CardProps>();
     const [frontUri, setFrontUri] = useState<any>(null);
@@ -83,16 +88,16 @@ const UploadCard = () => {
     }
 
     return (
-        <View style={{ marginTop: 32, marginHorizontal: 16 }}>
-            <Text style={{ fontWeight: 600, fontSize: 16, color: "#32383D", lineHeight: 20 }}>
-                Please take photos of both the front and back of your registration card
-            </Text>
+        <ThemedView style={{ paddingTop: 32, paddingHorizontal: 16 }}>
+            <ThemedText style={{ fontWeight: 600, fontSize: 16, lineHeight: 20 }}>
+                {finalText("Please take photos of both the front and back of your registration card", translations, selectedLanguage)}
+            </ThemedText>
             <View style={{ marginTop: 24 }} >
                 {currentData && <IdProofUploadCard data={currentData} docType={docType} onChange={handleChange} handleUrl={handleUrl} frontUri={frontUri} backUri={backUri} setBackUri={setBackUri} setFrontUri={setFrontUri} />}
             </View>
             <CustomButton title='Upload Images' width='FULL' onPress={handleUploadImage} isDisabled={frontUri === null || backUri ===null || currentData?.value === "" ? true : false} containerStyle={{ marginTop: 32 }} />
             {loader && <Loader />}
-        </View>
+        </ThemedView>
     )
 };
 

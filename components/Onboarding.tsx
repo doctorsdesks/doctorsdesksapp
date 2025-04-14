@@ -3,6 +3,7 @@ import { View, StyleSheet, Dimensions } from 'react-native';
 import CustomButton from './CustomButton';
 import Carousel from './Carousel';
 import { router } from 'expo-router';
+import { ThemedView } from './ThemedView';
 
 const { height } = Dimensions.get('window');
 
@@ -13,18 +14,17 @@ const Onboarding = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <ThemedView style={styles.container}>
       <Carousel />
       <CustomButton containerStyle={styles.buttonFixedBottom} title="Get Started" onPress={handlePress} />
-    </View>
+    </ThemedView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    marginHorizontal: 16, 
     marginVertical: 20,
-    height: height - 20,
+    height: height,
   },
   header: {
     fontSize: 24,
@@ -33,7 +33,8 @@ const styles = StyleSheet.create({
   },
   buttonFixedBottom: {
     position: 'absolute',
-    bottom: 0,
+    bottom: 8,
+    marginHorizontal: 12,
     left: 0,
     right: 0,
   }

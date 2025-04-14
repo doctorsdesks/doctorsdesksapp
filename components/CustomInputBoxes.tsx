@@ -2,6 +2,8 @@ import { useAppContext } from '@/context/AppContext';
 import React from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { finalText } from './Utils';
+import { ThemedView } from './ThemedView';
+import { ThemedText } from './ThemedText';
 
 interface CustomInputBoxesProps {
     data: { 
@@ -22,10 +24,10 @@ const CustomInputBoxes: React.FC<CustomInputBoxesProps> = ({ data, onChange }) =
     const languages = ["Hindi", "English", "Haryanvi"]
 
     return (
-        <View style={{ marginBottom: 16}} >
-            <Text style={styles.label}>
+        <ThemedView style={{ marginBottom: 16}} >
+            <ThemedText style={styles.label}>
                 {finalText(data?.label, translations, selectedLanguage)} {data?.isMandatory && <Text style={styles.mandatory}>*</Text>}
-            </Text>
+            </ThemedText>
             <View 
                 style={{ 
                     display: 'flex',
@@ -61,13 +63,12 @@ const CustomInputBoxes: React.FC<CustomInputBoxesProps> = ({ data, onChange }) =
             <Text style={{ marginTop: 8, fontWeight: 400, fontSize: 12, color: "#757575"}} >
                 {data?.placeholder}
             </Text>
-        </View>
+        </ThemedView>
     )
 };
 
 const styles = StyleSheet.create({
     label: {
-      backgroundColor: '#FCFCFC',
       fontSize: 14,
       color: '#8C8C8C',
       marginBottom: 8,

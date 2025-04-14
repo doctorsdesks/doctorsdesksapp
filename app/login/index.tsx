@@ -1,48 +1,32 @@
 import CustomButton from '@/components/CustomButton';
-import CustomInput from '@/components/CustomInput';
 import React, { useEffect } from 'react';
-import { BackHandler, Pressable, StyleSheet, Text, View } from 'react-native';
-import auth from '@react-native-firebase/auth';
+import { BackHandler, Pressable, StyleSheet, View } from 'react-native';
 import { router } from 'expo-router';
 import Toast from 'react-native-toast-message';
 import Loader from '@/components/Loader';
 import { useAppContext } from '@/context/AppContext';
 import axios from 'axios';
 import { saveSecureKey } from '@/components/Utils';
-import { signUpDetailsInitial } from '@/context/InitialState';
+import { ThemedView } from '@/components/ThemedView';
+import CustomInput2 from '@/components/CustomInput2';
+import { ThemedText } from '@/components/ThemedText';
 
 const Login = () => {
-    const { signUpDetails, setSignUpDetails, setDoctorDetails } = useAppContext();
-    const [phoneNumber, setPhoneNumber] = React.useState({
-        id: 'phone',
-        type: 'STRING',
-        inputType: 'PHONE',
-        value: '',
-        label: 'Mobile Number',
-        isMandatory: true,
-        errorMessage: 'Please enter 10 digits mobile number.',
-    });
-    const [otp, setOtp] = React.useState({
-        id: 'otp',
-        type: 'STRING',
-        inputType: 'NUMBER',
-        value: '',
-        label: 'OTP',
-        isMandatory: true,
-        errorMessage: 'Please enter 4 digits otp.',
-    });
-    const [confirm, setConfirm] = React.useState<any>(false);
+    const { signUpDetails } = useAppContext();
+    const [loginDetails, setLoginDetails] = React.useState<any>([]);
 
-    const [timer, setTimer] = React.useState<number>(0);
-    const [canResendOtp, setCanResendOtp] = React.useState<boolean>(false);
-    const [isOTPWrong, setIsOTPWrong] = React.useState<boolean>(false);
     const [loader, setLoader] = React.useState<boolean>(false);
 
-    const [testingNumbers] = React.useState<string>("1111111111, 1111111112, 1111111113, 1111111119");
+    useEffect(() => {
+        if(signUpDetails){
+            const details = signUpDetails?.loginDetails;
+            const finalDetails = details?.filter((item: { id: string }) => item?.id !== "confirmPassword" );
+            setLoginDetails(finalDetails);
+        }
+    }, [signUpDetails]);
 
     useEffect(() => {
         const backAction = () => {
-            setSignUpDetails(signUpDetailsInitial);
             BackHandler.exitApp()
             return true;
         };
@@ -52,138 +36,56 @@ const Login = () => {
         return () => backHandler.remove();
     }, []);
 
-    useEffect(() => {
-        if (signUpDetails) {
-            setConfirm(signUpDetails?.phoneOTPDetails?.otpTriggered);
-        }
-    }, [signUpDetails]);
-
-    useEffect(() => {
-        if (timer === 0) {
-            setCanResendOtp(true);
-          return;
-        }
-    
-        setCanResendOtp(false);
-    
-        const timerId = setInterval(() => {
-          setTimer(timer-1);
-        }, 1000);
-    
-        return () => clearInterval(timerId);
-      }, [timer]);
-
-    const handleChange = (value: string) => { 
-        if (value?.length <= 10) {
-            setPhoneNumber({ ...phoneNumber, value });
-        }
-
-    }
-
-    const handleOtpTrigger = () => {
-
-        if(testingNumbers.includes(phoneNumber.value)){
-            const newSignUpDetails = { ...signUpDetails, phoneOTPDetails: {
-                    phoneNumber: phoneNumber.value,
-                    otp: otp.value,
-                    otpTriggered: true
-                },
+    const handleChange = (value: string, id: string) => {
+        let finalValue = value;
+        if (id === "number") {
+            if (value?.length <= 10) {
+                finalValue = value;
+            } else {
+                finalValue = value?.substring(0,10);
             }
-            setSignUpDetails(newSignUpDetails)
-            setTimer(30);
-            setLoader(false);
-            setCanResendOtp(false);
-        } else {
-            setLoader(true);
-            setCanResendOtp(false);
-            signInWithPhoneNumber();
         }
-    }
-
-    const handleOTP = (value: string) => {
-        if(value?.length <= 6) {
-            setIsOTPWrong(false);
-            setOtp({ ...otp, value });
-        }
-    }
-
-    const signInWithPhoneNumber = async () => {
-        const completeNumber = "+91" + phoneNumber.value;
-        try {
-            const confirmation = await auth().signInWithPhoneNumber(completeNumber);
-            setLoader(false);
-            const newSignUpDetails = { ...signUpDetails, phoneOTPDetails: {
-                    phoneNumber: phoneNumber.value,
-                    otp: otp.value,
-                    otpTriggered: true
-                },
+        const currentData = loginDetails.map((item: any) => {
+            if (item.id === id) {
+                return { ...item, value: finalValue }; 
             }
-            setSignUpDetails(newSignUpDetails)
-            setTimer(30);
-        } catch (error: any) {
-            setLoader(false);
-            Toast.show({
-                type: 'error',  
-                text1: error?.message || "Something went wrong!. Please try again later",
-                visibilityTime: 3000,
-            });
-        }
+            return item;
+        });
+        setLoginDetails(currentData);  
     }
 
-    const confirmCode = async () => { 
+    const handleLogin = async () => {
         setLoader(true);
-        if(otp.value === "123456"){
-            CheckForUserExist();
-        } else {
-            try {
-                const responseOtp = await confirm.confirm(otp.value);
-                CheckForUserExist();
-            } catch (error: any) {
+        
+        const phone = loginDetails?.find((item: { id: string }) => item?.id === "number")?.value;
+        const password = loginDetails?.find((item: { id: string }) => item?.id === "password")?.value;
+        
+        const updateData = {
+            phone,
+            password,
+            type: "DOCTOR"
+        }
+        
+        const url = "http://docter-api-service-lb-413222422.ap-south-1.elb.amazonaws.com/v1/user/login";
+        try {
+            const response = await axios.post(url, updateData,
+                {
+                  headers: {
+                    'X-Requested-With': 'nirvaanhealth_web_app',
+                  },
+                }
+              );
+            const { data } = response;
+            if (data.data?.success) {
+                await saveSecureKey("doctorId", data.data?.user?.phone);
+                await saveSecureKey("userAuthtoken", data.data?.user?.authToken);
+                router.replace("/dashboard");
+            } else {
                 Toast.show({
-                    type: 'error',
-                    text1: error?.message || "Something went wrong!. Please try again later",
+                    type: 'error',  
+                    text1: data.data.message || "Something went wrong!",
                     visibilityTime: 3000,
                 });
-                setLoader(false);
-            }
-        }
-    }
-
-    const CheckForUserExist = async () => {
-        const url = "http://docter-api-service-lb-413222422.ap-south-1.elb.amazonaws.com/v1/doctor/" + phoneNumber.value;
-        // const url = "http://localhost:3000/v1/doctor/" + phoneNumber?.value;
-        try {
-            const response = await axios.get(url,
-                {
-                    headers: {
-                    'X-Requested-With': 'doctorsdesks_web_app',
-                    },
-                }
-            );
-            const { data } = response;
-            if( data?.data == null ){
-                // new doctor 
-                const newSignUpDetails = { ...signUpDetails, phoneOTPDetails: {
-                        phoneNumber: phoneNumber.value,
-                        otp: otp.value,
-                    },
-                }
-                setSignUpDetails(newSignUpDetails)
-                setLoader(false);
-                router.replace({
-                    pathname: '/signup',
-                    params: {
-                        currentStep: "PD"
-                    }
-                })
-            } else if (data.data) {
-                // existing doctor
-                setSignUpDetails(signUpDetailsInitial);
-                setDoctorDetails({ ...data.data })
-                saveSecureKey("doctorId", data.data.phone);
-                saveSecureKey("isUserLoggedIn", "true");
-                setLoader(false);
-                router.replace("/dashboard");
             }
         } catch (error: any) {
             Toast.show({
@@ -191,60 +93,78 @@ const Login = () => {
                 text1: error.response.data.message || "Something went wrong!",
                 visibilityTime: 3000,
             });
+        } finally {
             setLoader(false);
         }
     }
 
-    
+    const renderInputType = (item: any) => {
+        switch (item.inputType) {
+            case "NUMBER":
+                return (
+                    <CustomInput2 data={item} onChange={(value, id) => handleChange(value, id)} />
+                )
+                break;
+            case "PASSWORD":
+                return (
+                    <CustomInput2 data={item} onChange={(value, id) => handleChange(value, id)} />
+                )
+                break;
+            default:
+                break;
+        }
+    }
+
+    const renderValue = () => {
+        return (loginDetails?.map((item: any) => {
+            return (
+                <View key={item?.id} style={{ marginBottom: 16, paddingBottom: 24 }} >
+                    {renderInputType(item)}
+                </View>
+            )
+        }))
+    }
+
+    const handleDisable = () => {
+        const number = loginDetails?.find((item: { id: string }) => item?.id === "number")?.value;
+        const password = loginDetails?.find((item: { id: string }) => item?.id === "password")?.value;
+        if (number?.length !== 10 || password?.length < 8 ){
+            return true;
+        }
+        return false;
+    }
+
+    const handleClickSignup = () => {
+        router.replace("/login/numberPassword");
+    }
 
     return (
-        <View style={style.container} >
-            {!confirm ? (
-                <View>
-                    <CustomInput data={phoneNumber} onChange={handleChange} />
-                    <View style={{ marginTop: 24 }} >
-                        <CustomButton title="Get OTP" onPress={() => handleOtpTrigger()} isDisabled={phoneNumber?.value === "" || phoneNumber?.value?.length !== 10 } />
-                    </View>
-                </View>
-            ) : (
-                <View style={{ marginTop: 20 }} >
-                    <Text style={{ fontSize: 14, fontWeight: 400, lineHeight: 20, color: "#32383D" }} >
-                        Enter the <Text style={{ fontWeight: 600 }} >6 digit</Text> code from the sms we sent to <Text style={{ fontWeight: 600 }} >{phoneNumber?.value}</Text>
-                    </Text>
-                    <View style={{ marginTop: 40 }} >
-                        <CustomInput data={otp} onChange={handleOTP} />
-                        {isOTPWrong && <Text style={{ marginTop: 5, fontSize: 12, color: 'red' }}>Please enter correct otp.</Text>}
-                    </View>
-                    <View style={{ marginTop: 20, display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }} >
-                        <Text>
-                            Didn't receive OTP?
-                        </Text>
-                        <Pressable style={{ marginLeft: 4, borderBottomWidth: 1, borderBottomColor: "#1EA6D6" }} onPress={() => handleOtpTrigger()} >
-                            <Text style={{ color: "#1EA6D6"}} >
-                                {canResendOtp ? "Resend Code" : `Retry in ${timer}`}
-                            </Text>
-                        </Pressable>
-                    </View>
-                    <View style={{ marginTop: 24 }} >
-                        <CustomButton title="Verify OTP" onPress={() => confirmCode()} isDisabled={otp?.value === "" || otp?.value?.length !== 6 } />
-                    </View>
-                </View>
-            )}
+        <ThemedView style={style.container} >
+            {renderValue()}
+            <View style={{ marginTop: 4, display: 'flex', flexDirection: 'row', justifyContent: 'center' }} >
+                <ThemedText type='subtitle' >
+                    Don't have an account ?
+                </ThemedText>
+                <Pressable onPress={handleClickSignup} style={{ marginLeft: 4 }}  >
+                    <ThemedText type="subtitle" style={{ fontWeight: 600, color: "#1EA6D6" }}>
+                        SignUp
+                    </ThemedText>
+                </Pressable>
+            </View>
+            <View style={{ display: "flex", alignItems: "center", marginTop: 24 }} >
+                <CustomButton width='FULL' title="Login" onPress={handleLogin} isDisabled={handleDisable()} />
+            </View>
             {loader && <Loader />}
-        </View>
+        </ThemedView>
     )
 }
 
 const style = StyleSheet.create({
     container: {
-        backgroundColor: "#FCFCFC",
         paddingHorizontal: 16, 
         paddingVertical: 40,
         height: "100%"
     },
-    header: {
-        color: "pink"
-    }
 });
 
 export default Login;

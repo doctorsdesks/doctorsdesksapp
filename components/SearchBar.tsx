@@ -3,6 +3,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useState, useEffect } from "react";
 import { useAppContext } from "@/context/AppContext";
 import { finalText, getSecureKey } from "./Utils";
+import { ThemedView } from "./ThemedView";
 
 interface SearchBarProps {
     searchPatients: (value: string) => void;
@@ -39,20 +40,20 @@ const SearchBar: React.FC<SearchBarProps> = ({ searchPatients, listOpened, showP
     };
 
     return (
-        <View style={{ width: "100%", overflow: "hidden", borderTopStartRadius: listOpened ? 38 : 80, borderTopEndRadius: listOpened ? 36 : 80, borderBottomEndRadius: listOpened ? 0 : 80, borderBottomStartRadius: listOpened ? 0 : 80, borderWidth: 1, borderColor: showPatientList || isFocused ? "#2DB9B0" : "#F6F5FA", backgroundColor: colorSchema === "dark" ? "#303135" : "#F6F5FA", paddingHorizontal: 20, paddingVertical: 12, display: 'flex', flexDirection: 'row', alignItems: 'center', position: 'relative' }} >
+        <ThemedView style={{ width: "100%", overflow: "hidden", borderTopStartRadius: listOpened ? 38 : 80, borderTopEndRadius: listOpened ? 36 : 80, borderBottomEndRadius: listOpened ? 0 : 80, borderBottomStartRadius: listOpened ? 0 : 80, borderWidth: 1, borderColor: showPatientList || isFocused ? "#2DB9B0" : "#C3E7FB", backgroundColor: colorSchema === "dark" ? "#303135" : "#F6F5FA", paddingHorizontal: 20, paddingVertical: 12, display: 'flex', flexDirection: 'row', alignItems: 'center', position: 'relative' }} >
             <View style={{ width: 28 }} >
                 <Ionicons name='search-sharp' size={20} />
             </View>
             <TextInput
                 placeholderTextColor={'#8C8C8C'}
-                style={{ borderWidth: 1, borderRadius: 4, padding: 10, fontSize: 16, width: "90%", borderColor: colorSchema === 'dark' ? "#303135" : "#F6F5FA"}}
+                style={{ borderWidth: 1, borderRadius: 4, fontSize: 14, lineHeight: 20, width: "90%", borderColor: colorSchema === 'dark' ? "#303135" : "#F6F5FA"}}
                 value={searchValue}
                 onChangeText={handleChange}
                 onFocus={() => setIsFocused(true)}
                 placeholder={finalText("Search by patient name or number", translations, selectedLanguage)}
                 keyboardType={'default'}
             />
-        </View>
+        </ThemedView>
     );
 };
 

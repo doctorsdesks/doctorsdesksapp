@@ -1,7 +1,13 @@
 import { useAppContext } from '@/context/AppContext';
-import React, { useState } from 'react';
-import { View, Text, TextInput, StyleSheet, Image } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, TextInput, StyleSheet, Image, Pressable } from 'react-native';
 import { finalText } from './Utils';
+import { ThemedText } from './ThemedText';
+import { ThemedView } from './ThemedView';
+import { useColorScheme } from '@/hooks/useColorScheme.web';
+import { Colors } from '@/constants/Colors';
+import DateTimePicker from '@react-native-community/datetimepicker';
+import { Ionicons } from '@expo/vector-icons';
 
 interface CustomInput2Props {
   data: {
@@ -14,6 +20,7 @@ interface CustomInput2Props {
     errorMessage?: string;
     placeholder?: string;
     isDisabled?: boolean;
+    isError?: boolean;
   };
   onChange: (value: string, id: string) => void;
   handleFocus?: () => void;
@@ -25,6 +32,17 @@ const CustomInput2: React.FC<CustomInput2Props> = ({ data, onChange, handleFocus
   const [isFocused, setIsFocused] = useState(false);
   const [isError, setIsError] = useState(false);
   const { label, value, isMandatory, errorMessage, placeholder, inputType, id, isDisabled } = data;
+  const [showDatePicker, setShowDatePicker] = useState(false);
+  const [showPassword, setShowPassword] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (data) {
+      const error = data?.isError || false;
+      setIsError(error);
+    }
+  },[data])
+
+  const colorScheme = useColorScheme() || 'light';
 
   const handleBlurLocal = () => {
     handleBlur && handleBlur(data?.value);
@@ -58,6 +76,11 @@ const CustomInput2: React.FC<CustomInput2Props> = ({ data, onChange, handleFocus
       return;
     }
 
+    if (inputType === "PASSWORD" && value?.length < 8) {
+      setIsError(true);
+      return;
+    }
+
     setIsError(false);
   };
 
@@ -70,32 +93,56 @@ const CustomInput2: React.FC<CustomInput2Props> = ({ data, onChange, handleFocus
     } else {
       onChange(value, data.id);
     }
-    
   }
 
+  const formatDate = (date: Date) => {
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
+    return `${day}-${month}-${year}`;
+  };
+
+  const handleDateChange = (_event: any, selectedDate?: Date) => {
+    setShowDatePicker(false);
+    if (selectedDate) {
+      onChange(formatDate(selectedDate), id);
+    }
+  };
+
   return (
-    <View>
-        <Text style={[styles.label, isFocused && styles.labelFocused, isError && styles.labelError]}>
+    <ThemedView>
+        <ThemedText style={[styles.label, isFocused && styles.labelFocused, isError && styles.labelError]}>
           {finalText(label, translations, selectedLanguage)} {isMandatory && !isDisabled && <Text style={styles.mandatory}>*</Text>}
-        </Text>
+        </ThemedText>
         {data?.isDisabled ? 
           <View
-            style={[styles.input, styles.disabled]}
+            style={[styles.input, { backgroundColor: Colors[colorScheme].cardBackgroud }]}
           >
-            <Text>
+            <ThemedText>
               {value}
-            </Text>
+            </ThemedText>
           </View>
-        :
+        : inputType === 'DATE' ? (
+          <>
+            <Pressable onPress={() => setShowDatePicker(true)} style={[styles.input, isFocused && styles.inputFocused, isError && styles.inputError]}>
+              <Text style={{ color: value ? Colors[colorScheme].text : "#8C8C8C"}} >{value || placeholder}</Text>
+            </Pressable>
+            {showDatePicker && (
+              <DateTimePicker value={value ? new Date(value.split('-').reverse().join('-')) : new Date()} mode="date" display="default" onChange={handleDateChange} />
+            )}
+          </>
+        ) : 
           <View style={{ position: 'relative' }} >
             <TextInput
               placeholderTextColor={'#8C8C8C'}
-              style={[styles.input, isFocused && styles.inputFocused, isError && styles.inputError, { paddingLeft: data?.inputType === "AMOUNT" ? 44 : 8 }]}
+              style={[styles.input, isFocused && styles.inputFocused, isError && styles.inputError, { paddingLeft: data?.inputType === "AMOUNT" ? 48 : 8, color: Colors[colorScheme].text }]}
               value={value}
               onChangeText={onLocalChange}
               onBlur={handleBlurLocal}
               onFocus={handleFocusLocal}
               placeholder={placeholder}
+              secureTextEntry={inputType === "PASSWORD" && !showPassword}
+              autoCapitalize={inputType === "PASSWORD" || inputType === "EMAIL" ? "none" : "sentences"}
               keyboardType={
                 inputType === 'NUMBER' || inputType === 'PHONE' || inputType === 'AMOUNT'
                   ? 'numeric'
@@ -103,20 +150,24 @@ const CustomInput2: React.FC<CustomInput2Props> = ({ data, onChange, handleFocus
               }
             />
             {data?.inputType === "AMOUNT" && 
-              <View style={{ height: "100%", backgroundColor: "#A9A9AB", zIndex: 2, width: 40, position: 'absolute', display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', borderBottomLeftRadius: 6, borderTopLeftRadius: 6  }} >
+              <View style={{ height: "100%", backgroundColor: "#2DB9B0", zIndex: 2, width: 40, position: 'absolute', display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', borderBottomLeftRadius: 6, borderTopLeftRadius: 6  }} >
                 <Image source={require('../assets/images/rupee.png')} resizeMode='contain' height={24} width={24} />
               </View>
+            }
+            {data?.inputType === "PASSWORD" && 
+              <Pressable onPress={() => setShowPassword(!showPassword)} style={{ height: "100%", backgroundColor: "#2DB9B0", zIndex: 2, width: 40, position: 'absolute', right:  0, display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', borderBottomRightRadius: 4, borderTopRightRadius: 4  }} >
+                {showPassword ? <Ionicons name='eye' size={24} /> : <Ionicons name='eye-off-outline' size={24} />}
+              </Pressable>
             }
           </View>
         }
       {isError && errorMessage && <Text style={styles.error}>{errorMessage}</Text>}
-    </View>
+    </ThemedView>
   );
 };
 
 const styles = StyleSheet.create({
   label: {
-    backgroundColor: '#FCFCFC',
     fontSize: 14,
     color: '#8C8C8C',
     marginBottom: 6
@@ -148,9 +199,6 @@ const styles = StyleSheet.create({
     fontSize: 12,
     marginTop: 5,
   },
-  disabled: {
-    backgroundColor: "#CFD8DC"
-  }
 });
 
 export default CustomInput2;

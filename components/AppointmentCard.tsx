@@ -5,6 +5,8 @@ import { AppointmentStatus } from '@/constants/Enums';
 import CustomButton from './CustomButton';
 import CustomText from './CustomText';
 import { Ionicons } from '@expo/vector-icons';
+import { ThemedView } from './ThemedView';
+import { ThemedText } from './ThemedText';
 
 interface AppointmentCardProps {
     appointment: Appointment;
@@ -82,30 +84,30 @@ const AppointmentCard: React.FC<AppointmentCardProps> = ({ appointment, width, h
     }
 
     return (
-        <View 
+        <ThemedView 
             key={appointment?._id} 
             style={{ borderWidth: 1, borderRadius: 12, borderColor: "#D9D9D9", padding: 16, marginBottom: 16 }}
         >
-            <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', borderBottomWidth: 1, borderBottomColor: "#F1F1F1" }} >
+            <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', borderBottomWidth: appointment?.status === AppointmentStatus.PENDING ? 1 : 0, borderBottomColor: "#F1F1F1" }} >
                 <View style={{ height: 70, width: 70, borderRadius: 100, display: 'flex', alignItems: 'center', flexDirection: 'row', justifyContent: 'center', backgroundColor: "#2DB9B0" }} >
                     {appointment?.patientImageUrl && appointment?.patientImageUrl !== ""
                     ?
                         <Image source={{uri: appointment?.patientImageUrl}} resizeMode='cover' height={70} width={70} style={{ height: 70, width: 70, borderRadius: 100 }} />  
                     :
-                        <CustomText textStyle={{ fontSize: 40, lineHeight: 52, fontWeight: 700, color: "#fff" }} text={capitalizeWords(appointment?.patientName)?.substring(0,1)} />
+                        <ThemedText style={{ fontSize: 40, lineHeight: 52, fontWeight: 700 }}>{capitalizeWords(appointment?.patientName)?.substring(0,1)}</ThemedText>
                     }
                 </View>
                 <View style={{ marginLeft: 24, display: 'flex', width: width - 236 }} >
-                    <CustomText textStyle={{ fontSize: 16, fontWeight: 600, color: "#32383D" }} text={capitalizeWords(appointment?.patientName)} />
+                    <ThemedText style={{ fontSize: 16, fontWeight: 600 }}>{capitalizeWords(appointment?.patientName)}</ThemedText>
                     <View style={{ marginTop: 6, display: 'flex', flexDirection: 'row', alignItems: 'center' }} >
                         <Ionicons name='calendar-outline' size={16} />
-                        <CustomText text={appointment?.date} textStyle={{ marginLeft: 8, fontSize: 12, lineHeight: 16, fontWeight: 400, color: "#32383D" }} />
+                        <ThemedText style={{ marginLeft: 8, fontSize: 12, lineHeight: 16, fontWeight: 400 }} >{appointment?.date}</ThemedText>
                     </View>
                     <View style={{ marginTop: 6, display: 'flex', flexDirection: 'row', alignItems: 'center' }} >
                         <Ionicons name='time-outline' size={16} />
-                        <CustomText textStyle={{ marginLeft: 8, fontSize: 12, lineHeight: 16, fontWeight: 400, color: "#32383D" }}  text={changeTimeToAmPm(appointment?.startTime)}/>
+                        <ThemedText style={{ marginLeft: 8, fontSize: 12, lineHeight: 16, fontWeight: 400, color: "#32383D" }}>{changeTimeToAmPm(appointment?.startTime)}</ThemedText>
                     </View>
-                    <View style={{ marginTop: 6, marginBottom: 10, paddingHorizontal: 6, paddingVertical: 3, borderRadius: 40, backgroundColor: "#1EA6D6", display: 'flex', alignItems: 'center', justifyContent: 'center' }} >
+                    <View style={{ marginTop: 6, marginBottom: 10, paddingHorizontal: 6, paddingVertical: 6, borderRadius: 40, backgroundColor: "#1EA6D6", display: 'flex', alignItems: 'center', justifyContent: 'center' }} >
                         <CustomText multiLingual={true} textStyle={{ fontSize: 11, lineHeight: 16, fontWeight: 600, color: "#FFFFFF" }} text={appointment?.appointmentType === "OPD" ? "Normal Appointment" : "Emergency Appointment"} />
                     </View>
                 </View>
@@ -117,15 +119,15 @@ const AppointmentCard: React.FC<AppointmentCardProps> = ({ appointment, width, h
                     </View>
                 }
             </View>
-            <View style={{ marginTop: 16 }} >
-                    {appointment?.status === AppointmentStatus.PENDING &&
-                        <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }} >
-                            <CustomButton multiLingual={true} width='HALF' title="Deny" onPress={() => handleStatusUpdate && handleStatusUpdate("CANCEL", appointment?._id)} textColor="#009688" containerStyle={{ backgroundColor: "#fff", borderWidth: 1, borderColor: "#009688" }} />
-                            <CustomButton multiLingual={true} width='HALF' title="Approve" onPress={() => handleStatusUpdate && handleStatusUpdate("ACCEPT", appointment?._id)} />
-                        </View>
-                    }
-            </View>
-        </View>
+            {appointment?.status === AppointmentStatus.PENDING && 
+                <View style={{ marginTop: 10 }} >
+                    <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }} >
+                        <CustomButton multiLingual={true} width='HALF' title="Deny" onPress={() => handleStatusUpdate && handleStatusUpdate("CANCEL", appointment?._id)} textColor="#009688" containerStyle={{ backgroundColor: "#fff", borderWidth: 1, borderColor: "#009688" }} />
+                        <CustomButton multiLingual={true} width='HALF' title="Approve" onPress={() => handleStatusUpdate && handleStatusUpdate("ACCEPT", appointment?._id)} />
+                    </View>
+                </View>
+            }
+        </ThemedView>
     );
 };
 
