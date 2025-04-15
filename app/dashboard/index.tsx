@@ -10,7 +10,7 @@ import PatientList from '@/components/PatientList';
 import SearchBar from '@/components/SearchBar';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
-import { finalText, getAppointments, getDfo, getDoctorDetails, getPatientList, getSecureKey } from '@/components/Utils';
+import { finalText, formatDateToYYYYMMDD, getAppointments, getDfo, getDoctorDetails, getPatientList, getSecureKey } from '@/components/Utils';
 import { Colors } from '@/constants/Colors';
 import { AppointmentStatus, PatientListProps } from '@/constants/Enums';
 import { URLS } from '@/constants/Urls';
@@ -21,6 +21,7 @@ import axios from 'axios';
 import { router } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { Dimensions, Image, Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { Path, Rect, Svg } from 'react-native-svg';
 import Toast from 'react-native-toast-message';
 
 
@@ -29,7 +30,7 @@ const Home = () => {
     const scrollViewRef = React.useRef(null);
     const { width, height } = Dimensions.get('window');
     const [isListOpened, setIsListOpened] = useState<boolean>(false);
-    const [loader, setLoader] = useState<boolean>(false);
+    const [loader, setLoader] = useState<boolean>(true);
     const [appointments, setAppointments] = useState<Array<any>>([]);
     const [patientCount, setPatientCount] = useState<string>('0');
     const [doctorId, setDoctorId] = useState<string>("");
@@ -56,7 +57,7 @@ const Home = () => {
     useEffect(() => {
         if (doctorId !== "") {
             const today = new Date();
-            const formattedDate = today.toISOString().split('T')[0];
+            const formattedDate = formatDateToYYYYMMDD(today)
             findDoctor(doctorId)
             getDfoInfo(doctorId)
             getAllAppointments(doctorId, formattedDate)
@@ -181,7 +182,7 @@ const Home = () => {
             if (status === 201){
                 setShowCancelPopUp(false);
                 const today = new Date();
-                const formattedDate = today.toISOString().split('T')[0];
+                const formattedDate = formatDateToYYYYMMDD(today)
                 getAllAppointments(doctorId, formattedDate);
             }
         } catch (error: any) {
@@ -254,7 +255,7 @@ const Home = () => {
                         borderRadius: 8, 
                         borderLeftWidth: 8, 
                         borderColor: "#0A867E", 
-                        paddingLeft: 16, 
+                        paddingLeft: 8, 
                         paddingRight: 32, 
                         paddingVertical: 12, 
                         width: width - 32, 
@@ -265,10 +266,16 @@ const Home = () => {
                         backgroundColor: "#12B6A7"
                 }}>
                     <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }} >
-                        <Image source={require('../../assets/images/persons.png')} style={{ height: 40, width: 40 }} resizeMode='contain' />
-                        <CustomText multiLingual={true} textStyle={{ fontSize: 16, lineHeight: 16, fontWeight: 600, color: "#FFFFFF", marginLeft: 8 }} text="Total number of patient today:"/>
+                        <Svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+                            <Rect width="40" height="40" rx="20" fill="#0A867E"/>
+                            <Path d="M17.1605 18.87C17.0605 18.86 16.9405 18.86 16.8305 18.87C14.4505 18.79 12.5605 16.84 12.5605 14.44C12.5605 11.99 14.5405 10 17.0005 10C19.4505 10 21.4405 11.99 21.4405 14.44C21.4305 16.84 19.5405 18.79 17.1605 18.87Z" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            <Path d="M24.4093 12C26.3493 12 27.9093 13.57 27.9093 15.5C27.9093 17.39 26.4093 18.93 24.5393 19C24.4593 18.99 24.3693 18.99 24.2793 19" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            <Path d="M12.1607 22.56C9.7407 24.18 9.7407 26.82 12.1607 28.43C14.9107 30.27 19.4207 30.27 22.1707 28.43C24.5907 26.81 24.5907 24.17 22.1707 22.56C19.4307 20.73 14.9207 20.73 12.1607 22.56Z" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            <Path d="M26.3398 28C27.0598 27.85 27.7398 27.56 28.2998 27.13C29.8598 25.96 29.8598 24.03 28.2998 22.86C27.7498 22.44 27.0798 22.16 26.3698 22" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </Svg>
+                        <ThemedText style={{ fontSize: 16, lineHeight: 16, fontWeight: 600, color: "#FFFFFF", marginLeft: 8 }} >{finalText("Total number of patient today", translations, selectedLanguage)}: </ThemedText>
                     </View>
-                    <CustomText textStyle={{ fontSize: 24, lineHeight: 30, fontWeight: 600, color: "#FFFFFF" }} text={patientCount} />
+                    <ThemedText style={{ fontSize: 24, lineHeight: 30, fontWeight: 600, color: "#FFFFFF" }} >{patientCount}</ThemedText>
                 </View>
                 <View style={{ marginTop: 24 }} >
                     <ThemedText style={{ fontSize: 16, lineHeight: 20, fontWeight: 600 }}>{finalText("My Tasks", translations, selectedLanguage)} </ThemedText>
@@ -300,7 +307,9 @@ const Home = () => {
                             onPress={() => setShowClinicReminder(false)}
                             style={styles.closeButton}
                         >
-                            <ThemedText style={[styles.closeButtonText, { color: colors.crossIcon }]}>✕</ThemedText>
+                            <Svg width="32" height="32" viewBox="0 0 32 32" fill="none" >
+                                <Path d="M24.4009 7.61336C23.8809 7.09336 23.0409 7.09336 22.5209 7.61336L16.0009 14.12L9.48094 7.60002C8.96094 7.08002 8.12094 7.08002 7.60094 7.60002C7.08094 8.12002 7.08094 8.96002 7.60094 9.48002L14.1209 16L7.60094 22.52C7.08094 23.04 7.08094 23.88 7.60094 24.4C8.12094 24.92 8.96094 24.92 9.48094 24.4L16.0009 17.88L22.5209 24.4C23.0409 24.92 23.8809 24.92 24.4009 24.4C24.9209 23.88 24.9209 23.04 24.4009 22.52L17.8809 16L24.4009 9.48002C24.9076 8.97336 24.9076 8.12002 24.4009 7.61336Z" fill="#212B46"/>
+                            </Svg>
                         </Pressable>
                         <Image source={require('../../assets/images/clinicReminder.png')} style={styles.image} resizeMode='contain' />
                         <ThemedText style={{ fontSize: 16, lineHeight: 18, fontWeight: 600, marginTop: 24 }} >{finalText("Ready to receive patients?", translations, selectedLanguage)}</ThemedText>
@@ -376,7 +385,7 @@ const styles = StyleSheet.create({
     closeButton: {
         padding: 8,
         position: 'absolute',
-        right: 8,
+        right: 0,
         top: 8
     },
     closeButtonText: {

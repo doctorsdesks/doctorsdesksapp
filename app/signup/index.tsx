@@ -215,8 +215,9 @@ const SignUp = () => {
                 if (loginResponse?.status === "SUCCESS") {
                     setDoctorDetails(data?.data);
                     setSignUpDetails(signUpDetailsInitial);
-                    saveSecureKey("isUserOnBoarded", "true");
-                    saveSecureKey("userAuthtoken", loginResponse?.data?.user?.authToken);
+                    await saveSecureKey("isUserOnBoarded", "true");
+                    await saveSecureKey("doctorId", data.data?.phone);
+                    await saveSecureKey("userAuthtoken", loginResponse?.data?.user?.authToken);
                     router.replace("/successSignUp");
                     setLoader(false);
                 } else {

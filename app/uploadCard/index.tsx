@@ -87,17 +87,18 @@ const UploadCard = () => {
         }
     }
 
-    return (
-        <ThemedView style={{ paddingTop: 32, paddingHorizontal: 16 }}>
-            <ThemedText style={{ fontWeight: 600, fontSize: 16, lineHeight: 20 }}>
-                {finalText("Please take photos of both the front and back of your registration card", translations, selectedLanguage)}
-            </ThemedText>
-            <View style={{ marginTop: 24 }} >
-                {currentData && <IdProofUploadCard data={currentData} docType={docType} onChange={handleChange} handleUrl={handleUrl} frontUri={frontUri} backUri={backUri} setBackUri={setBackUri} setFrontUri={setFrontUri} />}
-            </View>
-            <CustomButton title='Upload Images' width='FULL' onPress={handleUploadImage} isDisabled={frontUri === null || backUri ===null || currentData?.value === "" ? true : false} containerStyle={{ marginTop: 32 }} />
-            {loader && <Loader />}
-        </ThemedView>
+    return (loader ? 
+            <Loader />
+        :
+            <ThemedView style={{ paddingTop: 32, paddingHorizontal: 16 }}>
+                <ThemedText style={{ fontWeight: 600, fontSize: 16, lineHeight: 20 }}>
+                    {finalText("Please take photos of both the front and back of your registration card", translations, selectedLanguage)}
+                </ThemedText>
+                <View style={{ marginTop: 24 }} >
+                    {currentData && <IdProofUploadCard data={currentData} docType={docType} onChange={handleChange} handleUrl={handleUrl} frontUri={frontUri} backUri={backUri} setBackUri={setBackUri} setFrontUri={setFrontUri} />}
+                </View>
+                <CustomButton title='Upload Images' width='FULL' onPress={handleUploadImage} isDisabled={frontUri === null || backUri ===null || currentData?.value === "" ? true : false} containerStyle={{ marginTop: 32 }} />
+            </ThemedView>
     )
 };
 

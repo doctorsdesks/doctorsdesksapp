@@ -2,11 +2,10 @@ import React, { useState } from 'react';
 import { Pressable, View } from 'react-native';
 import { AppointmentStatus } from '@/constants/Enums';
 import { changeTimeToAmPm, finalText } from './Utils';
-import { Ionicons } from '@expo/vector-icons';
 import { ThemedView } from './ThemedView';
 import { ThemedText } from './ThemedText';
-import { useColorScheme } from '@/hooks/useColorScheme.web';
 import { useAppContext } from '@/context/AppContext';
+import Icon from './Icons';
 
 interface AppointmentCardTwoProps {
     lastAppointment: boolean;
@@ -45,10 +44,6 @@ const AppointmentCardTwo: React.FC<AppointmentCardTwoProps> = ({ lastAppointment
                     position: 'absolute',
                     left: 0,
                     top: calculatedTop,
-                    borderWidth: 1,
-                    borderRadius: 20,
-                    borderColor: "#2DB9B0",
-                    backgroundColor: "#fff",
                     height: 20,
                     width: 20,
                     display: "flex",
@@ -57,7 +52,20 @@ const AppointmentCardTwo: React.FC<AppointmentCardTwoProps> = ({ lastAppointment
                     zIndex: 3,
                 }}
             >
-                {status === AppointmentStatus.COMPLETED && <Ionicons name='checkmark-outline' color={"#2DB9B0"} size={20} />}
+                {status === AppointmentStatus.COMPLETED ?
+                    <Icon type='rightTick' />
+                :
+                    <View
+                        style={{
+                            borderWidth: 1,
+                            borderRadius: 20,
+                            borderColor: "#2DB9B0",
+                            backgroundColor: "#fff",
+                            height: 20,
+                            width: 20,
+                        }}
+                    />
+                }
             </View>
             <View 
                 style={{

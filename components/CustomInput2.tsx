@@ -8,6 +8,7 @@ import { useColorScheme } from '@/hooks/useColorScheme.web';
 import { Colors } from '@/constants/Colors';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Ionicons } from '@expo/vector-icons';
+import { Path, Svg } from 'react-native-svg';
 
 interface CustomInput2Props {
   data: {
@@ -124,8 +125,17 @@ const CustomInput2: React.FC<CustomInput2Props> = ({ data, onChange, handleFocus
           </View>
         : inputType === 'DATE' ? (
           <>
-            <Pressable onPress={() => setShowDatePicker(true)} style={[styles.input, isFocused && styles.inputFocused, isError && styles.inputError]}>
+            <Pressable onPress={() => setShowDatePicker(true)} style={[styles.input, isFocused && styles.inputFocused, isError && styles.inputError, { position: 'relative' }]}>
               <ThemedText style={{ color: value ? Colors[colorScheme].text : "#8C8C8C"}} >{value || placeholder}</ThemedText>
+              {data?.inputType === "DATE" &&
+                <View style={{ height: "100%", zIndex: 2, position: 'absolute', right:  6, top: 10, display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center'  }} >
+                  <Svg width="18" height="19" viewBox="0 0 18 19" fill="none" >
+                    <Path d="M13.5 1.83594V3.33594M4.5 1.83594V3.33594" stroke="#A9A9AB" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+                    <Path d="M1.875 9.51837C1.875 6.25039 1.875 4.6164 2.81409 3.60117C3.75318 2.58594 5.26462 2.58594 8.2875 2.58594H9.7125C12.7354 2.58594 14.2468 2.58594 15.1859 3.60117C16.125 4.6164 16.125 6.25039 16.125 9.51837V9.90351C16.125 13.1715 16.125 14.8055 15.1859 15.8207C14.2468 16.8359 12.7354 16.8359 9.7125 16.8359H8.2875C5.26462 16.8359 3.75318 16.8359 2.81409 15.8207C1.875 14.8055 1.875 13.1715 1.875 9.90351V9.51837Z" stroke="#A9A9AB" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+                    <Path d="M2.25 6.33594H15.75" stroke="#A9A9AB" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+                  </Svg>
+                </View>
+              }
             </Pressable>
             {showDatePicker && (
               <DateTimePicker value={value ? new Date(value.split('-').reverse().join('-')) : new Date()} mode="date" display="default" onChange={handleDateChange} />

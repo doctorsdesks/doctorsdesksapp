@@ -11,6 +11,7 @@ import { ThemedView } from './ThemedView';
 import { ThemedText } from './ThemedText';
 import { finalText } from './Utils';
 import { useAppContext } from '@/context/AppContext';
+import Icon from './Icons';
 
 export interface ManageSlotTimingProps {
     timings: any[];
@@ -20,7 +21,7 @@ export interface ManageSlotTimingProps {
 
 const ManageSlotTiming: React.FC<ManageSlotTimingProps> = ({ timings, setTimings, eachDayChange }) => {
     const { translations, selectedLanguage } = useAppContext();
-    const { height, width } = Dimensions.get('window');
+    const { height } = Dimensions.get('window');
     const [allDaysSelected, setAllDaysSelected] = useState<boolean>(false);
     const [days, setDays] = useState<Array<DaysForSlot>>([
         {
@@ -225,7 +226,7 @@ const ManageSlotTiming: React.FC<ManageSlotTimingProps> = ({ timings, setTimings
                                                 <ThemedText style={{ fontSize: 14, lineHeight: 20, fontWeight: 400, color: "#32383D" }} >{session?.startTime} - {session?.endTime} </ThemedText>
                                             </View>
                                             <Pressable onPress={() => handleDeleteSession(index)} >
-                                                <Ionicons size={24} color={"#757575"} name='remove-circle' />
+                                                <Icon type='delete' />
                                             </Pressable>
                                         </View>
                                     )
@@ -246,8 +247,8 @@ const ManageSlotTiming: React.FC<ManageSlotTimingProps> = ({ timings, setTimings
                                             {startTime}
                                         </ThemedText>
                                     }
-                                    <View style={{ marginLeft: 8 }} >
-                                        <Ionicons size={18} color={"#757575"} name='time-outline' />
+                                    <View style={{ marginLeft: 4 }} >
+                                        <Icon type='clock' />
                                     </View>
                                 </Pressable>
                             </View>
@@ -264,13 +265,13 @@ const ManageSlotTiming: React.FC<ManageSlotTimingProps> = ({ timings, setTimings
                                             {endTime}
                                         </ThemedText>
                                     }
-                                    <View style={{ marginLeft: 8 }} >
-                                        <Ionicons size={18} color={"#757575"} name='time-outline' />
+                                    <View style={{ marginLeft: 4 }} >
+                                        <Icon type='clock' />
                                     </View>
                                 </Pressable>
                             </View>
-                            <Pressable style={{ marginTop: 34 }} onPress={handleAddSession} >
-                                <Ionicons size={24} color={"#757575"} name='add-circle-outline' />
+                            <Pressable style={{ marginTop: 34, marginLeft: 4 }} onPress={handleAddSession} >
+                                <Icon type='addCircle' fill={startTime !== "" && endTime !== "" ? "#2DB9B0" : "#757575" } />
                             </Pressable>
                         </View>
                     </View>
