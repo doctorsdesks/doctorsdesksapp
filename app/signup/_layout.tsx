@@ -1,6 +1,6 @@
+import Icon from '@/components/Icons';
 import { useAppContext } from '@/context/AppContext';
 import { signUpDetailsInitial } from '@/context/InitialState';
-import { Ionicons } from '@expo/vector-icons';
 import { router, Stack } from 'expo-router';
 import React from 'react';
 import { Pressable, StyleSheet } from 'react-native';
@@ -46,7 +46,7 @@ export default function () {
                                 })
                             }
                         }}>
-                            <Ionicons style={styles.icon} name="arrow-back" size={24} color="black" />
+                            <Icon type='goBack' />
                         </Pressable>
                     ),
                     headerTitleAlign: 'center',

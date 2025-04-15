@@ -12,7 +12,7 @@ import { useAppContext } from '@/context/AppContext';
 import { Ionicons } from '@expo/vector-icons';
 import { router, useLocalSearchParams } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import { BackHandler, Dimensions, Image, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { BackHandler, Dimensions, Image, Keyboard, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import Toast from 'react-native-toast-message';
 
 const ManageSlotDurationAndTiming = () => {
@@ -59,6 +59,7 @@ const ManageSlotDurationAndTiming = () => {
             isActive: false,
         }
     ]);
+    const [isKeyboardOpen, setIsKeyboardOpen] = useState<boolean>(false);
 
     useEffect(() => {
         const backAction = () => {
@@ -67,8 +68,18 @@ const ManageSlotDurationAndTiming = () => {
         };
 
         const backHandler = BackHandler.addEventListener("hardwareBackPress", backAction);
+        const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () =>
+            setIsKeyboardOpen(true)
+        );
+        const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () =>
+           setIsKeyboardOpen(false)
+        );
 
-        return () => backHandler.remove();
+        return () => {
+            backHandler?.remove();
+            keyboardDidShowListener?.remove();
+            keyboardDidHideListener?.remove();
+        };
     }, []);
 
     useEffect(() => {
@@ -269,7 +280,7 @@ const ManageSlotDurationAndTiming = () => {
                                                                         <View style={{ marginTop: 10, marginLeft: 20 }} >
                                                                             {timing?.timings?.map((eachTime: any, i: number) => {
                                                                                 return (
-                                                                                    <View key={eachTime?.startTime + "-" + eachTime?.end + "_" + i + "_" + index}  style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginBottom: 8 }} >
+                                                                                    <View key={eachTime?.startTime + "-" + eachTime?.end + timing?.day + "_" + i + "_" + index}  style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginBottom: 8 }} >
                                                                                         <Ionicons size={16} color={"#1EA6D6"} name='timer' />
                                                                                         <ThemedText style={{ fontSize: 12, lineHeight: 14, fontWeight: 400, marginLeft: 8 }} >
                                                                                             {eachTime?.startTime} - {eachTime?.endTime}
@@ -356,7 +367,7 @@ const ManageSlotDurationAndTiming = () => {
                     }
                     {isAddSlots && <ManageSlotTiming eachDayChange={eachDayChange} timings={navData[0]?.isActive ? timings : timingsEmergency} setTimings={(data: any) => handleSetTiming(data)} />}
                 </View>
-                {!isAddSlots && <View style={{ display: "flex", alignItems: "center", position: 'absolute', bottom: 16, right: 16, left: 16 }} >
+                {!isAddSlots && !isKeyboardOpen && <View style={{ display: "flex", alignItems: "center", position: 'absolute', bottom: 16, right: 16, left: 16 }} >
                     <CustomButton width='FULL' title={isEditable ? "Save" : "Update"} onPress={handleSave} />
                 </View>}
             </ThemedView>

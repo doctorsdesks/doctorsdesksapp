@@ -173,6 +173,11 @@ const BlockSlots = () => {
 
     const handleDateChange = (date: string) => {
         setSelectedDay(date);
+        const currentSlots = [...slotsToShow];
+        const finalSlots = currentSlots?.map((slot: any) => {
+            return { ...slot, isSelected: false }
+        });
+        setSlotsToShow(finalSlots);
     }
 
     return (
@@ -192,7 +197,7 @@ const BlockSlots = () => {
                             <ThemedText style={{ marginTop: 24, fontSize: 18, lineHeight: 18, fontWeight: 700 }} >{finalText(`No ${navData?.filter((item: any) => item?.isActive)[0]?.label?.split(" ")[0]} Appointments`, translations, selectedLanguage)}!</ThemedText>
                         </View>
                     : 
-                    <View  style={{ marginTop: 12, marginBottom: 12, display:'flex', flexDirection: 'row', flexWrap: 'wrap', gap: 18 }}>
+                    <View  style={{ marginTop: 12, marginBottom: 12, display:'flex', flexDirection: 'row', flexWrap: 'wrap', gap: 16 }}>
                         {slotsToShow?.map((slot: any) => {
                             return (
                                 <Slot key={slot?.startTime} isSelected={slot?.isSelected} slot={slot} onSelectSlot={handleSelect} />

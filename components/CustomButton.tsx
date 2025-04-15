@@ -1,8 +1,9 @@
 import { useAppContext } from '@/context/AppContext';
 import React from 'react';
-import { Text, StyleSheet, GestureResponderEvent, Pressable } from 'react-native';
+import { StyleSheet, GestureResponderEvent, Pressable, View } from 'react-native';
 import { finalText } from './Utils';
 import { ThemedText } from './ThemedText';
+import Icon from './Icons';
 
 // Define the prop types for the CustomButton
 interface CustomButtonProps {
@@ -13,10 +14,11 @@ interface CustomButtonProps {
   isDisabled?: boolean;
   width?: string;
   multiLingual?: boolean;
+  icon?: string;
 }
 
 // Functional component definition using the props interface
-const CustomButton: React.FC<CustomButtonProps> = ({ title, onPress, textColor = '#FFFFFF', containerStyle, isDisabled = false, width = "AUTO", multiLingual }) => {
+const CustomButton: React.FC<CustomButtonProps> = ({ title, onPress, textColor = '#FFFFFF', containerStyle, isDisabled = false, width = "AUTO", icon }) => {
   const { translations, selectedLanguage } = useAppContext();
 
   return (
@@ -30,7 +32,10 @@ const CustomButton: React.FC<CustomButtonProps> = ({ title, onPress, textColor =
       onPress={(e) => onPress(e)}
       disabled={isDisabled}
     >
-      <ThemedText style={[styles.buttonText, { color: textColor }]}>{finalText(title, translations, selectedLanguage)}</ThemedText>
+      <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+        {icon && icon !== "" && <Icon type={icon} />}
+        <ThemedText style={[styles.buttonText, { color: textColor, marginLeft: icon && icon !== "" ? 8 : 0 }]}>{finalText(title, translations, selectedLanguage)}</ThemedText>
+      </View>
     </Pressable>
   );
 };

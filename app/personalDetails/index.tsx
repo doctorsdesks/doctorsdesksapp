@@ -15,11 +15,11 @@ import { URLS } from '@/constants/Urls';
 import axios from 'axios';
 import { router } from 'expo-router';
 import Loader from '@/components/Loader';
-import { Ionicons } from '@expo/vector-icons';
 import MainHeader from '@/components/MainHeader';
 import { ThemedView } from '@/components/ThemedView';
 import SearchSelect from '@/components/SearchSelect';
 import { ThemedText } from '@/components/ThemedText';
+import Icon from '@/components/Icons';
 
 const PersonalDetailsSetting = () => {
     const { height } = Dimensions.get('window');
@@ -372,15 +372,9 @@ const PersonalDetailsSetting = () => {
                             <View style={{ position: 'relative' }} >
                                 <View style={{ position: 'absolute', right: 4, top: 8, zIndex: 2 }} >
                                     {doctorDetails?.docStatus === DocStatusType.VERIFIED ? 
-                                        <Image
-                                            source={require('@/assets/images/verified.png')}
-                                            style={styles.icon}
-                                        /> 
+                                        <Icon type='verified' /> 
                                     : 
-                                        <Image
-                                            source={require('@/assets/images/notVerifiedIcon.png')}
-                                            style={styles.icon}
-                                        /> 
+                                        <Icon type='notVerified' /> 
                                     }
                                 </View>
                                 {doctorData && doctorData?.imageUrl && doctorData?.imageUrl !== "" ? <Image source={{uri: doctorData?.imageUrl}} resizeMode='cover' height={100} width={100} style={{ marginTop: 8, height: 100, width: 100, borderColor: "#CFD8DC", borderRadius: 100 }} />
@@ -439,12 +433,12 @@ const PersonalDetailsSetting = () => {
                                 <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
                                     <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }} >
                                         <View style={{ padding: 6, borderWidth: 1, borderRadius: 4, borderColor: "#D9D9D9" }} >
-                                            <Image source={require('../../assets/images/registration.png')} resizeMode='contain' height={24} width={24} />
+                                            <Icon type='registration' />
                                         </View>
                                         <ThemedText style={{ fontSize: 14, lineHeight: 14, fontWeight: 600, marginLeft: 8 }} >{finalText("Registration Certificate", translations, selectedLanguage)} </ThemedText>
                                     </View>
                                     <Pressable onPress={() => openDocumentCard("registrationInfo")} style={{ transform: [{ rotate: idInfo?.registrationInfo?.isOpen ? '180deg' : '0deg' }] }} >
-                                        <Ionicons size={24} color={"#A9A9AB"} name='chevron-down' />
+                                        <Icon type='arrowDown' />
                                     </Pressable>
                                 </View>
                                 {idInfo?.registrationInfo?.isOpen &&
@@ -467,12 +461,12 @@ const PersonalDetailsSetting = () => {
                                     <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }} >
                                         <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }} >
                                             <View style={{ padding: 6, borderWidth: 1, borderRadius: 4, borderColor: "#D9D9D9" }} >
-                                                <Image source={require('../../assets/images/address.png')} resizeMode='contain' height={24} width={24} />
+                                                <Icon type='aadhaarPan' />
                                             </View>
                                             <ThemedText style={{ fontSize: 14, lineHeight: 14, fontWeight: 600, marginLeft: 8 }} >{finalText("Aadhar Card", translations, selectedLanguage)} </ThemedText>
                                         </View>
                                         <Pressable onPress={() => openDocumentCard("aadharInfo")} style={{ transform: [{ rotate: idInfo?.aadharInfo?.isOpen ? '180deg' : '0deg' }] }} >
-                                            <Ionicons size={24} color={"#A9A9AB"} name='chevron-down' />
+                                            <Icon type='arrowDown' />
                                         </Pressable>
                                     </View>
                                     {idInfo?.aadharInfo?.isOpen &&
@@ -496,12 +490,12 @@ const PersonalDetailsSetting = () => {
                                     <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }} >
                                         <View style={{ display: 'flex', alignItems: 'center', flexDirection: 'row' }} >
                                             <View style={{ padding: 6, borderWidth: 1, borderRadius: 4, borderColor: "#D9D9D9" }} >
-                                                <Image source={require('../../assets/images/address.png')} resizeMode='contain' height={24} width={24} />
+                                                <Icon type='aadhaarPan' />
                                             </View>
                                             <ThemedText style={{ fontSize: 14, lineHeight: 14, fontWeight: 600, marginLeft: 8 }} >{finalText("Pan Card", translations, selectedLanguage)} </ThemedText>
                                         </View>
                                         <Pressable onPress={() => openDocumentCard("panInfo")} style={{ transform: [{ rotate: idInfo?.panInfo?.isOpen ? '180deg' : '0deg' }] }} >
-                                            <Ionicons size={24} color={"#A9A9AB"} name='chevron-down' />
+                                            <Icon type='arrowDown' />
                                         </Pressable>
                                     </View>
                                     {idInfo?.panInfo?.isOpen &&

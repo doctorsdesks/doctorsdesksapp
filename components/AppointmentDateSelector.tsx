@@ -5,14 +5,12 @@ import {
   FlatList,
   Pressable,
 } from 'react-native';
-import CustomText from './CustomText';
-import { Ionicons } from '@expo/vector-icons';
 import { finalText } from './Utils';
 import { useAppContext } from '@/context/AppContext';
 import { ThemedView } from './ThemedView';
 import { ThemedText } from './ThemedText';
-import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme.web';
+import Icon from './Icons';
 
 interface AppointmentDateSelectorProps {
     handleDateChange: (date: string) => void;
@@ -29,32 +27,39 @@ const AppointmentDateSelector: React.FC<AppointmentDateSelectorProps> = ({ handl
   
   useEffect(() => {
     if (currentMonth) {
-        const days = getDaysInMonth(currentMonth);
-        setDaysToRender(days);
-        let finalDate;
-      
-        if (selectedDay === "") {
-          const today = new Date();
-          const day = formatDay(today);
-          const date = formatDate(today);
-          if (date < 10) {
-            finalDate = "0"+date;
-          }
-          setSelectedDay(`${day} ${date}`);
+      const days = getDaysInMonth(currentMonth);
+      setDaysToRender(days);
+      let finalDate;
+      const year = currentMonth.getFullYear();
+      let month: any = currentMonth.getMonth()+1;
+      if (selectedDay === "") {
+        const today = new Date();
+        const day = formatDay(today);
+        const date = formatDate(today);
+        if (date < 10) {
+          finalDate = "0"+date;
         } else {
-          const [day, date] = selectedDay?.split(" ");
-          if (parseInt(date) < 10) {
-            finalDate = "0"+date;
-          }
+          finalDate = date;
         }
-        const year = currentMonth.getFullYear();
-        let month: any = currentMonth.getMonth()+1;
-        if (month < 10) {
-          month = "0" + month;
+        setSelectedDay(`${day} ${date}`);
+      } else {
+        const [day, date] = selectedDay?.split(" ");
+        if (parseInt(date) < 10) {
+          finalDate = "0"+date;
+        } else {
+          finalDate = date;
         }
-        const newDate = `${year}-${month}-${finalDate}`;
-        handleDateChange(newDate);
-    }
+        const dateForCurrentMonth = new Date(year, month - 1, parseInt(date));
+        const dayForCurrentMonth = formatDay(dateForCurrentMonth);
+        const finalDay = `${dayForCurrentMonth} ${finalDate}`;
+        setSelectedDay(finalDay);
+      }
+      if (month < 10) {
+        month = "0" + month;
+      }
+      const newDate = `${year}-${month}-${finalDate}`;
+      handleDateChange(newDate);
+  }
     
   },[currentMonth])
 
@@ -147,14 +152,14 @@ const AppointmentDateSelector: React.FC<AppointmentDateSelectorProps> = ({ handl
     <ThemedView>
         <View style={styles.monthSelector}>
             <Pressable onPress={() => changeMonth('left')}>
-                <Ionicons name='chevron-back-circle-outline' size={32} color={Colors[colorSchema].appointmentIcon} />
+              <Icon type="arrowCircleLeft" />
             </Pressable>
             <View style={{ display: 'flex', flexDirection: 'row' }}>
                 <ThemedText style={styles.monthText} >{finalText(formatMonthYear(currentMonth).split(' ')[0], translations, selectedLanguage)}</ThemedText>
                 <ThemedText style={[styles.monthText, { marginLeft: 8 }]} >{formatMonthYear(currentMonth).split(' ')[1]}</ThemedText>
             </View>
             <Pressable onPress={() => changeMonth('right')}>
-            <Ionicons name='chevron-forward-circle-outline' size={32} color={Colors[colorSchema].appointmentIcon} />
+              <Icon type="arrowCircleRight" />
             </Pressable>
         </View>
         {daysToRender?.length > 0 && 

@@ -6,6 +6,7 @@ import { useAppContext } from '@/context/AppContext';
 import { finalText } from './Utils';
 import { ThemedView } from './ThemedView';
 import { ThemedText } from './ThemedText';
+import Icon from './Icons';
 
 interface MainHeaderProps {
     selectedNav: string;
@@ -98,7 +99,7 @@ const MainHeader: React.FC<MainHeaderProps> = ({ selectedNav, title = "" }) => {
     return (
         <ThemedView style={{ display: 'flex', position: 'relative', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginBottom: 16 }} >
             {selectedNav !== "home" && <Pressable style={{ position: 'absolute', left: 0 }} onPress={handleBackNav}>
-                <Ionicons name="arrow-back" size={24} color="black" style={{ paddingRight: 12 }} />
+                <Icon type="goBack" />
             </Pressable>}
             <ThemedText style={styles.text} >{finalText(showtext(), translations, selectedLanguage)}</ThemedText>
         </ThemedView>

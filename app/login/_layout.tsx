@@ -1,7 +1,6 @@
-import { Colors } from '@/constants/Colors';
+import Icon from '@/components/Icons';
 import { useAppContext } from '@/context/AppContext';
 import { useColorScheme } from '@/hooks/useColorScheme.web';
-import { Ionicons } from '@expo/vector-icons';
 import { router, Stack, useLocalSearchParams } from 'expo-router';
 import React from 'react';
 import { Pressable, StyleSheet } from 'react-native';
@@ -46,7 +45,7 @@ export default function () {
                         title: 'Login',
                         headerLeft: () => (
                             <Pressable onPress={() => handleBackPress("login")}>
-                                <Ionicons style={styles.icon} name="arrow-back" size={24} color="black" />
+                                <Icon type='goBack' />
                             </Pressable>
                         ),
                         headerTitleAlign: 'center',
@@ -66,7 +65,7 @@ export default function () {
                         title: 'Sign up',
                         headerLeft: () => (
                             <Pressable onPress={() =>handleBackPress("numberPassword")}>
-                                <Ionicons style={styles.icon} name="arrow-back" size={24} color={Colors[colorScheme].icon} />
+                                <Icon type='goBack' />
                             </Pressable>
                         ),
                         headerTitleAlign: 'center',

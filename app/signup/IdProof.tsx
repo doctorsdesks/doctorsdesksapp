@@ -31,7 +31,7 @@ const IdProof: React.FC<IdProofProps> = ({ idProofData }) => {
                         })
                     }}
                 >
-                    <IdProofCard data={idProofData[0]} />
+                    <IdProofCard data={idProofData[0]} type="Registration" />
                 </Pressable>
             </View>
             <View style={{ marginTop: 32}} >
@@ -47,7 +47,7 @@ const IdProof: React.FC<IdProofProps> = ({ idProofData }) => {
                         })
                     }}
                 >
-                    <IdProofCard data={idProofData[1]} />
+                    <IdProofCard data={idProofData[1]} type="Aadhar" />
                 </Pressable>
                 <Pressable
                     onPress={() => {
@@ -60,7 +60,7 @@ const IdProof: React.FC<IdProofProps> = ({ idProofData }) => {
                         })
                     }}
                 >
-                    <IdProofCard data={idProofData[2]} />
+                    <IdProofCard data={idProofData[2]} type="Pan" />
                 </Pressable>
             </View>
             

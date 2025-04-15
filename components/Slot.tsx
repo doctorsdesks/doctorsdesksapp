@@ -5,6 +5,7 @@ import React from "react";
 import { useColorScheme } from "@/hooks/useColorScheme.web";
 import { Colors } from "@/constants/Colors";
 import { Ionicons } from "@expo/vector-icons";
+import Icon from "./Icons";
 
 interface SlotProps {
     slot: Slot;
@@ -77,11 +78,11 @@ const Slot: React.FC<SlotProps> = ({ slot, onSelectSlot, isSelected }) => {
 
     const getIcon = () => {
         if (slot?.slotStatus === "LOCKED" || isSelected) {
-            return <Ionicons name='lock-closed' size={12} style={{ marginRight: 8, color: getTextColor() }} />
+            return <Icon type="lock" fill={getTextColor()} />
         } else if (slot?.slotStatus === "BOOKED") {
-            return <Ionicons name='checkmark-circle-sharp' size={12} style={{ marginRight: 8, color: getTextColor() }} />
+            return <Ionicons name='checkmark-circle-sharp' size={12} style={{ color: getTextColor() }} />
         } else {
-            return <Ionicons name='lock-open-outline' size={12} style={{ marginRight: 8, color: getTextColor() }} />
+            return <Ionicons name='lock-open-outline' size={12} style={{ color: getTextColor() }} />
         }
     }
 
@@ -90,12 +91,16 @@ const Slot: React.FC<SlotProps> = ({ slot, onSelectSlot, isSelected }) => {
             <Pressable
                 style={[styles.slot, { 
                     borderColor: getBorderColor(), 
-                    backgroundColor: getBgColor()
+                    backgroundColor: getBgColor(),
+                    display: 'flex',
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'center'
                 }]}
                 onPress={() => slot?.slotStatus === "OPEN" && onSelectSlot(slot)}
             >
                 {getIcon()}
-                <ThemedText style={{ fontSize: 12, lineHeight: 12, fontWeight: 600, color: getTextColor() }} >{getSlotTime()}</ThemedText>
+                <ThemedText style={{ fontSize: 12, lineHeight: 12, marginLeft: 8, fontWeight: 600, color: getTextColor() }} >{getSlotTime()}</ThemedText>
             </Pressable>
         </ThemedView>
     )
@@ -106,8 +111,7 @@ const styles = StyleSheet.create({
         width: 102,
     },
     slot: {
-        paddingHorizontal: 12,
-        paddingVertical: 10,
+        paddingVertical: 14,
         borderWidth: 1,
         borderRadius: 8,
         display: 'flex',
