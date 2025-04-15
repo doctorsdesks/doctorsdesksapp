@@ -12,7 +12,7 @@ export interface CardProps {
     documentType: string;
     value: string;
     isUploaded: boolean;
-    docIcon: any;
+    docIcon?: any;
     frontUrl: string;
     backUrl: string;
 }
@@ -44,7 +44,8 @@ export const AppointmentType = {
 
 export const DocStatusType = {
     NOT_VERIFIED: "NOT_VERIFIED",
-    VERIFIED: "VERIFIED"
+    VERIFIED: "VERIFIED",
+    BLOCKED: "BLOCKED"
 }
 
 export interface DaysForSlot {

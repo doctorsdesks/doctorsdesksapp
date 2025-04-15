@@ -254,7 +254,6 @@ export const signUpDetailsInitial = {
           value: "",
           frontUrl: "",
           backUrl: "",
-          docIcon: require('../assets/images/registration.png'),
       },
       {
           id: "aadharCard",
@@ -264,7 +263,6 @@ export const signUpDetailsInitial = {
           value: "",
           frontUrl: "",
           backUrl: "",
-          docIcon: require('../assets/images/address.png'),
       },
       {
           id: "panCard",
@@ -274,7 +272,6 @@ export const signUpDetailsInitial = {
           value: "",
           frontUrl: "",
           backUrl: "",
-          docIcon: require('../assets/images/address.png'),
       }
     ]
   }

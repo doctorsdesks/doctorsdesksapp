@@ -1,6 +1,6 @@
 import { useAppContext } from '@/context/AppContext';
 import React, { useEffect, useState } from 'react';
-import { View, Text, TextInput, StyleSheet, Image, Pressable } from 'react-native';
+import { View, Text, TextInput, StyleSheet, Pressable } from 'react-native';
 import { finalText } from './Utils';
 import { ThemedText } from './ThemedText';
 import { ThemedView } from './ThemedView';
@@ -9,6 +9,7 @@ import { Colors } from '@/constants/Colors';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Ionicons } from '@expo/vector-icons';
 import { Path, Svg } from 'react-native-svg';
+import Icon from './Icons';
 
 interface CustomInput2Props {
   data: {
@@ -161,7 +162,7 @@ const CustomInput2: React.FC<CustomInput2Props> = ({ data, onChange, handleFocus
             />
             {data?.inputType === "AMOUNT" && 
               <View style={{ height: "100%", backgroundColor: "#2DB9B0", zIndex: 2, width: 40, position: 'absolute', display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', borderBottomLeftRadius: 6, borderTopLeftRadius: 6  }} >
-                <Image source={require('../assets/images/rupee.png')} resizeMode='contain' height={24} width={24} />
+                <Icon type='rupee' />
               </View>
             }
             {data?.inputType === "PASSWORD" && 
