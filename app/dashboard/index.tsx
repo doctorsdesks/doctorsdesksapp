@@ -12,7 +12,7 @@ import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { finalText, formatDateToYYYYMMDD, getAppointments, getDfo, getDoctorDetails, getPatientList, getSecureKey } from '@/components/Utils';
 import { Colors } from '@/constants/Colors';
-import { AppointmentStatus, PatientListProps } from '@/constants/Enums';
+import { AppointmentStatus, DocStatusType, PatientListProps } from '@/constants/Enums';
 import { URLS } from '@/constants/Urls';
 import { useAppContext } from '@/context/AppContext';
 import { textObject } from '@/context/InitialState';
@@ -96,7 +96,7 @@ const Home = () => {
         if (response.status === "SUCCESS") {
             const docDetails = response.data;
             setDoctorDetails(docDetails);
-            if (docDetails?.docStatus === "NOT_VERIFIED") {
+            if (docDetails?.docStatus === DocStatusType.NOT_VERIFIED) {
                 const notVerifiedItem = {
                     "id": "not_verified",
                     "label": "You are not verified!",
@@ -115,7 +115,7 @@ const Home = () => {
                 currentBanners.push(notVerifiedItem);
                 setBannerItems(currentBanners);
             }
-            if (docDetails?.docStatus === "BLOCKED") {
+            if (docDetails?.docStatus === DocStatusType.BLOCKED) {
                 router.replace("/successSignUp/block");
             }
             setLoader(false);

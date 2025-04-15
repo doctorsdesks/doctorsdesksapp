@@ -1,4 +1,4 @@
-import CustomButton from '@/components/CustomButton';
+import Icon from '@/components/Icons';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { finalText } from '@/components/Utils';
@@ -42,7 +42,7 @@ const BlockPage: React.FC<BlockPageProps> = ({ onClick }) => {
         <ThemedView style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 16, paddingBottom: 38, backgroundColor: colorSchema === 'dark' ? '#0a0a0a' : '#fcfcfc', height: height + 38 }}  >
             <View style={{ display: 'flex', marginTop: 184, alignItems: 'center'}} >
                 <View style={{ height: 120, width: 120, display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: "#FFE5E5", borderRadius: 100 }} >
-                    <Image source={require("../../assets/images/block.png")} style={{ height: 57, width: 51 }} resizeMode='contain' />
+                    <Icon type='block' />
                 </View>
                 <ThemedText style={{ fontSize: 20, lineHeight: 24, fontWeight: 700, marginTop: 32 }}>
                     {finalText("Access Blocked", translations, selectedLanguage)}!

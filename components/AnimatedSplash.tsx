@@ -1,7 +1,6 @@
+import { useColorScheme } from '@/hooks/useColorScheme.web';
 import React, { useEffect, useRef } from 'react';
-import { View, Animated, StyleSheet, Dimensions, Easing } from 'react-native';
-
-const { width } = Dimensions.get('window');
+import { View, Animated, StyleSheet, Easing } from 'react-native';
 
 const AnimatedSplash = ({ onAnimationComplete }: { onAnimationComplete: () => void }) => {
   const loaderScale = useRef(new Animated.Value(0)).current;
@@ -9,6 +8,8 @@ const AnimatedSplash = ({ onAnimationComplete }: { onAnimationComplete: () => vo
   const loaderOpacity = useRef(new Animated.Value(1)).current;
   const logoScale = useRef(new Animated.Value(0)).current;
   const logoOpacity = useRef(new Animated.Value(0)).current;
+
+  const colorScheme = useColorScheme() ?? 'light';
 
   useEffect(() => {
     // First phase: Loader animation (0-1s)
@@ -108,7 +109,7 @@ const AnimatedSplash = ({ onAnimationComplete }: { onAnimationComplete: () => vo
         ]}
       >
         <Animated.Image
-          source={require('../assets/images/logoImage.png')}
+          source={colorScheme === 'light' ? require('../assets/images/logoImage.png') : require('../assets/images/logoOne.png')}
           style={styles.image}
           resizeMode="contain"
         />
