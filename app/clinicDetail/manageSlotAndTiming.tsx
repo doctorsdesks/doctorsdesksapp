@@ -193,7 +193,15 @@ const ManageSlotDurationAndTiming = () => {
                                         borderWidth: 1,
                                         paddingHorizontal: 12,
                                         height: height - 360,
-                                        position: 'relative'
+                                        position: 'relative',
+                                        backgroundColor: '#f2f2f2',
+                                        shadowColor: '#000000',
+                                        shadowOffset: { width: 0, height: 4 },
+                                        shadowOpacity: 0.1,
+                                        shadowRadius: 12,
+                                        elevation: 4,
+                                        marginHorizontal: 4,
+                                        marginBottom: 4
                                     }}
                                 >
                                     {timings?.length > 0 ?

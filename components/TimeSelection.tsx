@@ -142,7 +142,7 @@ const TimePicker: React.FC<TimePickerProps> = ({ handleTimeSelection, title, tim
           initialScrollIndex={Math.max(hours.indexOf(selectedHour),0)}
           onMomentumScrollEnd={(event) => onScrollEnd(event, 'hour', hours)}
           style={styles.picker}
-          contentContainerStyle={styles.flatListContainer}
+          contentContainerStyle={[styles.flatListContainer, { paddingTop: 60, paddingBottom: 80 }]}
         />
         <FlatList
           ref={minuteListRef}
@@ -155,7 +155,7 @@ const TimePicker: React.FC<TimePickerProps> = ({ handleTimeSelection, title, tim
           initialScrollIndex={Math.max(minutes.indexOf(selectedMinute),0)}
           onMomentumScrollEnd={(event) => onScrollEnd(event, 'minute', minutes)}
           style={styles.picker}
-          contentContainerStyle={styles.flatListContainer}
+          contentContainerStyle={[styles.flatListContainer, { paddingTop: 60, paddingBottom: 80 }]}
         />
         <FlatList
           ref={periodListRef}
