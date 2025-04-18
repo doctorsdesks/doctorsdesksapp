@@ -98,7 +98,7 @@ export const uploadFile = async (fileUri: any, fileName: string, phoneNumber: st
     } catch (error: any) {
         return {
           status: "FAILURE",
-          error: error?.response?.data?.message
+          error: error?.response?.data?.message || "Something went wrong!"
         }
     }
   }
@@ -113,22 +113,22 @@ export const uploadFile = async (fileUri: any, fileName: string, phoneNumber: st
           },
         }
       );
-    const { data, status } = response;
-    if (status === 200){
+      const { data, status } = response;
+      if (status === 200){
+          return {
+            status: "SUCCESS",
+            data: data.data,
+          }
+      } else {
         return {
-          status: "SUCCESS",
-          data: data.data,
+          status: "FAILURE",
+          error: "Something wrong. Please try again.",
         }
-    } else {
-      return {
-        status: "FAILURE",
-        error: "Something wrong. Please try again.",
       }
-    }
     } catch (error: any) {
       return {
         status: "FAILURE",
-        error: error?.response?.data?.message
+        error: error?.response?.data?.message || "Something went wrong!"
       }
     }
   }
@@ -160,7 +160,7 @@ export const uploadFile = async (fileUri: any, fileName: string, phoneNumber: st
     } catch (error: any) {
         return {
           status: "FAILURE",
-          error: error?.response?.data?.message
+          error: error?.response?.data?.message || "Something went wrong!"
         }
     }
   }
@@ -192,7 +192,7 @@ export const uploadFile = async (fileUri: any, fileName: string, phoneNumber: st
     } catch (error: any) {
         return {
           status: "FAILURE",
-          error: error?.response?.data?.message
+          error: error?.response?.data?.message || "Something went wrong!"
         }
     }
   }
@@ -224,7 +224,7 @@ export const uploadFile = async (fileUri: any, fileName: string, phoneNumber: st
     } catch (error: any) {
         return {
           status: "FAILURE",
-          error: error?.response?.data?.message
+          error: error?.response?.data?.message || "Something went wrong!"
         }
     }
   }
@@ -266,7 +266,7 @@ export const uploadFile = async (fileUri: any, fileName: string, phoneNumber: st
     } catch (error: any) {
         return {
           status: "FAILURE",
-          error: error?.response?.data?.message
+          error: error?.response?.data?.message || "Something went wrong!"
         }
     }
   }
@@ -299,7 +299,7 @@ export const uploadFile = async (fileUri: any, fileName: string, phoneNumber: st
         } catch (error: any) {
           return {
             status: "FAILURE",
-            error: error?.response?.data?.message
+            error: error?.response?.data?.message || "Something went wrong!"
           }
         }
   }
@@ -339,7 +339,7 @@ export const uploadFile = async (fileUri: any, fileName: string, phoneNumber: st
     } catch (error: any) {
         return {
           status: "FAILURE",
-          error: error?.response?.data?.message
+          error: error?.response?.data?.message || "Something went wrong!"
         }
     }
   }
@@ -369,7 +369,7 @@ export const uploadFile = async (fileUri: any, fileName: string, phoneNumber: st
     } catch (error: any) {
         return {
           status: "FAILURE",
-          error: error?.response?.data?.message
+          error: error?.response?.data?.message || "Something went wrong!"
         }
     }
   }
@@ -404,7 +404,7 @@ export const uploadFile = async (fileUri: any, fileName: string, phoneNumber: st
       await saveSecureKey("userAuthtoken", "");
         return {
           status: "FAILURE",
-          error: error?.response?.data?.message
+          error: error?.response?.data?.message || "Something went wrong!"
         }
     }
     
@@ -437,7 +437,7 @@ export const uploadFile = async (fileUri: any, fileName: string, phoneNumber: st
     } catch (error: any) {
         return {
           status: "FAILURE",
-          error: error?.response?.data?.message
+          error: error?.response?.data?.message || "Something went wrong!"
         }
     }
   }
@@ -469,7 +469,7 @@ export const uploadFile = async (fileUri: any, fileName: string, phoneNumber: st
     } catch (error: any) {
         return {
           status: "FAILURE",
-          error: error?.response?.data?.message
+          error: error?.response?.data?.message || "Something went wrong!"
         }
     }
   }
@@ -501,7 +501,7 @@ export const uploadFile = async (fileUri: any, fileName: string, phoneNumber: st
     } catch (error: any) {
         return {
           status: "FAILURE",
-          error: error?.response?.data?.message
+          error: error?.response?.data?.message || "Something went wrong!"
         }
     }
   }

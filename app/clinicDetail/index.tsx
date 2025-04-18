@@ -220,7 +220,7 @@ const ClinicDetailsSetting = () => {
                     </ScrollView>
                 </View>
                 <View style={{ display: "flex", alignItems: "center", position: 'absolute', left: 16, right: 16, bottom: 16, zIndex: 2 }} >
-                    <CustomButton width='FULL' title={isEditable ? "Save" : "Update"} onPress={handleButtonClick} />
+                    <CustomButton width='FULL' title={isEditable ? "Save Address" : "Edit Address"} onPress={handleButtonClick} />
                 </View>
             </ThemedView>
     );

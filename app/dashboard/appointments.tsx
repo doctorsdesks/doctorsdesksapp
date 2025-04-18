@@ -7,9 +7,11 @@ import Navbar, { NavbarObject } from '@/components/Navbar';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { finalText, formatDateToYYYYMMDD, getAppointments } from '@/components/Utils';
+import { Colors } from '@/constants/Colors';
 import { AppointmentStatus, AppointmentType } from '@/constants/Enums';
 import { URLS } from '@/constants/Urls';
 import { useAppContext } from '@/context/AppContext';
+import { useColorScheme } from '@/hooks/useColorScheme.web';
 import axios from 'axios';
 import { router } from 'expo-router';
 import React, { useEffect, useState } from 'react';
@@ -34,6 +36,8 @@ const Appointments = () => {
     const [appointments, setAppointments] = useState<Array<any>>([]);
     const [filteredAppointments, setFilteredAppointments] = useState<Array<any>>([]);
     const [loader, setLoader] = useState<boolean>(false);
+
+    const colorScheme = useColorScheme() ?? 'light';
 
     useEffect(() => {
         const backAction = () => {
@@ -65,11 +69,9 @@ const Appointments = () => {
             const emergencyAppointment = completeOrAcceptedAppointments?.filter((item: any) => item?.appointmentType === AppointmentType.EMERGENCY);
             const newNavData = navData?.map((item: NavbarObject) => {
                 if (item?.label?.split(" ")[0] === "Normal") {
-                    const languageText = finalText("Normal", translations, selectedLanguage)
-                    return { ...item, label: `${languageText} (${normalAppointment?.length})`, isActive: true }
+                    return { ...item, label: `Normal (${normalAppointment?.length})`, isActive: true }
                 } else {
-                    const languageText = finalText("Emergency", translations, selectedLanguage)
-                    return { ...item, label: `${languageText} (${emergencyAppointment?.length})`, isActive: false }
+                    return { ...item, label: `Emergency (${emergencyAppointment?.length})`, isActive: false }
                 }
             });
             setNavData(newNavData);
@@ -151,7 +153,7 @@ const Appointments = () => {
     return (
         <ThemedView style={styles.container} >
             <MainHeader selectedNav="appointment" />
-            <Navbar data={navData} onClick={handleNavClick} />
+            <Navbar data={navData} onClick={handleNavClick} source="appointment" />
             <View style={{ marginTop: 24 }} >
                 <AppointmentDateSelector handleDateChange={handleDateChange} />
             </View>
@@ -160,9 +162,23 @@ const Appointments = () => {
                     ref={scrollViewRef} 
                     style={{ marginTop: 20 }}>
                     {filteredAppointments?.length === 0 ?
-                        <View style={{ marginTop: 12, height: 260, display: 'flex', alignItems: 'center' }} >
+                        <View style={{ 
+                            marginTop: 12, 
+                            height: 260,
+                            marginHorizontal: 4,
+                            marginBottom: 12,
+                            display: 'flex', 
+                            alignItems: 'center', 
+                            backgroundColor: Colors[colorScheme].background,
+                            shadowColor: '#000000',
+                            shadowOffset: { width: 0, height: 4 },
+                            shadowOpacity: 0.1,
+                            shadowRadius: 12,
+                            elevation: 4,
+                            borderRadius: 12,
+                        }} >
                             <Image source={require('../../assets/images/noTasks.png')} style={{ height: 175, width: 200 }} resizeMode='contain' />
-                            <ThemedText style={{ marginTop: 24, fontSize: 18, lineHeight: 18, fontWeight: 700 }} >{finalText(`No ${navData?.filter((item: any) => item?.isActive)[0]?.label?.split(" ")[0]} Appointments`, translations, selectedLanguage)}!</ThemedText>
+                            <ThemedText style={{ marginTop: 24, fontSize: 18, lineHeight: 22, fontWeight: 700 }} >{finalText(`No ${navData?.filter((item: any) => item?.isActive)[0]?.label?.split(" ")[0]} Appointments`, translations, selectedLanguage)}!</ThemedText>
                         </View>
                     : 
                         filteredAppointments?.map((appointment: any, index: number) => {

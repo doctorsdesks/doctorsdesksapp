@@ -2,6 +2,7 @@ import AppointmentCard from '@/components/AppointmentCard';
 import CustomButton from '@/components/CustomButton';
 import CustomInput2 from '@/components/CustomInput2';
 import CustomPopUp from '@/components/CustomPopUp';
+import Icon from '@/components/Icons';
 import Loader from '@/components/Loader';
 import MainFooter from '@/components/MainFooter';
 import MainHeader from '@/components/MainHeader';
@@ -44,6 +45,7 @@ const Tasks = () => {
     const [loader, setLoader] = useState<boolean>(false);
     const [showCancelPopUp, setShowCancelPopUp] = useState<boolean>(false);
     const [cancelReason, setCancelReason] = useState<any>(textObject);
+
     const colorScheme = useColorScheme() ?? 'light';
 
     useEffect(() => {
@@ -166,9 +168,23 @@ const Tasks = () => {
                     ref={scrollViewRef} 
                     style={{ marginTop: 20 }}>
                     {filteredAppointments?.length === 0 ?
-                        <View style={{ marginTop: 12, height: 260, display: 'flex', alignItems: 'center' }} >
+                        <View style={{ 
+                            marginTop: 12, 
+                            height: 260,
+                            marginHorizontal: 4,
+                            marginBottom: 12,
+                            display: 'flex', 
+                            alignItems: 'center', 
+                            backgroundColor: Colors[colorScheme].background,
+                            shadowColor: '#000000',
+                            shadowOffset: { width: 0, height: 4 },
+                            shadowOpacity: 0.1,
+                            shadowRadius: 12,
+                            elevation: 4,
+                            borderRadius: 12,
+                        }} >
                             <Image source={require('../../assets/images/noTasks.png')} style={{ height: 175, width: 200 }} resizeMode='contain' />
-                            <ThemedText style={{ marginTop: 24, fontSize: 18, lineHeight: 18, fontWeight: 700 }} >{finalText(`No ${navData?.filter((item: any) => item?.isActive)[0]?.label} Appointments`, translations, selectedLanguage)}!</ThemedText>
+                            <ThemedText style={{ marginTop: 24, fontSize: 18, lineHeight: 22, fontWeight: 700 }} >{finalText(`No ${navData?.filter((item: any) => item?.isActive)[0]?.label} Appointments`, translations, selectedLanguage)}!</ThemedText>
                         </View>
                     :
                         filteredAppointments?.map((appointment: any) => {
@@ -185,7 +201,7 @@ const Tasks = () => {
                             onPress={() => setShowCancelPopUp(false)}
                             style={styles.closeButton}
                         >
-                            <ThemedText style={[styles.closeButtonText, { color: Colors[colorScheme].crossIcon }]}>✕</ThemedText>
+                            <Icon type='cross' />
                         </Pressable>
                         <View style={{ display: "flex", width: width - 64, marginTop: 20 }} >
                             <CustomInput2 data={cancelReason} onChange={handleCancelReason} />

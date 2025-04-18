@@ -51,7 +51,7 @@ const BlockPage: React.FC<BlockPageProps> = ({ onClick }) => {
                     {finalText("Your account has been resticted due to policy violations or user complaints", translations, selectedLanguage)}.
                 </ThemedText>
                 <ThemedText style={{ fontSize: 16, lineHeight: 22, fontWeight: 500, marginTop: 16, paddingHorizontal: 24, color: Colors[colorSchema].subText, textAlign: 'center' }} >
-                    {finalText("Four further queries, please email to", translations, selectedLanguage)}.
+                    {finalText("For further queries, please email to", translations, selectedLanguage)}.
                 </ThemedText>
                 <ThemedText type='link' style={{ marginTop: 6, paddingHorizontal: 24, textAlign: 'center' }} >
                     {finalText("support@nirvaanhealth.com", translations, selectedLanguage)}.

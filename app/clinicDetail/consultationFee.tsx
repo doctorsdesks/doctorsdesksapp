@@ -144,7 +144,7 @@ const ConsultationFee = () => {
                     })}
                 </View>
                 <View style={{ display: "flex", alignItems: "center", position: 'absolute', bottom: 16, right: 16, left: 16 }} >
-                        <CustomButton multiLingual={true} width='FULL' title={isEditable ? "Save" : "Update"} onPress={handleSave} />
+                        <CustomButton multiLingual={true} width='FULL' title={isEditable ? "Save Fees" : "Edit Fees"} onPress={handleSave} />
                 </View>
             </ThemedView>
     );

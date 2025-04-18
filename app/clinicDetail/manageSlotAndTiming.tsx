@@ -1,5 +1,6 @@
 import CustomButton from '@/components/CustomButton';
 import CustomInput2 from '@/components/CustomInput2';
+import Icon from '@/components/Icons';
 import Loader from '@/components/Loader';
 import MainHeader from '@/components/MainHeader';
 import ManageSlotTiming from '@/components/ManageSlotTiming';
@@ -7,8 +8,10 @@ import Navbar, { NavbarObject } from '@/components/Navbar';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { changeTimeToAmPm, changeTimeTwentyFourHours, finalText, getClinics, updateClinic } from '@/components/Utils';
+import { Colors } from '@/constants/Colors';
 import { StringObject } from '@/constants/Enums';
 import { useAppContext } from '@/context/AppContext';
+import { useColorScheme } from '@/hooks/useColorScheme.web';
 import { Ionicons } from '@expo/vector-icons';
 import { router, useLocalSearchParams } from 'expo-router';
 import React, { useEffect, useState } from 'react';
@@ -31,35 +34,15 @@ const ManageSlotDurationAndTiming = () => {
         placeholder: "Enter in minutes",
         isDisabled: true,
     })
-    const [slotDurationObjectEmergency, setSlotDurationObjectEmergency] = useState<StringObject>({
-        id: "slotDuration",
-        type: "STRING",
-        inputType: "NUMBER",
-        value: "",
-        label: "Slot Duration (Minutes)",
-        isMandatory: true,
-        errorMessage: "Slot duration must be at least 5 minutes",
-        placeholder: "Enter in minutes",
-        isDisabled: true,
-    })
     const [isEditable, setIsEditable] = useState<boolean>(isEditablePath && isEditablePath === "true" ? true : false);
     const [loader, setLoader] = useState<boolean>(true);
     const [timings, setTimings] = useState<any>([]);
-    const [timingsEmergency, setTimingsEmergency] = useState<any>([]);
     const [clinicId, setClinicId] = useState<string>("");
     const [isAddSlots, setIsAddSlots] = useState<boolean>(false);
     const [eachDayChange, setEachDayChange] = useState<any>(null);
-    const [navData, setNavData] = useState<Array<NavbarObject>>([
-        {
-            label: "Normal Slot",
-            isActive: true,
-        },
-        {
-            label: "Emergency Slot",
-            isActive: false,
-        }
-    ]);
     const [isKeyboardOpen, setIsKeyboardOpen] = useState<boolean>(false);
+
+    const colorScheme = useColorScheme() ?? 'light';
 
     useEffect(() => {
         const backAction = () => {
@@ -89,12 +72,9 @@ const ManageSlotDurationAndTiming = () => {
             if (respnose.status === "SUCCESS") {
                 const timingDetails = respnose.data;
                 setClinicId(timingDetails?._id);
-                const comingSlotDuration = timingDetails?.slotDurationNormal || "";
-                let comingSlotTimings = timingDetails?.clinicTimingsNormal || [];
-                const comingSlotDurationEmergency = timingDetails?.slotDurationEmergency || "";
-                let comingSlotTimingsEmergency = timingDetails?.clinicTimingsEmergency || [];
+                const comingSlotDuration = timingDetails?.slotDuration || "";
+                let comingSlotTimings = timingDetails?.clinicTimings || [];
                 setSlotDurationObject({ ...slotDurationObject, value: JSON.stringify(comingSlotDuration) });
-                setSlotDurationObjectEmergency({ ...slotDurationObjectEmergency, value: JSON.stringify(comingSlotDurationEmergency) });
                 comingSlotTimings = comingSlotTimings?.map((day: any) => {
                     let newTimings = [...day?.timings];
                     newTimings = newTimings?.map((eachTime: any) => {
@@ -103,14 +83,6 @@ const ManageSlotDurationAndTiming = () => {
                     return { ...day, timings: newTimings };
                 })
                 setTimings(comingSlotTimings);
-                comingSlotTimingsEmergency = comingSlotTimingsEmergency?.map((day: any) => {
-                    let newTimings = [...day?.timings];
-                    newTimings = newTimings?.map((eachTime: any) => {
-                        return { startTime : changeTimeToAmPm(eachTime?.startTime), endTime: changeTimeToAmPm(eachTime?.endTime) };
-                    })
-                    return { ...day, timings: newTimings };
-                })
-                setTimingsEmergency(comingSlotTimingsEmergency);
                 setLoader(false);
             } else {
                 Toast.show({
@@ -125,11 +97,7 @@ const ManageSlotDurationAndTiming = () => {
     },[doctorDetails])
 
     const handleSlotChange = (value: string) => {
-        if (navData[0]?.isActive) {
-            setSlotDurationObject({ ...slotDurationObject, value: value });
-        } else {
-            setSlotDurationObjectEmergency({ ...slotDurationObjectEmergency, value: value });
-        }
+        setSlotDurationObject({ ...slotDurationObject, value: value });
     }
 
     const handlAddSlots = () => {
@@ -150,9 +118,6 @@ const ManageSlotDurationAndTiming = () => {
             const newObject = { ...slotDurationObject };
             newObject.isDisabled = false;
             setSlotDurationObject(newObject)
-            const newObjectEmergency = { ...slotDurationObjectEmergency };
-            newObjectEmergency.isDisabled = false;
-            setSlotDurationObjectEmergency(newObjectEmergency)
             setIsEditable(true);
         }
     }
@@ -167,22 +132,10 @@ const ManageSlotDurationAndTiming = () => {
             })
             return { ...day, timings : timings };
         });
-
-        let finalTimingsEmergency = timingsEmergency;
-        finalTimingsEmergency = finalTimingsEmergency?.filter((day: any) => day?.timings && day?.timings?.length > 0);
-        finalTimingsEmergency = finalTimingsEmergency?.map((day: any) => {
-            let timings = [...day?.timings];
-            timings = timings?.map((eachTime: any) => {
-                return { startTime: changeTimeTwentyFourHours(eachTime?.startTime), endTime: changeTimeTwentyFourHours(eachTime?.endTime) }
-            })
-            return { ...day, timings : timings };
-        });
         const updateData = {
             timingPayload: {
-                slotDurationNormal: slotDurationObject?.value,
-                eachDayInfoNormal: finalTimings,
-                slotDurationEmergency: slotDurationObjectEmergency?.value,
-                eachDayInfoEmergency: finalTimingsEmergency
+                slotDuration: slotDurationObject?.value,
+                eachDayInfo: finalTimings,
             }
         }
         const response: any = await updateClinic(clinicId, updateData);
@@ -204,21 +157,10 @@ const ManageSlotDurationAndTiming = () => {
         }
     }
 
-    const handleNavClick = (value: string) => {
-        setIsAddSlots(false);
-        setEachDayChange(null);
-        const newNavData = navData?.map((item: NavbarObject) => ({ ...item, isActive: item?.label === value ? true : false }));
-        setNavData(newNavData);
-    }
-
     const handleSetTiming = (data: any) => {
         setIsAddSlots(false);
         setEachDayChange(null);
-        if (navData[0]?.isActive) {
-            setTimings(data);
-        } else {
-            setTimingsEmergency(data);
-        }
+        setTimings(data);
     }
 
     return (loader ?
@@ -226,22 +168,22 @@ const ManageSlotDurationAndTiming = () => {
         :
             <ThemedView style={styles.container} >
                 <MainHeader selectedNav={ isAddSlots ? 'manageSlotTiming' : 'manageSlotAndTiming'} />
-                <Navbar data={navData} onClick={handleNavClick} />
                 <View>
                     {!isAddSlots && 
                         <View style={{ position: 'relative', height }}>
                             <View style={{ marginTop: 32 }} >
                                 <View>
+                                    <ThemedText style={{ fontSize: 14, lineHeight: 18, marginBottom: 8, fontWeight: 600, color: "#3B82F6" }} >{finalText("Slot duration is time for seeing one patient", translations, selectedLanguage)}. </ThemedText>
                                     {isEditable ?
-                                        <CustomInput2 data={navData[0]?.isActive ? slotDurationObject : slotDurationObjectEmergency} onChange={(value) => handleSlotChange(value)} />
+                                        <CustomInput2 data={slotDurationObject} onChange={(value) => handleSlotChange(value)} />
                                     :   slotDurationObject?.value === "" ?
                                             <ThemedText style={{ fontSize: 16, lineHeight: 20, fontWeight: 600 }} >{finalText("Please add slot duration", translations, selectedLanguage)} </ThemedText>
                                         :
-                                            <CustomInput2 data={navData[0]?.isActive ? slotDurationObject : slotDurationObjectEmergency} onChange={(value) => handleSlotChange(value)} />
+                                            <CustomInput2 data={slotDurationObject} onChange={(value) => handleSlotChange(value)} />
                                     }
                                 </View>
                                 <View style={{ marginTop: 24 }} >
-                                    <ThemedText style={{ fontSize: 16, lineHeight: 20, fontWeight: 600 }} >{finalText("Slot Timings", translations, selectedLanguage)} </ThemedText>
+                                    <ThemedText style={{ fontSize: 16, lineHeight: 20, fontWeight: 600 }} >{finalText("Clinic Timings for each day", translations, selectedLanguage)} </ThemedText>
                                 </View>
                                 <View 
                                     style= {{ 
@@ -252,123 +194,93 @@ const ManageSlotDurationAndTiming = () => {
                                         borderWidth: 1,
                                         paddingHorizontal: 12,
                                         height: height - 360,
-                                        position: 'relative'
+                                        position: 'relative',
+                                        backgroundColor: '#f2f2f2',
+                                        shadowColor: '#000000',
+                                        shadowOffset: { width: 0, height: 4 },
+                                        shadowOpacity: 0.1,
+                                        shadowRadius: 12,
+                                        elevation: 4,
+                                        marginHorizontal: 4,
+                                        marginBottom: 4
                                     }}
                                 >
-                                    {navData[0]?.isActive ?
-                                        timings?.length > 0 ?
-                                            <ScrollView
-                                                ref={scrollViewRef}
-                                                style={{ 
-                                                    display: 'flex',
-                                                    paddingVertical: 16,
-                                                    maxHeight: 340,
-                                                }}
-                                            >
-                                                <View style={{ paddingBottom: 16 }} >
-                                                    {timings?.map((timing: any, index: number) => {
-                                                        if (timing?.timings?.length > 0) {
-                                                            return (
-                                                                <View key={timing?.day} style={{ borderWidth: 1, borderColor: "#DDDDDD", borderRadius: 8, paddingHorizontal: 16, paddingVertical: 12, display: 'flex', flexDirection:  'row', alignItems: 'center', justifyContent: 'space-between', marginTop: index === 0 ? 0 : 12 }} >
-                                                                    <View>
-                                                                        <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-                                                                            <Ionicons size={20} color={"#2DB9B0"} name='calendar' />
-                                                                            <ThemedText style={{ fontSize: 16, lineHeight: 20, fontWeight: 600, marginLeft: 8 }} >
-                                                                                {timing?.day}
-                                                                            </ThemedText>
-                                                                        </View>
-                                                                        <View style={{ marginTop: 10, marginLeft: 20 }} >
-                                                                            {timing?.timings?.map((eachTime: any, i: number) => {
-                                                                                return (
-                                                                                    <View key={eachTime?.startTime + "-" + eachTime?.end + timing?.day + "_" + i + "_" + index}  style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginBottom: 8 }} >
-                                                                                        <Ionicons size={16} color={"#1EA6D6"} name='timer' />
-                                                                                        <ThemedText style={{ fontSize: 12, lineHeight: 14, fontWeight: 400, marginLeft: 8 }} >
-                                                                                            {eachTime?.startTime} - {eachTime?.endTime}
-                                                                                        </ThemedText>
-                                                                                    </View>
-                                                                                )
-                                                                            })}
-                                                                        </View>
+                                    {timings?.length > 0 ?
+                                        <ScrollView
+                                            ref={scrollViewRef}
+                                            style={{ 
+                                                display: 'flex',
+                                                paddingVertical: 16,
+                                                maxHeight: 340,
+                                            }}
+                                        >
+                                            <View style={{ paddingBottom: 16 }} >
+                                                {timings?.map((timing: any, index: number) => {
+                                                    if (timing?.timings?.length > 0) {
+                                                        return (
+                                                            <View key={timing?.day} style={{ borderWidth: 1, borderColor: "#DDDDDD", borderRadius: 8, paddingHorizontal: 16, paddingVertical: 12, display: 'flex', flexDirection:  'row', alignItems: 'center', justifyContent: 'space-between', marginTop: index === 0 ? 0 : 12 }} >
+                                                                <View>
+                                                                    <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+                                                                        <Ionicons size={20} color={"#2DB9B0"} name='calendar' />
+                                                                        <ThemedText style={{ fontSize: 16, lineHeight: 20, fontWeight: 600, marginLeft: 8 }} >
+                                                                            {finalText(timing?.day, translations, selectedLanguage)}
+                                                                        </ThemedText>
                                                                     </View>
-                                                                    <Pressable onPress={() => isEditable && handleClickEachDay(timing?.day)} >
-                                                                        <Ionicons size={24} color={"#32383D"} name='chevron-forward' />
-                                                                    </Pressable>
+                                                                    <View style={{ marginTop: 10, marginLeft: 20 }} >
+                                                                        {timing?.timings?.map((eachTime: any, i: number) => {
+                                                                            return (
+                                                                                <View key={eachTime?.startTime + "-" + eachTime?.end + timing?.day + "_" + i + "_" + index}  style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginBottom: 8 }} >
+                                                                                    <Ionicons size={16} color={"#1EA6D6"} name='timer' />
+                                                                                    <ThemedText style={{ fontSize: 12, lineHeight: 14, fontWeight: 400, marginLeft: 8 }} >
+                                                                                        {eachTime?.startTime} - {eachTime?.endTime}
+                                                                                    </ThemedText>
+                                                                                </View>
+                                                                            )
+                                                                        })}
+                                                                    </View>
                                                                 </View>
-                                                            )
-                                                        } else {
-                                                            return <></>
-                                                        }
-                                                    })}
-                                                </View>
-                                            </ScrollView>
-                                        :
-                                            <View style={{ height: height - 400, display: 'flex', alignItems: 'center', justifyContent: 'center' }} >
-                                                <Image source={require('../../assets/images/noTasks.png')} style={{ height: 175, width: 200 }} resizeMode='contain' />
-                                                <ThemedText style={{ marginTop: 4, fontSize: 14, lineHeight: 21, fontWeight: 600, color: "red" }} >{finalText("No slot exist, Please click on Update and Add Slots", translations, selectedLanguage)}</ThemedText>
+                                                                {isEditable && <Pressable onPress={() => isEditable && handleClickEachDay(timing?.day)} >
+                                                                    <Icon type='arrowRight' />
+                                                                </Pressable>}
+                                                            </View>
+                                                        )
+                                                    } else {
+                                                        return <></>
+                                                    }
+                                                })}
                                             </View>
+                                        </ScrollView>
                                     :
-                                        timingsEmergency?.length > 0 ?
-                                            <ScrollView
-                                                ref={scrollViewRef}
-                                                style={{ 
-                                                    display: 'flex',
-                                                    paddingVertical: 16,
-                                                    maxHeight: 340,
-                                                }}
-                                            >
-                                                <View style={{ paddingBottom: 16 }} >
-                                                    {timingsEmergency?.map((timing: any, index: number) => {
-                                                        if (timing?.timings?.length > 0) {
-                                                            return (
-                                                                <View key={timing?.day} style={{ borderWidth: 1, borderColor: "#DDDDDD", borderRadius: 8, paddingHorizontal: 16, paddingVertical: 12, display: 'flex', flexDirection:  'row', alignItems: 'center', justifyContent: 'space-between', marginTop: index === 0 ? 0 : 12 }} >
-                                                                    <View>
-                                                                        <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-                                                                            <Ionicons size={20} color={"#2DB9B0"} name='calendar' />
-                                                                            <ThemedText style={{ fontSize: 16, lineHeight: 20, fontWeight: 600, marginLeft: 8 }} >
-                                                                                {timing?.day}
-                                                                            </ThemedText>
-                                                                        </View>
-                                                                        <View style={{ marginTop: 10, marginLeft: 20 }} >
-                                                                            {timing?.timings?.map((eachTime: any, i: number) => {
-                                                                                return (
-                                                                                    <View key={eachTime?.startTime + "-" + eachTime?.end + "_" + i + "_" + index}  style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginBottom: 8 }} >
-                                                                                        <Ionicons size={16} color={"#1EA6D6"} name='timer' />
-                                                                                        <ThemedText style={{ fontSize: 12, lineHeight: 14, fontWeight: 400, marginLeft: 8 }} >
-                                                                                            {eachTime?.startTime} - {eachTime?.endTime}
-                                                                                        </ThemedText>
-                                                                                    </View>
-                                                                                )
-                                                                            })}
-                                                                        </View>
-                                                                    </View>
-                                                                    <Pressable onPress={() => isEditable && handleClickEachDay(timing?.day)} >
-                                                                        <Ionicons size={24} color={"#32383D"} name='chevron-forward' />
-                                                                    </Pressable>
-                                                                </View>
-                                                            )
-                                                        } else {
-                                                            return <></>
-                                                        }
-                                                    })}
-                                                </View>
-                                            </ScrollView>
-                                        :
-                                            <View style={{ height: height - 400, display: 'flex', alignItems: 'center', justifyContent: 'center' }} >
-                                                <Image source={require('../../assets/images/noTasks.png')} style={{ height: 175, width: 200 }} resizeMode='contain' />
-                                                <ThemedText style={{ marginTop: 4, fontSize: 14, lineHeight: 21, fontWeight: 600, color: "red" }} >{finalText("No slot exist, Please click on Update and Add Slots", translations, selectedLanguage)}</ThemedText>
-                                            </View>
+                                        <View style={{ 
+                                            marginTop: 12, 
+                                            height: 260,
+                                            marginHorizontal: 4,
+                                            marginBottom: 12,
+                                            display: 'flex', 
+                                            alignItems: 'center', 
+                                            backgroundColor: Colors[colorScheme].background,
+                                            shadowColor: '#000000',
+                                            shadowOffset: { width: 0, height: 4 },
+                                            shadowOpacity: 0.1,
+                                            shadowRadius: 12,
+                                            elevation: 4,
+                                            borderRadius: 12,
+                                        }} >
+                                            <Image source={require('../../assets/images/noTasks.png')} style={{ height: 175, width: 200 }} resizeMode='contain' />
+                                            <ThemedText style={{ marginTop: 4, fontSize: 14, lineHeight: 21, fontWeight: 600, color: "red" }} >{finalText("No timing exist, Please click on 'Edit Timings' then click 'Add Timing'", translations, selectedLanguage)}</ThemedText>
+                                        </View>
                                     }
                                     <View style={{ display: "flex", alignItems: "center", marginTop: 24, position: 'absolute', bottom: 12, right: 12, left: 12 }} >
-                                        <CustomButton multiLingual={true} width='FULL' title="Add Slots" onPress={handlAddSlots} isDisabled={!isEditable} />
+                                        <CustomButton multiLingual={true} width='FULL' title="Add Timings" onPress={handlAddSlots} isDisabled={!isEditable} />
                                     </View>
                                 </View>
                             </View>
                         </View>
                     }
-                    {isAddSlots && <ManageSlotTiming eachDayChange={eachDayChange} timings={navData[0]?.isActive ? timings : timingsEmergency} setTimings={(data: any) => handleSetTiming(data)} />}
+                    {isAddSlots && <ManageSlotTiming eachDayChange={eachDayChange} timings={ timings } setTimings={(data: any) => handleSetTiming(data)} />}
                 </View>
                 {!isAddSlots && !isKeyboardOpen && <View style={{ display: "flex", alignItems: "center", position: 'absolute', bottom: 16, right: 16, left: 16 }} >
-                    <CustomButton width='FULL' title={isEditable ? "Save" : "Update"} onPress={handleSave} />
+                    <CustomButton width='FULL' title={isEditable ? "Save" : "Edit Timings"} onPress={handleSave} />
                 </View>}
             </ThemedView>
     );

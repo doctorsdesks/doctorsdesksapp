@@ -2,12 +2,13 @@ import AppointmentDateSelector from '@/components/AppointmentDateSelector';
 import CustomButton from '@/components/CustomButton';
 import Loader from '@/components/Loader';
 import MainHeader from '@/components/MainHeader';
-import Navbar, { NavbarObject } from '@/components/Navbar';
 import Slot from '@/components/Slot';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { blockSlots, finalText, formatDateToYYYYMMDD, getClinics, getSlots } from '@/components/Utils';
+import { Colors } from '@/constants/Colors';
 import { useAppContext } from '@/context/AppContext';
+import { useColorScheme } from '@/hooks/useColorScheme.web';
 import { router } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { BackHandler, Dimensions, Image, ScrollView, StyleSheet, View } from 'react-native';
@@ -18,20 +19,11 @@ const BlockSlots = () => {
     const scrollViewRef = React.useRef(null);
     const { doctorDetails, translations, selectedLanguage } = useAppContext();
     const [selectedDay, setSelectedDay] = useState<string>("");
-    const [navData, setNavData] = useState<Array<NavbarObject>>([
-        {
-            label: "Normal",
-            isActive: true,
-        },
-        {
-            label: "Emergency",
-            isActive: false,
-        }
-    ]);
-    const [slots, setSlots] = useState<any>({});
     const [slotsToShow, setSlotsToShow] = useState<Array<any>>([]);
     const [loader, setLoader] = useState<boolean>(true);
     const [clinicId, setClinicId] = useState<string>("");
+
+    const colorScheme = useColorScheme() ?? 'light';
 
     useEffect(() => {
         const backAction = () => {
@@ -80,18 +72,7 @@ const BlockSlots = () => {
         const respnose = await getSlots(clinicId, formattedDate);
         if (respnose.status === "SUCCESS") {
             const messageAndSlotObject = respnose.data;
-            setSlots(messageAndSlotObject?.slots);
-            const newNavData = navData?.map((item: NavbarObject) => {
-                if (item?.label?.split(" ")[0] === "Normal") {
-                    const languageText = finalText("Normal", translations, selectedLanguage)
-                    return { ...item, label: `${languageText} (${messageAndSlotObject?.slots?.normalSlots?.length})`, isActive: true }
-                } else {
-                    const languageText = finalText("Emergency", translations, selectedLanguage)
-                    return { ...item, label: `${languageText} (${messageAndSlotObject?.slots?.emergencySlots?.length})`, isActive: false }
-                }
-            });
-            setNavData(newNavData);
-            setSlotsToShow(messageAndSlotObject?.slots?.normalSlots);
+            setSlotsToShow(messageAndSlotObject?.slots?.slots);
             setLoader(false);
         } else {
             Toast.show({
@@ -100,17 +81,6 @@ const BlockSlots = () => {
                 visibilityTime: 3000,
             });
             setLoader(false);
-        }
-    }
-
-    const handleNavClick = (value: string) => {
-        const newNavData = navData?.map((item: NavbarObject) => ({ ...item, isActive: item?.label === value ? true : false }));
-        setNavData(newNavData);
-        const [navValue] = value?.split(" ");
-        if (navValue === "Normal") {
-            setSlotsToShow([...slots?.normalSlots])
-        } else {
-            setSlotsToShow([...slots?.emergencySlots])
         }
     }
 
@@ -182,8 +152,7 @@ const BlockSlots = () => {
 
     return (
         <ThemedView style={styles.container} >
-            <MainHeader selectedNav="appointment" />
-            <Navbar data={navData} onClick={handleNavClick} />
+            <MainHeader selectedNav="block" />
             <View style={{ marginTop: 24 }} >
                 <AppointmentDateSelector handleDateChange={handleDateChange} />
             </View>
@@ -192,9 +161,23 @@ const BlockSlots = () => {
                     ref={scrollViewRef} 
                     style={{ marginTop: 20 }}>
                     {slotsToShow?.length === 0 ?
-                        <View style={{ marginTop: 12, height: 260, display: 'flex', alignItems: 'center' }} >
+                        <View style={{ 
+                            marginTop: 12, 
+                            height: 260,
+                            marginHorizontal: 4,
+                            marginBottom: 12,
+                            display: 'flex', 
+                            alignItems: 'center', 
+                            backgroundColor: Colors[colorScheme].background,
+                            shadowColor: '#000000',
+                            shadowOffset: { width: 0, height: 4 },
+                            shadowOpacity: 0.1,
+                            shadowRadius: 12,
+                            elevation: 4,
+                            borderRadius: 12,
+                        }} >
                             <Image source={require('../../assets/images/noTasks.png')} style={{ height: 175, width: 200 }} resizeMode='contain' />
-                            <ThemedText style={{ marginTop: 24, fontSize: 18, lineHeight: 18, fontWeight: 700 }} >{finalText(`No ${navData?.filter((item: any) => item?.isActive)[0]?.label?.split(" ")[0]} Appointments`, translations, selectedLanguage)}!</ThemedText>
+                            <ThemedText style={{ marginTop: 24, fontSize: 18, lineHeight: 18, fontWeight: 700 }} >{finalText(`No Slot Available`, translations, selectedLanguage)}!</ThemedText>
                         </View>
                     : 
                     <View  style={{ marginTop: 12, marginBottom: 12, display:'flex', flexDirection: 'row', flexWrap: 'wrap', gap: 16 }}>

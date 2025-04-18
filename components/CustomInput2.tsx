@@ -1,7 +1,6 @@
 import { useAppContext } from '@/context/AppContext';
 import React, { useEffect, useState } from 'react';
 import { View, Text, TextInput, StyleSheet, Pressable } from 'react-native';
-import { finalText } from './Utils';
 import { ThemedText } from './ThemedText';
 import { ThemedView } from './ThemedView';
 import { useColorScheme } from '@/hooks/useColorScheme.web';
@@ -30,7 +29,6 @@ interface CustomInput2Props {
 }
 
 const CustomInput2: React.FC<CustomInput2Props> = ({ data, onChange, handleFocus, handleBlur }) => {
-  const { translations, selectedLanguage } = useAppContext();
   const [isFocused, setIsFocused] = useState(false);
   const [isError, setIsError] = useState(false);
   const { label, value, isMandatory, errorMessage, placeholder, inputType, id, isDisabled } = data;
@@ -114,7 +112,7 @@ const CustomInput2: React.FC<CustomInput2Props> = ({ data, onChange, handleFocus
   return (
     <ThemedView>
         <ThemedText style={[styles.label, isFocused && styles.labelFocused, isError && styles.labelError]}>
-          {finalText(label, translations, selectedLanguage)} {isMandatory && !isDisabled && <Text style={styles.mandatory}>*</Text>}
+          {label} {isMandatory && !isDisabled && <Text style={styles.mandatory}>*</Text>}
         </ThemedText>
         {data?.isDisabled ? 
           <View

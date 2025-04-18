@@ -102,13 +102,13 @@ const styles = StyleSheet.create({
     },
     labelText: {
         fontSize: 16,
-        lineHeight: 18,
+        lineHeight: 20,
         fontWeight: '700',
         color: "#32383D"
     } as TextStyle,
     subLabelText: {
         fontSize: 14,
-        lineHeight: 16,
+        lineHeight: 18,
         fontWeight: '500',
         color: "#32383D",
         marginTop: 10

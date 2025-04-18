@@ -7,7 +7,7 @@ import IdProofUploadCard from './IdProofUploadCard';
 import CustomButton from '@/components/CustomButton';
 import Toast from 'react-native-toast-message';
 import Loader from '@/components/Loader';
-import { finalText, uploadFile } from '@/components/Utils';
+import { finalText, getValueById, uploadFile } from '@/components/Utils';
 import { ThemedView } from '@/components/ThemedView';
 import { ThemedText } from '@/components/ThemedText';
 import { Colors } from '@/constants/Colors';
@@ -43,7 +43,7 @@ const UploadCard = () => {
         setLoader(true);
         const fileNameFront = frontUri?.fileName;
         const fileNameBack = backUri?.fileName;
-        const phoneNumber = signUpDetails?.phoneOTPDetails?.phoneNumber;
+        const phoneNumber = getValueById(signUpDetails?.loginDetails, "number");
         const frontUrlObject = await uploadFile(frontUri, fileNameFront, phoneNumber);
         if (frontUrlObject.status === "SUCCESS"){
             const backUrlObject = await uploadFile(backUri, fileNameBack, phoneNumber);
@@ -58,11 +58,6 @@ const UploadCard = () => {
                 })
                 const newSignUpDetails = { ...signUpDetails, idProofDetails: newDocData}
                 setSignUpDetails(newSignUpDetails);
-                Toast.show({
-                    type: 'success',  
-                    text1: 'Image uploaded Successfully.',
-                    visibilityTime: 3000,
-                });
                 router.replace({
                     pathname: '/signup',
                     params: {
