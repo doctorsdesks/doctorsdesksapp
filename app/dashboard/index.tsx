@@ -3,7 +3,6 @@ import Banner from '@/components/Banner';
 import CustomButton from '@/components/CustomButton';
 import CustomInput2 from '@/components/CustomInput2';
 import CustomPopUp from '@/components/CustomPopUp';
-import CustomText from '@/components/CustomText';
 import Icon from '@/components/Icons';
 import Loader from '@/components/Loader';
 import MainFooter from '@/components/MainFooter';
@@ -43,7 +42,6 @@ const Home = () => {
     const [cancelReason, setCancelReason] = useState<any>(textObject);
 
     const colorScheme = useColorScheme() ?? 'light';
-    const colors = Colors[colorScheme];
 
     useEffect(() => {
         const getDoctorId =  async () => {
@@ -308,10 +306,10 @@ const Home = () => {
                     :   
                         <View style={{ 
                             marginTop: 12, 
-                            height: 260, 
+                            height: 320, 
                             display: 'flex', 
                             alignItems: 'center', 
-                            backgroundColor: Colors[colorScheme].background,
+                            backgroundColor: Colors[colorScheme].cardBg,
                             shadowColor: '#000000',
                             shadowOffset: { width: 0, height: 4 },
                             shadowOpacity: 0.1,

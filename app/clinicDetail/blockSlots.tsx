@@ -168,7 +168,7 @@ const BlockSlots = () => {
                             marginBottom: 12,
                             display: 'flex', 
                             alignItems: 'center', 
-                            backgroundColor: Colors[colorScheme].background,
+                            backgroundColor: Colors[colorScheme].cardBg,
                             shadowColor: '#000000',
                             shadowOffset: { width: 0, height: 4 },
                             shadowOpacity: 0.1,

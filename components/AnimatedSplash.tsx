@@ -123,7 +123,8 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#ffffff',
+    marginHorizontal: 16,
+    backgroundColor: '#fcfcfc',
   },
   imageContainer: {
     position: 'absolute',
