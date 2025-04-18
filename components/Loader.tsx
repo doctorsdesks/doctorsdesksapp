@@ -48,7 +48,6 @@ const Loader = () => {
   return (
     <ThemedView style={styles.container}>
       <Animated.View style={[styles.loaderContainer, animatedStyle]}>
-        <View style={styles.loader} />
         <View style={styles.textWrapper}>
           <Image 
             source={require('../assets/images/loaderImage.png')} 
@@ -77,15 +76,6 @@ const styles = StyleSheet.create({
   loaderContainer: {
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  loader: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    borderWidth: 5,
-    borderColor: '#2DB9B0',
-    borderTopColor: 'transparent',
-    position: 'absolute',
   },
   textWrapper: {
     justifyContent: 'center',

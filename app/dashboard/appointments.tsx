@@ -35,7 +35,7 @@ const Appointments = () => {
     ]);
     const [appointments, setAppointments] = useState<Array<any>>([]);
     const [filteredAppointments, setFilteredAppointments] = useState<Array<any>>([]);
-    const [loader, setLoader] = useState<boolean>(false);
+    const [loader, setLoader] = useState<boolean>(true);
 
     const colorScheme = useColorScheme() ?? 'light';
 
@@ -164,12 +164,12 @@ const Appointments = () => {
                     {filteredAppointments?.length === 0 ?
                         <View style={{ 
                             marginTop: 12, 
-                            height: 260,
+                            height: 320,
                             marginHorizontal: 4,
                             marginBottom: 12,
                             display: 'flex', 
                             alignItems: 'center', 
-                            backgroundColor: Colors[colorScheme].background,
+                            backgroundColor: Colors[colorScheme].cardBg,
                             shadowColor: '#000000',
                             shadowOffset: { width: 0, height: 4 },
                             shadowOpacity: 0.1,

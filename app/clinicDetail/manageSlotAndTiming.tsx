@@ -4,7 +4,6 @@ import Icon from '@/components/Icons';
 import Loader from '@/components/Loader';
 import MainHeader from '@/components/MainHeader';
 import ManageSlotTiming from '@/components/ManageSlotTiming';
-import Navbar, { NavbarObject } from '@/components/Navbar';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { changeTimeToAmPm, changeTimeTwentyFourHours, finalText, getClinics, updateClinic } from '@/components/Utils';
@@ -258,7 +257,7 @@ const ManageSlotDurationAndTiming = () => {
                                             marginBottom: 12,
                                             display: 'flex', 
                                             alignItems: 'center', 
-                                            backgroundColor: Colors[colorScheme].background,
+                                            backgroundColor: Colors[colorScheme].cardBg,
                                             shadowColor: '#000000',
                                             shadowOffset: { width: 0, height: 4 },
                                             shadowOpacity: 0.1,
