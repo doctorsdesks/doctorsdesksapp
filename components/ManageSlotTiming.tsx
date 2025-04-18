@@ -190,7 +190,7 @@ const ManageSlotTiming: React.FC<ManageSlotTimingProps> = ({ timings, setTimings
                     <View>
                         <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }} >
                             <ThemedText style={{ fontSize: 16, fontWeight: 600 }} >{finalText("Select Week Days", translations, selectedLanguage)} </ThemedText>
-                            <CustomSwitch isDisabled={eachDayChange ? true : false} isActive={allDaysSelected} onClick={handleAllDays} />
+                            {!eachDayChange && <CustomSwitch isActive={allDaysSelected} onClick={handleAllDays} />}
                         </View>
                         <View style={{ display: 'flex', flexDirection: "row", alignItems: 'center', justifyContent: 'space-between', marginTop: 24 }} >
                             {days?.map((day: DaysForSlot) => {
@@ -198,10 +198,10 @@ const ManageSlotTiming: React.FC<ManageSlotTimingProps> = ({ timings, setTimings
                                     <Pressable
                                         key={day?.label}
                                         id={day?.label} 
-                                        style={{ height: 32, width: 32, display: 'flex', alignItems: "center", justifyContent: 'center', borderColor: "#2DB9B0", borderWidth: 1, borderRadius: 32, backgroundColor: day?.isSelected ? "#2DB9B0" : "#F9F9F9" }}
+                                        style={{ height: 32, width: 32, display: 'flex', alignItems: "center", justifyContent: 'center', borderColor: eachDayChange ? "#DDDDDD" : "#2DB9B0", borderWidth: 1, borderRadius: 32, backgroundColor: day?.isSelected ? "#2DB9B0" : eachDayChange ? "#DDDDDD" : "#F9F9F9" }}
                                         onPress={() => !eachDayChange && handleDaySelect(day?.day)}
                                     >
-                                        <ThemedText style={{ fontSize: 14, lineHeight: 19, fontWeight: day?.isSelected ? 700 : 600, color: day?.isSelected ? "#FFFFFF" : "#32383D" }} >{finalText(day?.label, translations, selectedLanguage)} </ThemedText>
+                                        <ThemedText style={{ textAlign: 'center', fontSize: 14, lineHeight: 19, fontWeight: day?.isSelected ? 700 : 600, color: day?.isSelected ? "#FFFFFF" : "#32383D" }} >{finalText(day?.label, translations, selectedLanguage)} </ThemedText>
                                     </Pressable>
                                 )
                             })}

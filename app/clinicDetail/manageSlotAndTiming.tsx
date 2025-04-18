@@ -1,5 +1,6 @@
 import CustomButton from '@/components/CustomButton';
 import CustomInput2 from '@/components/CustomInput2';
+import Icon from '@/components/Icons';
 import Loader from '@/components/Loader';
 import MainHeader from '@/components/MainHeader';
 import ManageSlotTiming from '@/components/ManageSlotTiming';
@@ -238,9 +239,9 @@ const ManageSlotDurationAndTiming = () => {
                                                                         })}
                                                                     </View>
                                                                 </View>
-                                                                <Pressable onPress={() => isEditable && handleClickEachDay(timing?.day)} >
-                                                                    <Ionicons size={24} color={"#32383D"} name='chevron-forward' />
-                                                                </Pressable>
+                                                                {isEditable && <Pressable onPress={() => isEditable && handleClickEachDay(timing?.day)} >
+                                                                    <Icon type='arrowRight' />
+                                                                </Pressable>}
                                                             </View>
                                                         )
                                                     } else {
