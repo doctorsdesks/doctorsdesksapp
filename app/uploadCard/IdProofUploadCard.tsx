@@ -91,9 +91,16 @@ const IdProofUploadCard: React.FC<IdProofUploadCardProps> = ({ data, onChange, h
                     {finalText(`Click & Upload Photos of ${data?.label}`, translations, selectedLanguage)}
                 </ThemedText>
                 <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', marginTop: 16 }} >
-                    <View style={{ height: 125, width: 174, borderWidth: 1, borderColor: "#D9D9D9", borderRadius: 8, justifyContent: 'center', alignItems: 'center' }} >
+                    <View style={{ height: 160, width: 174, borderWidth: 1, borderColor: "#D9D9D9", borderRadius: 8, justifyContent: 'center', alignItems: 'center' }} >
                         {frontUri && frontUri?.uri !== "" ?
-                            <ViewImage resizeMode='cover' height={100} width={140} style={{ borderRadius: 8 }} data={frontUri} />
+                            <>
+                                <ViewImage resizeMode='cover' height={100} width={140} style={{ borderWidth: 1, borderColor: "#D9D9D9", borderRadius: 8 }} data={frontUri} />
+                                <Pressable style={{ display:'flex', alignItems: 'center' }} onPress={() => pickImage('FRONT')} >
+                                    <ThemedText style={{ fontSize: 12, marginTop: 16, lineHeight: 16, fontWeight: 600, color: "#2DB9B0" }}>
+                                        Change
+                                    </ThemedText>
+                                </Pressable>
+                            </>
                         :
                             <Pressable style={{ display:'flex', alignItems: 'center' }} onPress={() => pickImage('FRONT')} >
                                 <Svg width="32" height="32" viewBox="0 0 32 32" fill="none" >
@@ -109,9 +116,16 @@ const IdProofUploadCard: React.FC<IdProofUploadCardProps> = ({ data, onChange, h
                             </Pressable>
                         }
                     </View>
-                    <View style={{ height: 125, width: 174, borderWidth: 1, borderColor: "#D9D9D9", borderRadius: 8, justifyContent: 'center', alignItems: 'center' }} >
+                    <View style={{ height: 160, width: 174, borderWidth: 1, borderColor: "#D9D9D9", borderRadius: 8, justifyContent: 'center', alignItems: 'center' }} >
                         {backUri && backUri?.uri !== "" ?
-                            <ViewImage resizeMode='cover' height={100} width={140} style={{ borderRadius: 8 }} data={backUri} />
+                            <>
+                                <ViewImage resizeMode='cover' height={100} width={140} style={{ borderWidth: 1, borderColor: "#D9D9D9", borderRadius: 8 }} data={backUri} />
+                                <Pressable style={{ display:'flex', alignItems: 'center' }} onPress={() => pickImage('BACK')} >
+                                    <ThemedText style={{ fontSize: 12, marginTop: 16, lineHeight: 16, fontWeight: 600, color: "#2DB9B0" }}>
+                                        Change
+                                    </ThemedText>
+                                </Pressable>
+                            </>
                         : 
                             <Pressable style={{ display: 'flex', alignItems: 'center' }} onPress={() => pickImage('BACK')} >
                                 <Svg width="32" height="32" viewBox="0 0 32 32" fill="none" >

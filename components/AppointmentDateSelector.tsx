@@ -9,7 +9,6 @@ import { finalText } from './Utils';
 import { useAppContext } from '@/context/AppContext';
 import { ThemedView } from './ThemedView';
 import { ThemedText } from './ThemedText';
-import { useColorScheme } from '@/hooks/useColorScheme.web';
 import Icon from './Icons';
 
 interface AppointmentDateSelectorProps {
@@ -23,7 +22,6 @@ const AppointmentDateSelector: React.FC<AppointmentDateSelectorProps> = ({ handl
   const [selectedDay, setSelectedDay] = useState<string>("");
   const [loader, setLoader] = useState<boolean>(false);
   const flatListRef = useRef<FlatList>(null);
-  const colorSchema = useColorScheme() || 'light';
   
   useEffect(() => {
     if (currentMonth) {
@@ -193,7 +191,7 @@ const AppointmentDateSelector: React.FC<AppointmentDateSelectorProps> = ({ handl
                         flexDirection: 'column', 
                         alignItems: 'center',
                     }}>
-                        <ThemedText style={{ fontSize: 12, lineHeight: 12, fontWeight: '600', color: item === selectedDay ? '#FCFCFC' : "#32383D" }}>{item.split(" ")[0]}</ThemedText>
+                        <ThemedText style={{ fontSize: 12, lineHeight: 16, fontWeight: '600', color: item === selectedDay ? '#FCFCFC' : "#32383D" }}>{finalText(item.split(" ")[0], translations, selectedLanguage)}</ThemedText>
                         <ThemedText style={{ fontSize: 12, lineHeight: 12, fontWeight: '600', color: item === selectedDay ? '#FCFCFC' : "#32383D", marginTop: 4 }}>{item.split(" ")[1]}</ThemedText>
                     </View>
                 </Pressable>
@@ -227,7 +225,7 @@ const styles = StyleSheet.create({
   },
   monthText: {
     fontSize: 16,
-    lineHeight: 16,
+    lineHeight: 20,
     fontWeight: '600',
     color: '#32383D',
   },

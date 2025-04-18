@@ -4,13 +4,14 @@ import CustomButton from '@/components/CustomButton';
 import CustomInput2 from '@/components/CustomInput2';
 import CustomPopUp from '@/components/CustomPopUp';
 import CustomText from '@/components/CustomText';
+import Icon from '@/components/Icons';
 import Loader from '@/components/Loader';
 import MainFooter from '@/components/MainFooter';
 import PatientList from '@/components/PatientList';
 import SearchBar from '@/components/SearchBar';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
-import { finalText, formatDateToYYYYMMDD, getAppointments, getDfo, getDoctorDetails, getPatientList, getSecureKey } from '@/components/Utils';
+import { finalText, formatDateToYYYYMMDD, getAppointments, getDfo, getDoctorDetails, getPatientList, getSecureKey, getTranslations } from '@/components/Utils';
 import { Colors } from '@/constants/Colors';
 import { AppointmentStatus, DocStatusType, PatientListProps } from '@/constants/Enums';
 import { URLS } from '@/constants/Urls';
@@ -26,7 +27,7 @@ import Toast from 'react-native-toast-message';
 
 
 const Home = () => {
-    const { setDoctorDetails, setDfo, translations, selectedLanguage } = useAppContext();
+    const { setDoctorDetails, setDfo, translations, selectedLanguage, setTranslations } = useAppContext();
     const scrollViewRef = React.useRef(null);
     const { width, height } = Dimensions.get('window');
     const [isListOpened, setIsListOpened] = useState<boolean>(false);
@@ -52,6 +53,19 @@ const Home = () => {
             }
         }
         getDoctorId();
+        const getLanguages = async () => {
+            const response = await getTranslations();
+            if (response?.status === "SUCCESS") {
+                setTranslations(response?.data || {})
+            } else {
+                Toast.show({
+                    type: 'error',  
+                    text1: response?.error,
+                    visibilityTime: 3000,
+                });
+            }
+        }
+        getLanguages();
     },[])
 
     useEffect(() => {
@@ -238,7 +252,7 @@ const Home = () => {
                     <PatientList patientList={patientList} />
                 : 
                     <View style={styles.list}>
-                        <CustomText multiLingual={true} textStyle={{ fontSize: 16, lineHeight: 20, fontWeight: 600, color: "#32383D" }} text="No patient found!" />
+                        <ThemedText style={{ fontSize: 16, lineHeight: 20, fontWeight: 600 }} >{finalText("No patient found", translations, selectedLanguage)}! </ThemedText>
                     </View>
                 )
             }
@@ -273,7 +287,7 @@ const Home = () => {
                             <Path d="M12.1607 22.56C9.7407 24.18 9.7407 26.82 12.1607 28.43C14.9107 30.27 19.4207 30.27 22.1707 28.43C24.5907 26.81 24.5907 24.17 22.1707 22.56C19.4307 20.73 14.9207 20.73 12.1607 22.56Z" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                             <Path d="M26.3398 28C27.0598 27.85 27.7398 27.56 28.2998 27.13C29.8598 25.96 29.8598 24.03 28.2998 22.86C27.7498 22.44 27.0798 22.16 26.3698 22" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                         </Svg>
-                        <ThemedText style={{ fontSize: 16, lineHeight: 16, fontWeight: 600, color: "#FFFFFF", marginLeft: 8 }} >{finalText("Total number of patient today", translations, selectedLanguage)}: </ThemedText>
+                        <ThemedText style={{ fontSize: 16, lineHeight: 20, fontWeight: 600, color: "#FFFFFF", marginLeft: 8 }} >{finalText("Total number of patient today", translations, selectedLanguage)}: </ThemedText>
                     </View>
                     <ThemedText style={{ fontSize: 24, lineHeight: 30, fontWeight: 600, color: "#FFFFFF" }} >{patientCount}</ThemedText>
                 </View>
@@ -292,9 +306,21 @@ const Home = () => {
                             </ScrollView>
                         </View>
                     :   
-                        <View style={{ marginTop: 12, height: 260, display: 'flex', alignItems: 'center' }} >
+                        <View style={{ 
+                            marginTop: 12, 
+                            height: 260, 
+                            display: 'flex', 
+                            alignItems: 'center', 
+                            backgroundColor: Colors[colorScheme].background,
+                            shadowColor: '#000000',
+                            shadowOffset: { width: 0, height: 4 },
+                            shadowOpacity: 0.1,
+                            shadowRadius: 12,
+                            elevation: 4,
+                            borderRadius: 12,
+                        }} >
                             <Image source={require('../../assets/images/noTasks.png')} style={{ height: 175, width: 200 }} resizeMode='contain' />
-                            <ThemedText style={{ marginTop: 24, fontSize: 18, lineHeight: 18, fontWeight: 700 }} >{finalText("No Appointments today", translations, selectedLanguage)}!</ThemedText>
+                            <ThemedText style={{ marginTop: 24, fontSize: 18, lineHeight: 22, fontWeight: 700 }} >{finalText("No Appointment today", translations, selectedLanguage)}!</ThemedText>
                         </View>
                     }
                 </View>
@@ -307,13 +333,11 @@ const Home = () => {
                             onPress={() => setShowClinicReminder(false)}
                             style={styles.closeButton}
                         >
-                            <Svg width="32" height="32" viewBox="0 0 32 32" fill="none" >
-                                <Path d="M24.4009 7.61336C23.8809 7.09336 23.0409 7.09336 22.5209 7.61336L16.0009 14.12L9.48094 7.60002C8.96094 7.08002 8.12094 7.08002 7.60094 7.60002C7.08094 8.12002 7.08094 8.96002 7.60094 9.48002L14.1209 16L7.60094 22.52C7.08094 23.04 7.08094 23.88 7.60094 24.4C8.12094 24.92 8.96094 24.92 9.48094 24.4L16.0009 17.88L22.5209 24.4C23.0409 24.92 23.8809 24.92 24.4009 24.4C24.9209 23.88 24.9209 23.04 24.4009 22.52L17.8809 16L24.4009 9.48002C24.9076 8.97336 24.9076 8.12002 24.4009 7.61336Z" fill="#212B46"/>
-                            </Svg>
+                            <Icon type='cross' />
                         </Pressable>
                         <Image source={require('../../assets/images/clinicReminder.png')} style={styles.image} resizeMode='contain' />
-                        <ThemedText style={{ fontSize: 16, lineHeight: 18, fontWeight: 600, marginTop: 24 }} >{finalText("Ready to receive patients?", translations, selectedLanguage)}</ThemedText>
-                        <ThemedText style={{ fontSize: 14, lineHeight: 16, fontWeight: 400, marginTop: 8, color: "#757575" }} >{finalText("Set your clinic slots & fees!", translations, selectedLanguage)}</ThemedText>
+                        <ThemedText style={{ fontSize: 16, lineHeight: 20, fontWeight: 600, marginTop: 24 }} >{finalText("Ready to receive patients", translations, selectedLanguage)}?</ThemedText>
+                        <ThemedText style={{ fontSize: 14, lineHeight: 18, fontWeight: 400, marginTop: 8, color: "#757575" }} >{finalText("Set your clinic slots & fees", translations, selectedLanguage)}!</ThemedText>
                         <View style={{ display: "flex", width: width - 64, marginTop: 20 }} >
                             <CustomButton multiLingual={true} width='FULL' title="Go to profile" onPress={goToProfile} />
                         </View>
@@ -327,7 +351,7 @@ const Home = () => {
                             onPress={() => setShowCancelPopUp(false)}
                             style={styles.closeButton}
                         >
-                            <ThemedText style={[styles.closeButtonText, { color: colors.crossIcon }]}>✕</ThemedText>
+                            <Icon type='cross' />
                         </Pressable>
                         <View style={{ display: "flex", width: width - 64, marginTop: 20 }} >
                             <CustomInput2 data={cancelReason} onChange={handleCancelReason} />

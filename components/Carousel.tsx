@@ -39,7 +39,7 @@ const Carousel = () => {
   };
 
   return (
-    <View style={[styles.container, { maxHeight: height - 180}]}>
+    <View style={[styles.container, { height: height, position: 'relative' }]}>
       <Animated.ScrollView
         ref={scrollViewRef}
         horizontal
@@ -55,10 +55,10 @@ const Carousel = () => {
         scrollEventThrottle={16} // Change from 280 to 16 for smoother event updates
       >
         {carouselItems.map((item, index) => (
-          <View style={[styles.carouselItem, { maxHeight: height - 336 }]} key={index}>
+          <View style={[styles.carouselItem, { height: 516 }]} key={index}>
             <Image source={item.image} style={styles.image} resizeMode='contain' />
-            <ThemedText type='title' style={{ marginBottom: 24 }} >{item?.title}</ThemedText>
-            <ThemedText type='subtitle' lightColor='#8C8C8C' darkColor='#8C8C8C' style={{ marginBottom: 24, marginHorizontal: 24 }}>{item.description}</ThemedText>
+            <ThemedText type='title' style={{ marginBottom: 12 }} >{item?.title}</ThemedText>
+            <ThemedText type='subtitle' lightColor='#8C8C8C' darkColor='#8C8C8C' style={{ marginBottom: 12, marginHorizontal: 24 }}>{item.description}</ThemedText>
           </View>
         ))}
       </Animated.ScrollView>
@@ -96,7 +96,6 @@ const Carousel = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: 40,
     marginHorizontal: 12
   },
   carouselItem: {
@@ -105,13 +104,16 @@ const styles = StyleSheet.create({
   },
   image: {
     width: width - 24,
-    height: 446,
-    marginBottom: 32,
+    height: 400,
+    marginBottom: 20,
     alignSelf: 'flex-start',
   },
   animatedBarContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
+    position: 'absolute',
+    top: 536,
+    left: (width-24)/2 -40,
   },
   bar: {
     height: 8,

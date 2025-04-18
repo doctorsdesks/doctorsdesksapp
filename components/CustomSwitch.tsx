@@ -12,7 +12,7 @@ const CustomSwitch: React.FC<CustomSwitchProps> = ({ isActive, onClick, isDisabl
     return (
         <View style={{ position: 'relative' }} >
             <Pressable 
-                style={{ height: 14, width: 34, backgroundColor: isActive ? "#A6D9EC" : "#92949C", borderRadius: 7 }}
+                style={{ height: 14, width: 40, backgroundColor: isActive ? "#A6D9EC" : "#92949C", borderRadius: 7 }}
                 onPress={() => !isDisabled && onClick(isActive)}
             />
             <View 
@@ -23,7 +23,7 @@ const CustomSwitch: React.FC<CustomSwitchProps> = ({ isActive, onClick, isDisabl
                     borderRadius: 20, 
                     position: 'absolute', 
                     zIndex: 2, top: -3, 
-                    left: isActive ? 14 : 0,
+                    left: isActive ? 20 : 0,
                     shadowColor: "#000",
                     shadowOffset: { width: 0, height: 2 },
                     shadowOpacity: 0.25,

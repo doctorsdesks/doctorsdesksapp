@@ -411,7 +411,7 @@ const PersonalDetailsSetting = () => {
                                     })}
                         </ScrollView>
                         <View style={{ display: "flex", alignItems: "center", position: 'absolute', bottom: 16, right: 0, left: 0, zIndex: 2 }} >
-                            <CustomButton multiLingual={true} width='FULL' title={isEditable ? "Save" : "Update"} onPress={handleButtonClick} />
+                            <CustomButton multiLingual={true} width='FULL' title={isEditable ? "Save Personal Details" : "Edit Personal Details"} onPress={handleButtonClick} />
                         </View>
                     </View>
                 :   
@@ -435,7 +435,7 @@ const PersonalDetailsSetting = () => {
                                         <View style={{ padding: 6, borderWidth: 1, borderRadius: 4, borderColor: "#D9D9D9" }} >
                                             <Icon type='registration' />
                                         </View>
-                                        <ThemedText style={{ fontSize: 14, lineHeight: 14, fontWeight: 600, marginLeft: 8 }} >{finalText("Registration Certificate", translations, selectedLanguage)} </ThemedText>
+                                        <ThemedText style={{ fontSize: 14, lineHeight: 18, fontWeight: 600, marginLeft: 8 }} >{finalText("Registration Certificate", translations, selectedLanguage)} </ThemedText>
                                     </View>
                                     <Pressable onPress={() => openDocumentCard("registrationInfo")} style={{ transform: [{ rotate: idInfo?.registrationInfo?.isOpen ? '180deg' : '0deg' }] }} >
                                         <Icon type='arrowDown' />
@@ -463,7 +463,7 @@ const PersonalDetailsSetting = () => {
                                             <View style={{ padding: 6, borderWidth: 1, borderRadius: 4, borderColor: "#D9D9D9" }} >
                                                 <Icon type='aadhaarPan' />
                                             </View>
-                                            <ThemedText style={{ fontSize: 14, lineHeight: 14, fontWeight: 600, marginLeft: 8 }} >{finalText("Aadhar Card", translations, selectedLanguage)} </ThemedText>
+                                            <ThemedText style={{ fontSize: 14, lineHeight: 18, fontWeight: 600, marginLeft: 8 }} >{finalText("Aadhar Card", translations, selectedLanguage)} </ThemedText>
                                         </View>
                                         <Pressable onPress={() => openDocumentCard("aadharInfo")} style={{ transform: [{ rotate: idInfo?.aadharInfo?.isOpen ? '180deg' : '0deg' }] }} >
                                             <Icon type='arrowDown' />
@@ -492,7 +492,7 @@ const PersonalDetailsSetting = () => {
                                             <View style={{ padding: 6, borderWidth: 1, borderRadius: 4, borderColor: "#D9D9D9" }} >
                                                 <Icon type='aadhaarPan' />
                                             </View>
-                                            <ThemedText style={{ fontSize: 14, lineHeight: 14, fontWeight: 600, marginLeft: 8 }} >{finalText("Pan Card", translations, selectedLanguage)} </ThemedText>
+                                            <ThemedText style={{ fontSize: 14, lineHeight: 18, fontWeight: 600, marginLeft: 8 }} >{finalText("Pan Card", translations, selectedLanguage)} </ThemedText>
                                         </View>
                                         <Pressable onPress={() => openDocumentCard("panInfo")} style={{ transform: [{ rotate: idInfo?.panInfo?.isOpen ? '180deg' : '0deg' }] }} >
                                             <Icon type='arrowDown' />

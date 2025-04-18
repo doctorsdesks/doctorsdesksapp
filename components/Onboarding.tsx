@@ -33,7 +33,7 @@ const styles = StyleSheet.create({
   },
   buttonFixedBottom: {
     position: 'absolute',
-    bottom: 8,
+    bottom: 16,
     marginHorizontal: 12,
     left: 0,
     right: 0,

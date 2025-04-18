@@ -1,6 +1,6 @@
-import { useLocalSearchParams } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, Dimensions, Image, Pressable } from 'react-native';
+import { View, StyleSheet, Dimensions, Image, Pressable, BackHandler } from 'react-native';
 import Svg, { Path, Rect, G, Defs, ClipPath } from 'react-native-svg';
 import { finalText, getPatient } from '@/components/Utils';
 import Toast from 'react-native-toast-message';
@@ -32,6 +32,17 @@ const PatientProfile = () => {
     const [error, setError] = useState<string | null>(null);
     const [showMore, setShowMore] = useState(false);
     const { width } = Dimensions.get('window');
+
+    useEffect(() => {
+        const backAction = () => {
+            router.replace("/dashboard");
+            return true;
+        };
+
+        const backHandler = BackHandler.addEventListener("hardwareBackPress", backAction);
+
+        return () => backHandler.remove();
+    }, []);
 
     useEffect(() => {
         const fetchPatientDetails = async () => {
@@ -135,7 +146,7 @@ const PatientProfile = () => {
                                     <Path d="M20.9961 13.5834V9.41675" stroke="#C4FFFB" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                                 </Svg>
                                 <View>
-                                    <ThemedText style={styles.labelText} >{finalText("Alternate No", translations, selectedLanguage)}.</ThemedText>
+                                    <ThemedText style={{ fontSize: 11, lineHeight: 15, fontWeight: 400, color: "#FCFCFC" }} >{finalText("Alternate No", translations, selectedLanguage)}.</ThemedText>
                                     <ThemedText style={styles.valueText} >{finalText(patientDetails?.alternatePhone || '-', translations, selectedLanguage)} </ThemedText>
                                 </View>
                             </View>
@@ -145,7 +156,7 @@ const PatientProfile = () => {
                                     <Path d="M8.91406 17.8985C8.91406 14.4116 11.8981 10.966 13.9925 8.97693C15.13 7.89669 16.8648 7.89669 18.0023 8.97693C20.0967 10.966 23.0807 14.4116 23.0807 17.8985C23.0807 21.3171 20.3984 24.8334 15.9974 24.8334C11.5964 24.8334 8.91406 21.3171 8.91406 17.8985Z" stroke="#C4FFFB" stroke-width="1.5"/>
                                 </Svg>
                                 <View>
-                                    <ThemedText style={styles.labelText} >{finalText("Blood Group", translations, selectedLanguage)} </ThemedText>
+                                    <ThemedText style={{ fontSize: 11, lineHeight: 15, fontWeight: 400, color: "#FCFCFC" }} >{finalText("Blood Group", translations, selectedLanguage)} </ThemedText>
                                     <ThemedText style={styles.valueText} >{finalText(patientDetails?.bloodGroup || '-', translations, selectedLanguage)} </ThemedText>
                                 </View>
                             </View>
@@ -165,7 +176,7 @@ const PatientProfile = () => {
                                     </Defs>
                                 </Svg>
                                 <View>
-                                    <ThemedText style={styles.labelText} >{finalText("Marital Status", translations, selectedLanguage)} </ThemedText>
+                                    <ThemedText style={{ fontSize: 11, lineHeight: 15, fontWeight: 400, color: "#FCFCFC" }} >{finalText("Marital Status", translations, selectedLanguage)} </ThemedText>
                                     <ThemedText style={styles.valueText} >{finalText(patientDetails?.maritalStatus || '-', translations, selectedLanguage)} </ThemedText>
                                 </View>
                             </View>
@@ -176,7 +187,7 @@ const PatientProfile = () => {
                                     <Path d="M19.75 11.9167C19.75 13.9878 18.0711 15.6667 16 15.6667C13.9289 15.6667 12.25 13.9878 12.25 11.9167C12.25 9.84568 13.9289 8.16675 16 8.16675C18.0711 8.16675 19.75 9.84568 19.75 11.9167Z" stroke="#C4FFFB" stroke-width="1.5"/>
                                 </Svg>
                                 <View>
-                                    <ThemedText style={styles.labelText} >{finalText("Primary User", translations, selectedLanguage)} </ThemedText>
+                                    <ThemedText style={{ fontSize: 11, lineHeight: 15, fontWeight: 400, color: "#FCFCFC" }} >{finalText("Primary User", translations, selectedLanguage)} </ThemedText>
                                     <ThemedText style={styles.valueText} >{finalText(patientDetails?.familyMemberOf || '-', translations, selectedLanguage)} </ThemedText>
                                 </View>
                             </View>
@@ -190,7 +201,7 @@ const PatientProfile = () => {
                                 <Path d="M7.68111 17.7298C7.73559 20.2844 7.76283 21.5617 8.70543 22.5079C9.64804 23.4541 10.9599 23.487 13.5837 23.5529C15.2007 23.5936 16.8019 23.5936 18.4189 23.5529C21.0427 23.487 22.3546 23.4541 23.2972 22.5079C24.2398 21.5617 24.267 20.2844 24.3215 17.7298C24.339 16.9084 24.339 16.0918 24.3215 15.2704C24.267 12.7158 24.2398 11.4385 23.2972 10.4923C22.3546 9.54611 21.0427 9.51315 18.419 9.44722C16.8019 9.40659 15.2007 9.40659 13.5837 9.44722C10.9599 9.51313 9.64804 9.54609 8.70543 10.4923C7.76282 11.4385 7.73558 12.7158 7.68111 15.2704C7.66359 16.0918 7.66359 16.9084 7.68111 17.7298Z" stroke="#C4FFFB" stroke-width="1.5" stroke-linejoin="round"/>
                             </Svg>
                                 <View>
-                                    <ThemedText style={styles.labelText} >{finalText("Email ID", translations, selectedLanguage)} </ThemedText>
+                                    <ThemedText style={{ fontSize: 11, lineHeight: 15, fontWeight: 400, color: "#FCFCFC" }} >{finalText("Email ID", translations, selectedLanguage)} </ThemedText>
                                     <ThemedText style={styles.valueText} >{finalText(patientDetails?.emailId || '-', translations, selectedLanguage)} </ThemedText>
                                 </View>
                             </View>
@@ -201,7 +212,7 @@ const PatientProfile = () => {
                                     <Path d="M9.0187 13.5751C10.6604 6.35842 21.352 6.36675 22.9854 13.5834C23.9437 17.8167 21.3104 21.4001 19.002 23.6168C17.327 25.2334 14.677 25.2334 12.9937 23.6168C10.6937 21.4001 8.06037 17.8084 9.0187 13.5751Z" stroke="#C4FFFB" stroke-width="1.5"/>
                                 </Svg>
                                 <View>
-                                    <ThemedText style={styles.labelText} >{finalText("Address", translations, selectedLanguage)} </ThemedText>
+                                    <ThemedText style={{ fontSize: 11, lineHeight: 15, fontWeight: 400, color: "#FCFCFC" }} >{finalText("Address", translations, selectedLanguage)} </ThemedText>
                                     <ThemedText style={styles.valueText} >{finalText(patientDetails?.address?.addressLine ? getAddress(patientDetails?.address) : '-', translations, selectedLanguage)} </ThemedText>
                                 </View>
                             </View>
@@ -315,16 +326,10 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         flex: 1,
     },
-    labelText: {
-        fontSize: 11,
-        lineHeight: 11,
-        fontWeight: 400,
-        color: '#FCFCFC',
-    },
     valueText: {
         fontSize: 14,
-        marginTop: 8,
-        lineHeight: 14,
+        marginTop: 2,
+        lineHeight: 18,
         color: '#FCFCFC',
         fontWeight: '600',
         width: 100,

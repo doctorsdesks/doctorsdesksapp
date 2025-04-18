@@ -13,7 +13,7 @@ import axios from 'axios';
 import Toast from 'react-native-toast-message';
 import Loader from '@/components/Loader';
 import SearchSelect from '@/components/SearchSelect';
-import { getConfig, getValueById, login, saveSecureKey } from '@/components/Utils';
+import { getConfig, getValueById, login, saveSecureKey, uploadFile } from '@/components/Utils';
 import { signUpDetailsInitial, signUpHeaderDataInitial } from '@/context/InitialState';
 import { ThemedView } from '@/components/ThemedView';
 import { CONFIGS } from '@/constants/Enums';
@@ -27,6 +27,7 @@ const SignUp = () => {
     const [step, setStep] = React.useState(currentStep || "PD");
 
     const [personalDetails, setPersonalDetails] = React.useState<any>([]);
+    const [imageUrl, setImageUrl] = React.useState<any>({uri: "", isUploaded: false});
     const [idProofData, setIdProofData] = React.useState<any>([]);
     const [clinicDetails, setClinicDetails] = React.useState<any>([]);
     const [showImage, setShowImage] = React.useState<boolean>(true);
@@ -104,24 +105,53 @@ const SignUp = () => {
         
     }
 
+    const handleUploadImage = async (file: any) => {
+        setLoader(true);
+        const fileName = file?.fileName;
+        const phoneNumber = getValueById(signUpDetails?.loginDetails, "number");
+        try {
+            const uploadedImageUrlObject = await uploadFile(file, fileName, phoneNumber);
+            if (uploadedImageUrlObject.status === "SUCCESS"){
+                setStep("CD");
+                const updatedHeaderDataPD = signUpHeaderData?.map((item) => {
+                    if(item?.label === "Personal Info") {
+                        return { ...item, status: "COMPLETED"}
+                    }
+                    if(item?.label === "Clinic Info") {
+                        return { ...item, status: "STARTED"}
+                    }
+                    return { ...item };
+                });
+                setSignUpHeaderData(updatedHeaderDataPD);
+                setImageUrl({ ...imageUrl, isUploaded: true, uri: uploadedImageUrlObject.data });
+                const newSignUpDetails = { ...signUpDetails, imageUrl: uploadedImageUrlObject.data, personalDetails: personalDetails}
+                setSignUpDetails(newSignUpDetails);
+                if (scrollViewRef.current) {
+                    (scrollViewRef.current as any).scrollTo({ x: 0, y: 0, animated: true });
+                }
+                setLoader(false);
+            } else {
+                Toast.show({
+                    type: 'error',  
+                    text1: `Something went wrong, error: ${uploadedImageUrlObject.data}`,
+                    visibilityTime: 3000,
+                });
+                setLoader(false);
+            }
+        } catch (error) {
+            Toast.show({
+                type: 'error',  
+                text1: `Something went wrong, error: ${error}`,
+                visibilityTime: 3000,
+            });
+            setLoader(false);
+        }
+        
+    }
+
     const handleButtonClick = () => {
         if(step === "PD") {
-            setStep("CD");
-            const updatedHeaderDataPD = signUpHeaderData?.map((item) => {
-                if(item?.label === "Personal Info") {
-                    return { ...item, status: "COMPLETED"}
-                }
-                if(item?.label === "Clinic Info") {
-                    return { ...item, status: "STARTED"}
-                }
-                return { ...item };
-            })
-            setSignUpHeaderData(updatedHeaderDataPD);
-            const newSignUpDetails = { ...signUpDetails, personalDetails: personalDetails}
-            setSignUpDetails(newSignUpDetails);
-            if (scrollViewRef.current) {
-                (scrollViewRef.current as any).scrollTo({ x: 0, y: 0, animated: true });
-            }
+            handleUploadImage(imageUrl?.uri);
         } else if(step === "CD"){
             setStep("IDP");
             const updatedHeaderDataCD = signUpHeaderData?.map((item) => {
@@ -148,7 +178,7 @@ const SignUp = () => {
             const aadharDetails = idProofData?.find((item: {id: string}) => item?.id === "aadharCard");
             const updateData = {
                 phone: getValueById(numPassInfo, "number"),
-                imageUrl: signUpDetails?.imageUrl,
+                imageUrl: imageUrl?.uri || signUpDetails?.imageUrl,
                 password: getValueById(numPassInfo, "password"),
                 name: getValueById(personalDetails, "fullName"),
                 gender: getValueById(personalDetails, "gender"),
@@ -380,7 +410,7 @@ const SignUp = () => {
         :
             <ThemedView style={style.container} >
                 <SignUpHeader data={signUpHeaderData} />
-                {showImage && step === "PD" && <ImageUpload />}
+                {showImage && step === "PD" && <ImageUpload imageUrl={imageUrl} setImageUrl={setImageUrl}  />}
                 <ScrollView
                     ref={scrollViewRef}
                     style={{ 

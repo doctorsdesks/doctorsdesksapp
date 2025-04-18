@@ -4,9 +4,13 @@ import CustomText from "./CustomText";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { ThemedView } from "./ThemedView";
+import { ThemedText } from "./ThemedText";
+import { finalText } from "./Utils";
+import { useAppContext } from "@/context/AppContext";
 
 const PatientList = (props: any) => {
     const scrollViewRef = React.useRef(null);
+    const { translations, selectedLanguage } = useAppContext();
   return (
     <ThemedView style={styles.list}>
         <ScrollView
@@ -17,19 +21,19 @@ const PatientList = (props: any) => {
             {props?.patientList?.map((patient: any, i: number) => (
                 <Pressable onPress={() => router.replace(`/patientProfile/${patient?.phone}`)} style={[styles.card, { borderBottomWidth: i === props?.patientList?.length - 1 ? 0 : 1 }]} key={patient?.phone}>
                     <View style={styles.cardSection}>
-                        <CustomText textStyle={{ fontSize: 14, lineHeight: 16, fontWeight: 600, color: "#000" }} text={patient?.name}/>
+                        <ThemedText style={{ fontSize: 14, lineHeight: 16, fontWeight: 600, color: "#000" }} >{finalText(patient?.name, translations, selectedLanguage)} </ThemedText>
                         <View style={{ display: "flex", flexDirection: "row" }}  >
                             <Ionicons name='call' size={14} />
-                            <CustomText textStyle={{ fontSize: 14, lineHeight: 16, fontWeight: 600, color: "#000", marginLeft: 4 }} text={patient?.phone}/>
+                            <ThemedText style={{ fontSize: 14, lineHeight: 16, fontWeight: 600, color: "#000", marginLeft: 4 }} >{finalText(patient?.phone, translations, selectedLanguage)} </ThemedText>
                         </View>
                     </View>
                     <View style={styles.cardSection}>
                         <View style={{ display: "flex", flexDirection: "row" }} >
-                            <CustomText multiLingual={true} textStyle={{ fontSize: 14, lineHeight: 16, fontWeight: 600, color: "#000" }} text="Age"/>
-                            <CustomText textStyle={{ fontSize: 14, lineHeight: 16, fontWeight: 600, color: "#000" }} text={` :  ${patient?.age}`}/>
-                            <CustomText multiLingual={true} textStyle={{ fontSize: 14, lineHeight: 16, fontWeight: 600, color: "#000", marginLeft: 4 }} text="years"/>
+                            <ThemedText style={{ fontSize: 14, lineHeight: 16, fontWeight: 600, color: "#000" }} >{finalText("Age", translations, selectedLanguage)} </ThemedText>
+                            <ThemedText style={{ fontSize: 14, lineHeight: 16, fontWeight: 600, color: "#000" }} >{` :  ${patient?.age}`} </ThemedText>
+                            <ThemedText style={{ fontSize: 14, lineHeight: 16, fontWeight: 600, color: "#000", marginLeft: 4 }} >{finalText("years", translations, selectedLanguage)} </ThemedText>
                         </View>
-                        <CustomText textStyle={{ fontSize: 14, lineHeight: 16, fontWeight: 600, color: "#000" }} text={patient?.uhiid}/>
+                        <ThemedText style={{ fontSize: 14, lineHeight: 16, fontWeight: 600, color: "#000" }} >{patient?.uhiid}</ThemedText>
                     </View>
                 </Pressable>
             ))}
