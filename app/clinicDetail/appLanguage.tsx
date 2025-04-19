@@ -43,6 +43,8 @@ const AppLanguage = () => {
                     display: 'flex',
                     flex: 1,
                     flexDirection: 'row',
+                    flexWrap: 'wrap',
+                    rowGap: 12,
                     marginTop: 28
                 }}>
                 {languages?.map((language: string) => {

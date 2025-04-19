@@ -142,7 +142,7 @@ const TimePicker: React.FC<TimePickerProps> = ({ handleTimeSelection, title, tim
           initialScrollIndex={Math.max(hours.indexOf(selectedHour),0)}
           onMomentumScrollEnd={(event) => onScrollEnd(event, 'hour', hours)}
           style={styles.picker}
-          contentContainerStyle={[styles.flatListContainer, { paddingTop: 60, paddingBottom: 80 }]}
+          contentContainerStyle={[styles.flatListContainer, { paddingTop: 60, paddingBottom: 60 }]} // Equal padding for proper centering
         />
         <FlatList
           ref={minuteListRef}
@@ -155,7 +155,7 @@ const TimePicker: React.FC<TimePickerProps> = ({ handleTimeSelection, title, tim
           initialScrollIndex={Math.max(minutes.indexOf(selectedMinute),0)}
           onMomentumScrollEnd={(event) => onScrollEnd(event, 'minute', minutes)}
           style={styles.picker}
-          contentContainerStyle={[styles.flatListContainer, { paddingTop: 60, paddingBottom: 80 }]}
+          contentContainerStyle={[styles.flatListContainer, { paddingTop: 60, paddingBottom: 60 }]}
         />
         <FlatList
           ref={periodListRef}
@@ -168,7 +168,7 @@ const TimePicker: React.FC<TimePickerProps> = ({ handleTimeSelection, title, tim
           initialScrollIndex={Math.max(periods.indexOf(selectedPeriod),0)}
           onMomentumScrollEnd={(event) => onScrollEnd(event, 'period', periods)}
           style={styles.picker}
-          contentContainerStyle={[styles.flatListContainer, { paddingTop: 60, paddingBottom: 80 }]}
+          contentContainerStyle={[styles.flatListContainer, { paddingTop: 60, paddingBottom: 60 }]}
         />
       </View>
       <View style={styles.buttonContainer}>
@@ -182,16 +182,17 @@ const TimePicker: React.FC<TimePickerProps> = ({ handleTimeSelection, title, tim
 const styles = StyleSheet.create({
   picker: {
     width: width / 4,
-    height: 200,
+    height: 180, // Height for exactly 3 items (60px each)
   },
   flatListContainer: {
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 60,
   },
   item: {
     paddingHorizontal: 30,
-    paddingVertical: 16,
+    height: 60, // Fixed height for each item
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   text: {
     fontSize: 20,
@@ -206,7 +207,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: "center",
     justifyContent: 'space-between',
-    marginTop: 0,
+    marginTop: 24,
   },
 });
 

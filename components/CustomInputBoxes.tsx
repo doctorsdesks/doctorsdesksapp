@@ -38,6 +38,8 @@ const CustomInputBoxes: React.FC<CustomInputBoxesProps> = ({ data, onChange }) =
                 style={{ 
                     display: 'flex',
                     flex: 1,
+                    flexWrap: 'wrap',
+                    rowGap: 12,
                     flexDirection: 'row'
                 }}
             >

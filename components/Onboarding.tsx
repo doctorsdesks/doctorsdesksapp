@@ -16,7 +16,9 @@ const Onboarding = () => {
   return (
     <ThemedView style={styles.container}>
       <Carousel />
-      <CustomButton containerStyle={styles.buttonFixedBottom} title="Get Started" onPress={handlePress} />
+      <View style={{ display: "flex", alignItems: "center", position: 'absolute', bottom: 16, right: 16, left: 16, zIndex: 2 }} >
+        <CustomButton width='FULL' title="Get Started" onPress={handlePress} />
+      </View>
     </ThemedView>
   );
 };
@@ -25,6 +27,7 @@ const styles = StyleSheet.create({
   container: {
     marginVertical: 20,
     height: height,
+    position: 'relative',
   },
   header: {
     fontSize: 24,

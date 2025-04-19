@@ -26,7 +26,7 @@ import Toast from 'react-native-toast-message';
 
 
 const Home = () => {
-    const { setDoctorDetails, setDfo, translations, selectedLanguage, setTranslations } = useAppContext();
+    const { setDoctorDetails, setDfo, translations, selectedLanguage } = useAppContext();
     const scrollViewRef = React.useRef(null);
     const { width, height } = Dimensions.get('window');
     const [isListOpened, setIsListOpened] = useState<boolean>(false);
@@ -51,19 +51,6 @@ const Home = () => {
             }
         }
         getDoctorId();
-        const getLanguages = async () => {
-            const response = await getTranslations();
-            if (response?.status === "SUCCESS") {
-                setTranslations(response?.data || {})
-            } else {
-                Toast.show({
-                    type: 'error',  
-                    text1: response?.error,
-                    visibilityTime: 3000,
-                });
-            }
-        }
-        getLanguages();
     },[])
 
     useEffect(() => {

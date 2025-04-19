@@ -5,13 +5,13 @@ import TimeSelection from '@/components/TimeSelection';
 import CustomSwitch from '@/components/CustomSwitch';
 import { router } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import { BackHandler, Dimensions, Pressable, View } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import { BackHandler, Dimensions, Pressable, StyleSheet, View } from 'react-native';
 import { ThemedView } from './ThemedView';
 import { ThemedText } from './ThemedText';
 import { finalText } from './Utils';
 import { useAppContext } from '@/context/AppContext';
 import Icon from './Icons';
+import Toast from 'react-native-toast-message';
 
 export interface ManageSlotTimingProps {
     timings: any[];
@@ -75,7 +75,12 @@ const ManageSlotTiming: React.FC<ManageSlotTimingProps> = ({ timings, setTimings
 
     useEffect(() => {
         const backAction = () => {
-            router.replace("/clinicDetail/manageSlotAndTiming");
+            router.replace({
+                pathname: "/clinicDetail/manageSlotAndTiming",
+                params: {
+                    selectedNav: "Clinic Timing",
+                }
+            });
             return true;
         };
 
@@ -149,15 +154,71 @@ const ManageSlotTiming: React.FC<ManageSlotTimingProps> = ({ timings, setTimings
         }
     }
 
+    const convertTo24Hour = (time: string) => {
+        const [timeStr, period] = time.split(" ");
+        let [hours, minutes] = timeStr.split(":");
+        let hour = parseInt(hours);
+        
+        if (period === "PM" && hour !== 12) {
+            hour += 12;
+        } else if (period === "AM" && hour === 12) {
+            hour = 0;
+        }
+        
+        return `${hour.toString().padStart(2, '0')}:${minutes}`;
+    };
+
+    const isOverlapping = (newStart: string, newEnd: string, existingSessions: any[]) => {
+        const newStartTime = convertTo24Hour(newStart);
+        const newEndTime = convertTo24Hour(newEnd);
+        
+        return existingSessions.some(session => {
+            const sessionStartTime = convertTo24Hour(session.startTime);
+            const sessionEndTime = convertTo24Hour(session.endTime);
+            
+            return (newStartTime < sessionEndTime && newEndTime > sessionStartTime);
+        });
+    };
+
     const handleAddSession = () => {
         if (startTime !== "" && endTime !== "") {
+            const currentSessions = sessions ? [...sessions] : [];
+            
+            // Check if end time is greater than start time
+            const startTime24 = convertTo24Hour(startTime);
+            const endTime24 = convertTo24Hour(endTime);
+            
+            if (endTime24 <= startTime24) {
+                Toast.show({
+                    type: 'error',
+                    text1: finalText("End time must be greater than start time", translations, selectedLanguage),
+                    visibilityTime: 3000,
+                });
+                return;
+            }
+            
+            if (isOverlapping(startTime, endTime, currentSessions)) {
+                Toast.show({
+                    type: 'error',
+                    text1: finalText("Session overlaps with existing time slot", translations, selectedLanguage),
+                    visibilityTime: 3000,
+                });
+                return;
+            }
+
             const newSession = {
                 startTime: startTime,
                 endTime: endTime
             }
-            const currentSessions = sessions ? [...sessions] : [];
             currentSessions.push(newSession);
-            setSessions(currentSessions);
+            
+            const sortedSessions = currentSessions.sort((a, b) => {
+                const timeA = convertTo24Hour(a.startTime);
+                const timeB = convertTo24Hour(b.startTime);
+                return timeA.localeCompare(timeB);
+            });
+            
+            setSessions(sortedSessions);
             setStartTime("");
             setEndTime("");
         }
@@ -184,7 +245,7 @@ const ManageSlotTiming: React.FC<ManageSlotTimingProps> = ({ timings, setTimings
     }
 
     return (
-        <ThemedView>
+        <ThemedView style={styles.container} >
             <View style={{ marginTop: 24, marginHorizontal: 16, height, position: 'relative' }} >
                 <View style={{ borderWidth: 1, borderColor: "#DDDDDDDD", borderRadius: 8, backgroundColor: "#F9F9F9", padding: 16 }} >
                     <View>
@@ -193,18 +254,24 @@ const ManageSlotTiming: React.FC<ManageSlotTimingProps> = ({ timings, setTimings
                             {!eachDayChange && <CustomSwitch isActive={allDaysSelected} onClick={handleAllDays} />}
                         </View>
                         <View style={{ display: 'flex', flexDirection: "row", alignItems: 'center', justifyContent: 'space-between', marginTop: 24 }} >
-                            {days?.map((day: DaysForSlot) => {
-                                return (
-                                    <Pressable
-                                        key={day?.label}
-                                        id={day?.label} 
-                                        style={{ height: 32, width: 32, display: 'flex', alignItems: "center", justifyContent: 'center', borderColor: eachDayChange ? "#DDDDDD" : "#2DB9B0", borderWidth: 1, borderRadius: 32, backgroundColor: day?.isSelected ? "#2DB9B0" : eachDayChange ? "#DDDDDD" : "#F9F9F9" }}
-                                        onPress={() => !eachDayChange && handleDaySelect(day?.day)}
-                                    >
-                                        <ThemedText style={{ textAlign: 'center', fontSize: 14, lineHeight: 19, fontWeight: day?.isSelected ? 700 : 600, color: day?.isSelected ? "#FFFFFF" : "#32383D" }} >{finalText(day?.label, translations, selectedLanguage)} </ThemedText>
-                                    </Pressable>
-                                )
-                            })}
+                            {eachDayChange && eachDayChange !== null ?
+                                <View style={{ paddingHorizontal: 8, paddingVertical: 4, borderColor: "#2DB9B0", borderWidth: 1, borderRadius: 32, backgroundColor: "#2DB9B0" }} >
+                                    <ThemedText style={{ textAlign: 'center', fontSize: 14, lineHeight: 19, fontWeight: 700, color: "#ffffff" }} >{finalText(eachDayChange, translations, selectedLanguage)}</ThemedText>
+                                </View>
+                            :
+                                days?.map((day: DaysForSlot) => {
+                                    return (
+                                        <Pressable
+                                            key={day?.label}
+                                            id={day?.label} 
+                                            style={{ height: 32, width: 32, display: 'flex', alignItems: "center", justifyContent: 'center', borderColor: "#2DB9B0", borderWidth: 1, borderRadius: 32, backgroundColor: day?.isSelected ? "#2DB9B0" : "#F9F9F9" }}
+                                            onPress={() => handleDaySelect(day?.day)}
+                                        >
+                                            <ThemedText style={{ textAlign: 'center', fontSize: 14, lineHeight: 19, fontWeight: day?.isSelected ? 700 : 600, color: day?.isSelected ? "#FFFFFF" : "#32383D" }} >{finalText(day?.label, translations, selectedLanguage)} </ThemedText>
+                                        </Pressable>
+                                    )
+                                })
+                            }
                         </View>
                     </View>
                     <View style={{ marginTop: 24 }} >
@@ -267,20 +334,29 @@ const ManageSlotTiming: React.FC<ManageSlotTimingProps> = ({ timings, setTimings
                                     </View>
                                 </Pressable>
                             </View>
-                            <Pressable style={{ marginTop: 26, marginBottom: 2, marginLeft: 2, backgroundColor: startTime !== "" && endTime !== "" ? '#009688' : '#99E4DF', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: 8, paddingHorizontal: 4 }} onPress={handleAddSession} >
-                                {/* <Icon type='addCircle' fill={startTime !== "" && endTime !== "" ? "#2DB9B0" : "#757575" } /> */}
-                                <ThemedText style={{ fontSize: 14, lineHeight: 18, fontWeight: 700, color: "#fff"  }} >{finalText("Add", translations, selectedLanguage)} </ThemedText>
-                            </Pressable>
+                            <View style={{  marginTop: 23, marginLeft: 2, display: 'flex', alignItems: 'center', justifyContent: 'center' }} >
+                                <Pressable style={{ backgroundColor: startTime !== "" && endTime !== "" ? '#009688' : '#99E4DF', borderRadius: 8, paddingHorizontal: 5, paddingVertical: 3 }} onPress={handleAddSession} >
+                                    <ThemedText style={{ fontSize: 14, lineHeight: 18, fontWeight: 700, color: "#fff"  }} >{finalText("Add", translations, selectedLanguage)} </ThemedText>
+                                </Pressable>
+                            </View>
                         </View>
                     </View>
                 </View>
-                <View style={{ display: "flex", alignItems: "center", marginTop: 24, position: 'absolute', bottom: 140, right: -16, left: -16 }} >
-                        <CustomButton  multiLingual={true} width='FULL' title="Submit" onPress={handleAddFinal}  />
-                </View>
+            </View>
+            <View style={{ display: "flex", alignItems: "center", position: 'absolute', bottom: 16, right: 16, left: 16 }} >
+                <CustomButton  multiLingual={true} width='FULL' title="Save Timings" onPress={handleAddFinal}  />
             </View>
             {lowerPanel && <LowerPanel children={lowerPanelChild} closeLoserPanel={() => setLowerPanel(false)} />}
         </ThemedView>
     );
 };
+
+
+const styles = StyleSheet.create({
+    container: {
+        height: "90%",
+        position: 'relative'
+    },
+});
 
 export default ManageSlotTiming;

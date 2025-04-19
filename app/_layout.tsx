@@ -1,6 +1,6 @@
 import { AppProvider } from '@/context/AppContext';
 import { Slot } from 'expo-router';
-import { Pressable, View } from 'react-native';
+import { Pressable, View, Dimensions } from 'react-native';
 import Toast, { BaseToast } from 'react-native-toast-message';
 import { Ionicons } from '@expo/vector-icons';
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
@@ -12,6 +12,9 @@ import * as SplashScreen from 'expo-splash-screen';
 
 // Keep the splash screen visible while we fetch resources
 SplashScreen.preventAutoHideAsync();
+
+const { width } = Dimensions.get('window');
+const TOAST_WIDTH = width * 0.8;
 
 export default function Layout() {
   const colorScheme = useColorScheme() || 'light';
@@ -43,9 +46,24 @@ export default function Layout() {
     success: (props: any) => (
       <BaseToast
         {...props}
-        style={{ borderLeftColor: Colors[colorScheme].successBorder, backgroundColor: Colors[colorScheme].successBackground }}
-        contentContainerStyle={{ paddingHorizontal: 15, flexDirection: "row", alignItems: "center" }}
-        text1Style={{ fontSize: 16, fontWeight: "600" }}
+        style={{ 
+          borderLeftColor: Colors[colorScheme].successBorder, 
+          backgroundColor: Colors[colorScheme].successBackground,
+          width: TOAST_WIDTH,
+          alignSelf: 'center'
+        }}
+        contentContainerStyle={{ 
+          paddingHorizontal: 15, 
+          flexDirection: "row", 
+          alignItems: "center"
+        }}
+        text1NumberOfLines={2}
+        text1Style={{ 
+          fontSize: 16, 
+          fontWeight: "600",
+          flexShrink: 1,
+          width: TOAST_WIDTH - 80 // Account for padding and close button
+        }}
         text2Style={{ fontSize: 14 }}
         renderTrailingIcon={() => (
           <Pressable onPress={() => Toast.hide()} style={{ justifyContent: "center", alignItems: "center", padding: 10 }}>
@@ -57,9 +75,24 @@ export default function Layout() {
     error: (props: any) => (
       <BaseToast
         {...props}
-        style={{ borderLeftColor: Colors[colorScheme].errorBorder, backgroundColor: Colors[colorScheme].errorBackground }}
-        contentContainerStyle={{ paddingHorizontal: 15, flexDirection: "row", alignItems: "center" }}
-        text1Style={{ fontSize: 16, fontWeight: "600" }}
+        style={{ 
+          borderLeftColor: Colors[colorScheme].errorBorder, 
+          backgroundColor: Colors[colorScheme].errorBackground,
+          width: TOAST_WIDTH,
+          alignSelf: 'center'
+        }}
+        contentContainerStyle={{ 
+          paddingHorizontal: 15, 
+          flexDirection: "row", 
+          alignItems: "center"
+        }}
+        text1NumberOfLines={2}
+        text1Style={{ 
+          fontSize: 16, 
+          fontWeight: "600",
+          flexShrink: 1,
+          width: TOAST_WIDTH - 80 // Account for padding and close button
+        }}
         text2Style={{ fontSize: 14 }}
         renderTrailingIcon={() => (
           <Pressable onPress={() => Toast.hide()} style={{ justifyContent: "center", alignItems: "center", padding: 10 }}>
@@ -88,7 +121,9 @@ export default function Layout() {
         <View style={{ flex: 1 }} onLayout={onLayoutRootView}>
           <Slot />
         </View>
-        <Toast config={toastConfig} />
+        <Toast 
+          config={toastConfig}
+        />
       </AppProvider>
     </ThemeProvider>
   );
