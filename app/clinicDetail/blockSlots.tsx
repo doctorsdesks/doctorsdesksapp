@@ -51,6 +51,10 @@ const BlockSlots = () => {
                         type: 'error',  
                         text1: respnose.error,
                         visibilityTime: 3000,
+                        props: { 
+                            style: { width: '80%' },
+                            numberOfLines: 2
+                        }
                     });
                     setLoader(false);
                 }
@@ -79,6 +83,10 @@ const BlockSlots = () => {
                 type: 'error',  
                 text1: respnose.error,
                 visibilityTime: 3000,
+                props: { 
+                    style: { width: '80%' },
+                    numberOfLines: 2
+                }
             });
             setLoader(false);
         }
@@ -136,6 +144,10 @@ const BlockSlots = () => {
                 type: 'error',  
                 text1: respnose.error,
                 visibilityTime: 3000,
+                props: { 
+                    style: { width: '80%' },
+                    numberOfLines: 2
+                }
             });
             setLoader(false);
         }

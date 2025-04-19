@@ -82,6 +82,10 @@ const NumberPassword = () => {
                     type: 'error',  
                     text1: `User exist with ${phone} number.`,
                     visibilityTime: 3000,
+                    props: { 
+                        style: { width: '80%' },
+                        numberOfLines: 2
+                    }
                 });
             } else {
                 const newSignupDetails = { ...signUpDetailsInitial };
@@ -94,6 +98,10 @@ const NumberPassword = () => {
                 type: 'error',  
                 text1: error.response.data.message || "Something went wrong!",
                 visibilityTime: 3000,
+                props: { 
+                    style: { width: '80%' },
+                    numberOfLines: 2
+                }
             });
         } finally {
             setLoader(false);

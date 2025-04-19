@@ -94,6 +94,10 @@ const Login = () => {
                     type: 'error',  
                     text1: data.data.message || "Something went wrong!",
                     visibilityTime: 3000,
+                    props: { 
+                        style: { width: '80%' },
+                        numberOfLines: 2
+                    }
                 });
             }
         } catch (error: any) {
@@ -101,6 +105,10 @@ const Login = () => {
                 type: 'error',  
                 text1: error.response.data.message || "Something went wrong!",
                 visibilityTime: 3000,
+                props: { 
+                    style: { width: '80%' },
+                    numberOfLines: 2
+                }
             });
         } finally {
             setLoader(false);

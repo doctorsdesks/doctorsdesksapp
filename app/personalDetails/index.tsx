@@ -176,6 +176,10 @@ const PersonalDetailsSetting = () => {
                     type: 'success',  
                     text1: data.message,
                     visibilityTime: 3000,
+                    props: { 
+                        style: { width: '80%' },
+                        numberOfLines: 2
+                    }
                 });
                 setDoctorDetails(data.data);
                 setLoader(false);
@@ -185,6 +189,10 @@ const PersonalDetailsSetting = () => {
                     type: 'error',  
                     text1: 'Something wrong happened. Please try again!',
                     visibilityTime: 3000,
+                    props: { 
+                        style: { width: '80%' },
+                        numberOfLines: 2
+                    }
                 });
                 setLoader(false);
             }
@@ -193,6 +201,10 @@ const PersonalDetailsSetting = () => {
                 type: 'error',  
                 text1: error.response.data.message,
                 visibilityTime: 3000,
+                props: { 
+                    style: { width: '80%' },
+                    numberOfLines: 2
+                }
             });
             setLoader(false);
         }
@@ -214,6 +226,10 @@ const PersonalDetailsSetting = () => {
                 type: 'error',  
                 text1: 'Permission denied, We need camera roll permissions to make this work!',
                 visibilityTime: 3000,
+                props: { 
+                    style: { width: '80%' },
+                    numberOfLines: 2
+                }
             });
         }
     };
@@ -249,6 +265,10 @@ const PersonalDetailsSetting = () => {
                 type: 'success',  
                 text1: 'Image uploaded Successfully.',
                 visibilityTime: 3000,
+                props: { 
+                    style: { width: '80%' },
+                    numberOfLines: 2
+                }
             });
             setDoctorData({
                 ...doctorData,
@@ -260,6 +280,10 @@ const PersonalDetailsSetting = () => {
                 type: 'error',  
                 text1: `Something went wrong, error: ${uploadedImageUrlObject.data}`,
                 visibilityTime: 3000,
+                props: { 
+                    style: { width: '80%' },
+                    numberOfLines: 2
+                }
             });
         }
     }

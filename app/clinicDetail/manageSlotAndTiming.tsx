@@ -105,6 +105,10 @@ const ManageSlotDurationAndTiming = () => {
                 type: 'error',  
                 text1: respnose.error,
                 visibilityTime: 3000,
+                props: { 
+                    style: { width: '80%' },
+                    numberOfLines: 2
+                }
             });
             setLoader(false);
         }
@@ -169,6 +173,10 @@ const ManageSlotDurationAndTiming = () => {
                 type: 'success',  
                 text1: response.message,
                 visibilityTime: 3000,
+                props: { 
+                    style: { width: '80%' },
+                    numberOfLines: 2
+                }
             });
             setLoader(false);
             if (data) {
@@ -182,6 +190,10 @@ const ManageSlotDurationAndTiming = () => {
                 type: 'error',
                 text1: response.error,
                 visibilityTime: 3000,
+                props: { 
+                    style: { width: '80%' },
+                    numberOfLines: 2
+                }
             });
             setLoader(false);
         }
@@ -218,7 +230,7 @@ const ManageSlotDurationAndTiming = () => {
                                 marginTop: 12,
                                 borderWidth: 1,
                                 paddingHorizontal: 12,
-                                height: height - 360,
+                                height: height - 240,
                                 position: 'relative',
                                 backgroundColor: '#f2f2f2',
                                 shadowColor: '#000000',
@@ -236,7 +248,7 @@ const ManageSlotDurationAndTiming = () => {
                                     style={{ 
                                         display: 'flex',
                                         paddingVertical: 16,
-                                        maxHeight: 340,
+                                        maxHeight: height - 320,
                                     }}
                                 >
                                     <View style={{ paddingBottom: 16 }} >

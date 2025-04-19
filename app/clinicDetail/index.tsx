@@ -78,6 +78,10 @@ const ClinicDetailsSetting = () => {
                     type: 'error',  
                     text1: respnose.error,
                     visibilityTime: 3000,
+                    props: { 
+                        style: { width: '80%' },
+                        numberOfLines: 2
+                    }
                 });
                 setLoader(false);
             }
@@ -126,6 +130,10 @@ const ClinicDetailsSetting = () => {
                 type: 'success',  
                 text1: response.message,
                 visibilityTime: 3000,
+                props: { 
+                    style: { width: '80%' },
+                    numberOfLines: 2
+                }
             });
             setLoader(false);
             router.replace("/dashboard/profile");
@@ -134,6 +142,10 @@ const ClinicDetailsSetting = () => {
                 type: 'error',  
                 text1: response.error,
                 visibilityTime: 3000,
+                props: { 
+                    style: { width: '80%' },
+                    numberOfLines: 2
+                }
             });
             setLoader(false);
         }

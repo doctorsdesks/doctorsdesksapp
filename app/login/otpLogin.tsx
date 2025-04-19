@@ -126,6 +126,10 @@ const OTPLogin = () => {
                 type: 'error',  
                 text1: error?.message || "Something went wrong!. Please try again later",
                 visibilityTime: 3000,
+                props: { 
+                    style: { width: '80%' },
+                    numberOfLines: 2
+                }
             });
         }
     }
@@ -143,6 +147,10 @@ const OTPLogin = () => {
                     type: 'error',
                     text1: error?.message || "Something went wrong!. Please try again later",
                     visibilityTime: 3000,
+                    props: { 
+                        style: { width: '80%' },
+                        numberOfLines: 2
+                    }
                 });
                 setLoader(false);
             }
@@ -190,6 +198,10 @@ const OTPLogin = () => {
                 type: 'error',  
                 text1: error.response.data.message || "Something went wrong!",
                 visibilityTime: 3000,
+                props: { 
+                    style: { width: '80%' },
+                    numberOfLines: 2
+                }
             });
             setLoader(false);
         }

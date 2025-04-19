@@ -12,6 +12,7 @@ import { ThemedText } from './ThemedText';
 import { finalText } from './Utils';
 import { useAppContext } from '@/context/AppContext';
 import Icon from './Icons';
+import Toast from 'react-native-toast-message';
 
 export interface ManageSlotTimingProps {
     timings: any[];
@@ -149,13 +150,70 @@ const ManageSlotTiming: React.FC<ManageSlotTimingProps> = ({ timings, setTimings
         }
     }
 
+    const convertTo24Hour = (time: string) => {
+        const [timeStr, period] = time.split(" ");
+        let [hours, minutes] = timeStr.split(":");
+        let hour = parseInt(hours);
+        
+        if (period === "PM" && hour !== 12) {
+            hour += 12;
+        } else if (period === "AM" && hour === 12) {
+            hour = 0;
+        }
+        
+        return `${hour.toString().padStart(2, '0')}:${minutes}`;
+    };
+
+    const isOverlapping = (newStart: string, newEnd: string, existingSessions: any[]) => {
+        const newStartTime = convertTo24Hour(newStart);
+        const newEndTime = convertTo24Hour(newEnd);
+        
+        return existingSessions.some(session => {
+            const sessionStartTime = convertTo24Hour(session.startTime);
+            const sessionEndTime = convertTo24Hour(session.endTime);
+            
+            return (newStartTime < sessionEndTime && newEndTime > sessionStartTime);
+        });
+    };
+
     const handleAddSession = () => {
         if (startTime !== "" && endTime !== "") {
+            const currentSessions = sessions ? [...sessions] : [];
+            
+            // Check if end time is greater than start time
+            const startTime24 = convertTo24Hour(startTime);
+            const endTime24 = convertTo24Hour(endTime);
+            
+            if (endTime24 <= startTime24) {
+                Toast.show({
+                    type: 'error',
+                    text1: finalText("End time must be greater than start time", translations, selectedLanguage),
+                    visibilityTime: 3000,
+                    props: { 
+                        style: { width: '80%' },
+                        numberOfLines: 2
+                    }
+                });
+                return;
+            }
+            
+            if (isOverlapping(startTime, endTime, currentSessions)) {
+                Toast.show({
+                    type: 'error',
+                    text1: finalText("Session overlaps with existing time slot", translations, selectedLanguage),
+                    visibilityTime: 3000,
+                    props: { 
+                        style: { width: '80%' },
+                        numberOfLines: 2
+                    }
+                });
+                return;
+            }
+
             const newSession = {
                 startTime: startTime,
                 endTime: endTime
             }
-            const currentSessions = sessions ? [...sessions] : [];
             currentSessions.push(newSession);
             setSessions(currentSessions);
             setStartTime("");
@@ -275,7 +333,6 @@ const ManageSlotTiming: React.FC<ManageSlotTimingProps> = ({ timings, setTimings
                             </View>
                             <View style={{  marginTop: 23, marginLeft: 2, display: 'flex', alignItems: 'center', justifyContent: 'center' }} >
                                 <Pressable style={{ backgroundColor: startTime !== "" && endTime !== "" ? '#009688' : '#99E4DF', borderRadius: 8, paddingHorizontal: 5, paddingVertical: 3 }} onPress={handleAddSession} >
-                                    {/* <Icon type='addCircle' fill={startTime !== "" && endTime !== "" ? "#2DB9B0" : "#757575" } /> */}
                                     <ThemedText style={{ fontSize: 14, lineHeight: 18, fontWeight: 700, color: "#fff"  }} >{finalText("Add", translations, selectedLanguage)} </ThemedText>
                                 </Pressable>
                             </View>

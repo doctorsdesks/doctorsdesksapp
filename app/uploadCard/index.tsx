@@ -69,6 +69,10 @@ const UploadCard = () => {
                     type: 'error',  
                     text1: `Something went wrong, error: ${backUrlObject.data}`,
                     visibilityTime: 3000,
+                    props: { 
+                        style: { width: '80%' },
+                        numberOfLines: 2
+                    }
                 });
                 setLoader(false);
             }
@@ -77,6 +81,10 @@ const UploadCard = () => {
                 type: 'error',  
                 text1: `Something went wrong, error: ${frontUrlObject.data}`,
                 visibilityTime: 3000,
+                props: { 
+                    style: { width: '80%' },
+                    numberOfLines: 2
+                }
             });
             setLoader(false);
         }

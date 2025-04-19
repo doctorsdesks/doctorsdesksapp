@@ -36,6 +36,10 @@ const IdProofUploadCard: React.FC<IdProofUploadCardProps> = ({ data, onChange, h
             type: 'error',  
             text1: 'Permission denied, We need camera roll permissions to make this work!',
             visibilityTime: 3000,
+            props: { 
+                style: { width: '80%' },
+                numberOfLines: 2
+            }
         });
         }
     };

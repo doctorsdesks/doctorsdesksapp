@@ -28,6 +28,10 @@ const ViewImage: React.FC<ImageProps> = ({ data, height, width, style, resizeMod
                             type: 'error',  
                             text1: "File doesn't exist at the given URI.",
                             visibilityTime: 3000,
+                            props: { 
+                                style: { width: '80%' },
+                                numberOfLines: 2
+                            }
                         });
                     }
                 } catch (error) {
@@ -35,6 +39,10 @@ const ViewImage: React.FC<ImageProps> = ({ data, height, width, style, resizeMod
                         type: 'error',  
                         text1: `Error accessing the file: ${error}`,
                         visibilityTime: 3000,
+                        props: { 
+                            style: { width: '80%' },
+                            numberOfLines: 2
+                        }
                     });
                 }
             } else {
