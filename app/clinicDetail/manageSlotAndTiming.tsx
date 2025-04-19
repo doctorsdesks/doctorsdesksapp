@@ -34,6 +34,7 @@ const ManageSlotDurationAndTiming = () => {
         placeholder: "Enter in minutes",
         isDisabled: true,
     })
+    const { selectedNav } = useLocalSearchParams();
     const [isEditable, setIsEditable] = useState<boolean>(isEditablePath && isEditablePath === "true" ? true : false);
     const [loader, setLoader] = useState<boolean>(true);
     const [timings, setTimings] = useState<any>([]);
@@ -44,11 +45,11 @@ const ManageSlotDurationAndTiming = () => {
     const [navData, setNavData] = useState<Array<NavbarObject>>([
         {
             label: "Slot Duration",
-            isActive: true,
+            isActive: selectedNav && selectedNav === "Clinic Timing" ? false : true,
         },
         {
             label: "Clinic Timing",
-            isActive: false,
+            isActive: selectedNav && selectedNav === "Clinic Timing" ? true : false,
         }
     ]); 
 
@@ -56,11 +57,7 @@ const ManageSlotDurationAndTiming = () => {
 
     useEffect(() => {
         const backAction = () => {
-            if (isAddSlots) {
-                // setIsAddSlots(false);
-            } else {
-                router.replace("/dashboard/profile");
-            }
+            router.replace("/dashboard/profile");
             return true;
         };
 
@@ -177,12 +174,11 @@ const ManageSlotDurationAndTiming = () => {
                 text1: response.message,
                 visibilityTime: 3000,
             });
-            setLoader(false);
             if (data) {
                 setIsAddSlots(false);
-            } else {
-                setIsEditable(false);
             }
+            setIsEditable(false);
+            setLoader(false);
             getTimingDetails();
         } else {
             Toast.show({

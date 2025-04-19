@@ -75,7 +75,12 @@ const ManageSlotTiming: React.FC<ManageSlotTimingProps> = ({ timings, setTimings
 
     useEffect(() => {
         const backAction = () => {
-            router.replace("/clinicDetail/manageSlotAndTiming");
+            router.replace({
+                pathname: "/clinicDetail/manageSlotAndTiming",
+                params: {
+                    selectedNav: "Clinic Timing",
+                }
+            });
             return true;
         };
 
