@@ -22,6 +22,7 @@ const ManageSlotDurationAndTiming = () => {
     const { doctorDetails, translations, selectedLanguage } = useAppContext();
     const { isEditablePath } = useLocalSearchParams();
     const { height } = Dimensions.get('window');
+    const [liveSlotDuration, setLiveSlotDuration] =  useState<string>("");
     const [slotDurationObject, setSlotDurationObject] = useState<StringObject>({
         id: "slotDuration",
         type: "STRING",
@@ -90,6 +91,7 @@ const ManageSlotDurationAndTiming = () => {
             setClinicId(timingDetails?._id);
             const comingSlotDuration = timingDetails?.slotDuration || "";
             let comingSlotTimings = timingDetails?.clinicTimings || [];
+            setLiveSlotDuration(JSON.stringify(comingSlotDuration));
             setSlotDurationObject({ ...slotDurationObject, value: JSON.stringify(comingSlotDuration) });
             comingSlotTimings = comingSlotTimings?.map((day: any) => {
                 let newTimings = [...day?.timings];
@@ -143,6 +145,11 @@ const ManageSlotDurationAndTiming = () => {
     }
 
     const handleNavClick = (value: string) => {
+        const newObject = { ...slotDurationObject };
+        newObject.isDisabled = true;
+        newObject.value = liveSlotDuration;
+        setSlotDurationObject(newObject)
+        setIsEditable(false);
         const newNavData = navData?.map((item: NavbarObject) => ({ ...item, isActive: item?.label === value ? true : false }));
         setNavData(newNavData);
     }
@@ -192,7 +199,7 @@ const ManageSlotDurationAndTiming = () => {
         :
             <ThemedView style={styles.container} >
                 <MainHeader selectedNav={ isAddSlots ? 'manageSlotTiming' : 'manageSlotAndTiming'} />
-                {!isAddSlots && <Navbar data={navData} onClick={handleNavClick} source="appointment" />}
+                {!isAddSlots && <Navbar data={navData} onClick={handleNavClick} />}
                 {/* For slot duration Nav */}
                 {navData[0]?.isActive && 
                     <View style={{ marginTop: 42 }} >
