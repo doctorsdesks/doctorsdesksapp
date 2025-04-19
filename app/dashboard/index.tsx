@@ -60,10 +60,6 @@ const Home = () => {
                     type: 'error',  
                     text1: response?.error,
                     visibilityTime: 3000,
-                    props: { 
-                        style: { width: '80%' },
-                        numberOfLines: 2
-                    }
                 });
             }
         }
@@ -101,10 +97,6 @@ const Home = () => {
                 type: 'error',  
                 text1: response.error,
                 visibilityTime: 3000,
-                props: { 
-                    style: { width: '80%' },
-                    numberOfLines: 2
-                }
             });
             setLoader(false);
         }
@@ -144,10 +136,6 @@ const Home = () => {
                 type: 'error',
                 text1: response.error,
                 visibilityTime: 3000,
-                props: { 
-                    style: { width: '80%' },
-                    numberOfLines: 2
-                }
             });
             setLoader(false);
         }
@@ -167,10 +155,6 @@ const Home = () => {
                 type: 'error',  
                 text1: response.error,
                 visibilityTime: 3000,
-                props: { 
-                    style: { width: '80%' },
-                    numberOfLines: 2
-                }
             });
             setLoader(false);
         }
@@ -218,10 +202,6 @@ const Home = () => {
                 type: 'error',  
                 text1: error.response.data.message,
                 visibilityTime: 3000,
-                props: { 
-                    style: { width: '80%' },
-                    numberOfLines: 2
-                }
             });
             setLoader(false);
         }
@@ -239,10 +219,6 @@ const Home = () => {
                     type: 'error',  
                     text1: response.error,
                     visibilityTime: 3000,
-                    props: { 
-                        style: { width: '80%' },
-                        numberOfLines: 2
-                    }
                 });
             }
         } else {

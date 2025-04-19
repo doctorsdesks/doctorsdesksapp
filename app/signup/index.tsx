@@ -135,10 +135,6 @@ const SignUp = () => {
                     type: 'error',  
                     text1: `Something went wrong, error: ${uploadedImageUrlObject.data}`,
                     visibilityTime: 3000,
-                    props: { 
-                        style: { width: '80%' },
-                        numberOfLines: 2
-                    }
                 });
                 setLoader(false);
             }
@@ -147,10 +143,6 @@ const SignUp = () => {
                 type: 'error',  
                 text1: `Something went wrong, error: ${error}`,
                 visibilityTime: 3000,
-                props: { 
-                    style: { width: '80%' },
-                    numberOfLines: 2
-                }
             });
             setLoader(false);
         }
@@ -272,10 +264,6 @@ const SignUp = () => {
                     type: 'error',  
                     text1: "Something wrong. Please try again.",
                     visibilityTime: 3000,
-                    props: { 
-                        style: { width: '80%' },
-                        numberOfLines: 2
-                    }
                 });
                 setLoader(false);
             }
@@ -285,20 +273,12 @@ const SignUp = () => {
                     type: 'error',  
                     text1: error.response.data.message,
                     visibilityTime: 3000,
-                    props: { 
-                        style: { width: '80%' },
-                        numberOfLines: 2
-                    }
                 });
             } else {
                 Toast.show({
                     type: 'error',  
                     text1: error.response.data.message,
                     visibilityTime: 3000,
-                    props: { 
-                        style: { width: '80%' },
-                        numberOfLines: 2
-                    }
                 });
             }
             setLoader(false);

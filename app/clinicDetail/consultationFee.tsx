@@ -70,10 +70,6 @@ const ConsultationFee = () => {
                     type: 'error',  
                     text1: respnose.error,
                     visibilityTime: 3000,
-                    props: { 
-                        style: { width: '80%' },
-                        numberOfLines: 2
-                    }
                 });
                 setLoader(false);
             }
@@ -119,10 +115,6 @@ const ConsultationFee = () => {
                 type: 'success',  
                 text1: response.message,
                 visibilityTime: 3000,
-                props: { 
-                    style: { width: '80%' },
-                    numberOfLines: 2
-                }
             });
             setLoader(false);
             router.replace("/dashboard/profile");
@@ -131,10 +123,6 @@ const ConsultationFee = () => {
                 type: 'error',  
                 text1: response.error,
                 visibilityTime: 3000,
-                props: { 
-                    style: { width: '80%' },
-                    numberOfLines: 2
-                }
             });
             setLoader(false);
         }

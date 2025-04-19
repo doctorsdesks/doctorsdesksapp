@@ -105,10 +105,6 @@ const ManageSlotDurationAndTiming = () => {
                 type: 'error',  
                 text1: respnose.error,
                 visibilityTime: 3000,
-                props: { 
-                    style: { width: '80%' },
-                    numberOfLines: 2
-                }
             });
             setLoader(false);
         }
@@ -173,10 +169,6 @@ const ManageSlotDurationAndTiming = () => {
                 type: 'success',  
                 text1: response.message,
                 visibilityTime: 3000,
-                props: { 
-                    style: { width: '80%' },
-                    numberOfLines: 2
-                }
             });
             setLoader(false);
             if (data) {
@@ -190,10 +182,6 @@ const ManageSlotDurationAndTiming = () => {
                 type: 'error',
                 text1: response.error,
                 visibilityTime: 3000,
-                props: { 
-                    style: { width: '80%' },
-                    numberOfLines: 2
-                }
             });
             setLoader(false);
         }

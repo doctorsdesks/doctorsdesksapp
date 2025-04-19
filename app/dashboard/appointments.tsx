@@ -82,10 +82,6 @@ const Appointments = () => {
                 type: 'error',  
                 text1: respnose.error,
                 visibilityTime: 3000,
-                props: { 
-                    style: { width: '80%' },
-                    numberOfLines: 2
-                }
             });
             setLoader(false);
         }
@@ -134,10 +130,6 @@ const Appointments = () => {
                     type: 'success',  
                     text1: data.message,
                     visibilityTime: 3000,
-                    props: { 
-                        style: { width: '80%' },
-                        numberOfLines: 2
-                    }
                 });
             }
             setLoader(false);
@@ -149,10 +141,6 @@ const Appointments = () => {
                     type: 'error',  
                     text1: error.response.data.message,
                     visibilityTime: 3000,
-                    props: { 
-                        style: { width: '80%' },
-                        numberOfLines: 2
-                    }
                 });
             setLoader(false);
         }

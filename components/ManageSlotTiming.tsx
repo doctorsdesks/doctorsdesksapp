@@ -6,7 +6,6 @@ import CustomSwitch from '@/components/CustomSwitch';
 import { router } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { BackHandler, Dimensions, Pressable, StyleSheet, View } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
 import { ThemedView } from './ThemedView';
 import { ThemedText } from './ThemedText';
 import { finalText } from './Utils';
@@ -189,10 +188,6 @@ const ManageSlotTiming: React.FC<ManageSlotTimingProps> = ({ timings, setTimings
                     type: 'error',
                     text1: finalText("End time must be greater than start time", translations, selectedLanguage),
                     visibilityTime: 3000,
-                    props: { 
-                        style: { width: '80%' },
-                        numberOfLines: 2
-                    }
                 });
                 return;
             }
@@ -202,10 +197,6 @@ const ManageSlotTiming: React.FC<ManageSlotTimingProps> = ({ timings, setTimings
                     type: 'error',
                     text1: finalText("Session overlaps with existing time slot", translations, selectedLanguage),
                     visibilityTime: 3000,
-                    props: { 
-                        style: { width: '80%' },
-                        numberOfLines: 2
-                    }
                 });
                 return;
             }
@@ -215,7 +206,14 @@ const ManageSlotTiming: React.FC<ManageSlotTimingProps> = ({ timings, setTimings
                 endTime: endTime
             }
             currentSessions.push(newSession);
-            setSessions(currentSessions);
+            
+            const sortedSessions = currentSessions.sort((a, b) => {
+                const timeA = convertTo24Hour(a.startTime);
+                const timeB = convertTo24Hour(b.startTime);
+                return timeA.localeCompare(timeB);
+            });
+            
+            setSessions(sortedSessions);
             setStartTime("");
             setEndTime("");
         }

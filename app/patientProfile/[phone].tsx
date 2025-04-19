@@ -58,10 +58,6 @@ const PatientProfile = () => {
                         type: 'error',  
                         text1: response.error,
                         visibilityTime: 3000,
-                        props: { 
-                            style: { width: '80%' },
-                            numberOfLines: 2
-                        }
                     });
                     setLoading(false);
                     setError(response.error);
