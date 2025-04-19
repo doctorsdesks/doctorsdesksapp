@@ -16,7 +16,7 @@ const LowerPanel: React.FC<LowerPanelProps> = ({ children, closeLoserPanel }) =>
             onPress={closeLoserPanel}
         >
             <Pressable 
-                style={{ position: 'absolute', zIndex: 10, bottom: 32, borderTopLeftRadius: 32, borderTopRightRadius: 32, paddingHorizontal: 20, paddingVertical: 24, backgroundColor: "#fff", width, height: "50%" }} 
+                style={{ position: 'absolute', zIndex: 10, bottom: 32, borderTopLeftRadius: 32, borderTopRightRadius: 32, paddingHorizontal: 20, paddingVertical: 24, backgroundColor: "#fff", width, height: 420 }} 
                 onPress={(e) => e.preventDefault()}
             >
                 {children}
