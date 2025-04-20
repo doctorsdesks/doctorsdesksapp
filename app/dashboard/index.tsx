@@ -233,7 +233,7 @@ const Home = () => {
         <ThemedView style={styles.container} >
             <SearchBar searchPatients={searchPatients}  showPatientList={showPatientList} listOpened={isListOpened} />
             {showPatientList &&
-                (patientList?.length > 0 ? 
+                (patientList?.length > 0 ?
                     <PatientList patientList={patientList} />
                 : 
                     <View style={styles.list}>
@@ -241,75 +241,77 @@ const Home = () => {
                     </View>
                 )
             }
-            <View style={{ marginTop: 20 }} >
-                {bannerItems?.map((banner: any) => {
-                    if (banner?.isHidden) return <></>;
-                    return (
-                        <Banner key={banner?.id} item={banner} />
-                    )
-                })}
-            </View>
-            <View>
-                <View style={{ 
-                        borderRadius: 8, 
-                        borderLeftWidth: 8, 
-                        borderColor: "#0A867E", 
-                        paddingLeft: 8, 
-                        paddingRight: 32, 
-                        paddingVertical: 12, 
-                        width: width - 32, 
-                        display: 'flex', 
-                        flexDirection: 'row', 
-                        alignItems: 'center', 
-                        justifyContent: 'space-between',
-                        backgroundColor: "#12B6A7"
-                }}>
-                    <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }} >
-                        <Svg width="40" height="40" viewBox="0 0 40 40" fill="none">
-                            <Rect width="40" height="40" rx="20" fill="#0A867E"/>
-                            <Path d="M17.1605 18.87C17.0605 18.86 16.9405 18.86 16.8305 18.87C14.4505 18.79 12.5605 16.84 12.5605 14.44C12.5605 11.99 14.5405 10 17.0005 10C19.4505 10 21.4405 11.99 21.4405 14.44C21.4305 16.84 19.5405 18.79 17.1605 18.87Z" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                            <Path d="M24.4093 12C26.3493 12 27.9093 13.57 27.9093 15.5C27.9093 17.39 26.4093 18.93 24.5393 19C24.4593 18.99 24.3693 18.99 24.2793 19" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                            <Path d="M12.1607 22.56C9.7407 24.18 9.7407 26.82 12.1607 28.43C14.9107 30.27 19.4207 30.27 22.1707 28.43C24.5907 26.81 24.5907 24.17 22.1707 22.56C19.4307 20.73 14.9207 20.73 12.1607 22.56Z" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                            <Path d="M26.3398 28C27.0598 27.85 27.7398 27.56 28.2998 27.13C29.8598 25.96 29.8598 24.03 28.2998 22.86C27.7498 22.44 27.0798 22.16 26.3698 22" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                        </Svg>
-                        <ThemedText style={{ fontSize: 16, lineHeight: 20, fontWeight: 600, color: "#FFFFFF", marginLeft: 8 }} >{finalText("Total number of patient today", translations, selectedLanguage)}: </ThemedText>
-                    </View>
-                    <ThemedText style={{ fontSize: 24, lineHeight: 30, fontWeight: 600, color: "#FFFFFF" }} >{patientCount}</ThemedText>
+            <ScrollView>
+                <View style={{ marginTop: 20 }} >
+                    {bannerItems?.map((banner: any) => {
+                        if (banner?.isHidden) return <></>;
+                        return (
+                            <Banner key={banner?.id} item={banner} />
+                        )
+                    })}
                 </View>
-                <View style={{ marginTop: 24 }} >
-                    <ThemedText style={{ fontSize: 16, lineHeight: 20, fontWeight: 600 }}>{finalText("My Tasks", translations, selectedLanguage)} </ThemedText>
-                    {appointments?.length > 0 ? 
-                        <View style={{ height: getHeight() }} >
-                            <ScrollView
-                                ref={scrollViewRef} 
-                                style={{ marginTop: 20 }}>
-                                {appointments?.map((appointment: any) => {
-                                    return (
-                                        <AppointmentCard key={appointment?._id} appointment={appointment} width={width} handleStatusUpdate={handleStatusUpdate} />
-                                    );
-                                })}
-                            </ScrollView>
-                        </View>
-                    :   
-                        <View style={{ 
-                            marginTop: 12, 
-                            height: 320, 
+                <View>
+                    <View style={{ 
+                            borderRadius: 8, 
+                            borderLeftWidth: 8, 
+                            borderColor: "#0A867E", 
+                            paddingLeft: 8, 
+                            paddingRight: 32, 
+                            paddingVertical: 12, 
+                            width: width - 32, 
                             display: 'flex', 
+                            flexDirection: 'row', 
                             alignItems: 'center', 
-                            backgroundColor: Colors[colorScheme].cardBg,
-                            shadowColor: '#000000',
-                            shadowOffset: { width: 0, height: 4 },
-                            shadowOpacity: 0.1,
-                            shadowRadius: 12,
-                            elevation: 4,
-                            borderRadius: 12,
-                        }} >
-                            <Image source={require('../../assets/images/noTasks.png')} style={{ height: 175, width: 200 }} resizeMode='contain' />
-                            <ThemedText style={{ marginTop: 24, fontSize: 18, lineHeight: 22, fontWeight: 700 }} >{finalText("No Appointment today", translations, selectedLanguage)}!</ThemedText>
+                            justifyContent: 'space-between',
+                            backgroundColor: "#12B6A7"
+                    }}>
+                        <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }} >
+                            <Svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+                                <Rect width="40" height="40" rx="20" fill="#0A867E"/>
+                                <Path d="M17.1605 18.87C17.0605 18.86 16.9405 18.86 16.8305 18.87C14.4505 18.79 12.5605 16.84 12.5605 14.44C12.5605 11.99 14.5405 10 17.0005 10C19.4505 10 21.4405 11.99 21.4405 14.44C21.4305 16.84 19.5405 18.79 17.1605 18.87Z" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                <Path d="M24.4093 12C26.3493 12 27.9093 13.57 27.9093 15.5C27.9093 17.39 26.4093 18.93 24.5393 19C24.4593 18.99 24.3693 18.99 24.2793 19" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                <Path d="M12.1607 22.56C9.7407 24.18 9.7407 26.82 12.1607 28.43C14.9107 30.27 19.4207 30.27 22.1707 28.43C24.5907 26.81 24.5907 24.17 22.1707 22.56C19.4307 20.73 14.9207 20.73 12.1607 22.56Z" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                <Path d="M26.3398 28C27.0598 27.85 27.7398 27.56 28.2998 27.13C29.8598 25.96 29.8598 24.03 28.2998 22.86C27.7498 22.44 27.0798 22.16 26.3698 22" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            </Svg>
+                            <ThemedText style={{ fontSize: 16, lineHeight: 20, fontWeight: 600, color: "#FFFFFF", marginLeft: 8 }} >{finalText("Total number of patient today", translations, selectedLanguage)}: </ThemedText>
                         </View>
-                    }
+                        <ThemedText style={{ fontSize: 24, lineHeight: 30, fontWeight: 600, color: "#FFFFFF" }} >{patientCount}</ThemedText>
+                    </View>
+                    <View style={{ marginTop: 24 }} >
+                        <ThemedText style={{ fontSize: 16, lineHeight: 20, fontWeight: 600 }}>{finalText("My Tasks", translations, selectedLanguage)} </ThemedText>
+                        {appointments?.length > 0 ? 
+                            <View style={{ height: getHeight() }} >
+                                <ScrollView
+                                    ref={scrollViewRef} 
+                                    style={{ marginTop: 20 }}>
+                                    {appointments?.map((appointment: any) => {
+                                        return (
+                                            <AppointmentCard key={appointment?._id} appointment={appointment} width={width} handleStatusUpdate={handleStatusUpdate} />
+                                        );
+                                    })}
+                                </ScrollView>
+                            </View>
+                        :   
+                            <View style={{ 
+                                marginTop: 12, 
+                                height: 320, 
+                                display: 'flex', 
+                                alignItems: 'center', 
+                                backgroundColor: Colors[colorScheme].cardBg,
+                                shadowColor: '#000000',
+                                shadowOffset: { width: 0, height: 4 },
+                                shadowOpacity: 0.1,
+                                shadowRadius: 12,
+                                elevation: 4,
+                                borderRadius: 12,
+                            }} >
+                                <Image source={require('../../assets/images/noTasks.png')} style={{ height: 175, width: 200 }} resizeMode='contain' />
+                                <ThemedText style={{ marginTop: 24, fontSize: 18, lineHeight: 22, fontWeight: 700 }} >{finalText("No Appointment today", translations, selectedLanguage)}!</ThemedText>
+                            </View>
+                        }
+                    </View>
                 </View>
-            </View>
+            </ScrollView>
             <MainFooter selectedNav='home' />
             {showClinicRemider && 
                 <CustomPopUp visible={showClinicRemider} onClose={() => setShowClinicReminder(true)}>

@@ -25,22 +25,9 @@ const Onboarding = () => {
 
 const styles = StyleSheet.create({
   container: {
-    marginVertical: 20,
     height: height,
     position: 'relative',
   },
-  header: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 20,
-  },
-  buttonFixedBottom: {
-    position: 'absolute',
-    bottom: 16,
-    marginHorizontal: 12,
-    left: 0,
-    right: 0,
-  }
 });
 
 export default Onboarding;

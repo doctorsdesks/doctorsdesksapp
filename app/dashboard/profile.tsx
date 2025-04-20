@@ -6,7 +6,7 @@ import { finalText, logout } from '@/components/Utils';
 import { useAppContext } from '@/context/AppContext';
 import { router } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import { BackHandler, Dimensions, Image, Pressable, StyleSheet, View } from 'react-native';
+import { BackHandler, Dimensions, Image, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { DocStatusType } from '@/constants/Enums';
 import { ThemedText } from '@/components/ThemedText';
@@ -14,7 +14,8 @@ import Icon from '@/components/Icons';
 
 const Profile = () => {
     const { setDoctorDetails, doctorDetails, translations, selectedLanguage } = useAppContext();
-    const { width } = Dimensions.get('window');
+    const { width, height } = Dimensions.get('window');
+    const scrollViewRef = React.useRef(null);
     const [loader, setLoader] = useState<boolean>(false);
 
     const handleLogout = async () => {
@@ -82,96 +83,101 @@ const Profile = () => {
                 <ThemedText style={{ fontSize: 14, lineHeight: 14, fontWeight: 500 }} >Dr. {doctorDetails?.name}</ThemedText>
                 <ThemedText style={{ fontSize: 12, lineHeight: 12, fontWeight: 400, marginTop: 6 }} >{getQualification()}</ThemedText>
             </View>
-            <View style={{ marginTop: 16, borderRadius: 8, borderColor: "#D9D9D9", borderWidth: 1, display: 'flex', flexDirection: 'column', paddingHorizontal: 16, paddingRight: 8, paddingVertical: 12, width: "100%" }} >
-                <Pressable
-                    onPress={() => {
-                        router.replace("/personalDetails");
-                    }}
-                    style={{ paddingVertical: 8, display: 'flex', flexDirection:'row', justifyContent: 'space-between', alignItems: 'center' }} 
-                >
-                    <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }} >
-                        <Icon type='personalProfile' />
-                        <ThemedText style={{ marginLeft: 8, fontSize: 15, lineHeight: 24, fontWeight: 500 }} >{finalText("Personal Details", translations, selectedLanguage)}</ThemedText>
-                    </View>
-                    <Icon type='arrowRight' />
-                </Pressable>
-                <Pressable 
-                    onPress={() => {
-                        router.replace("/clinicDetail");
-                    }}
-                    style={{ paddingVertical: 8, display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 8 }} 
-                >
-                    <View style={{ display: 'flex', alignItems: 'center', flexDirection: 'row' }} >
-                        <Icon type='clinicAddress' />
-                        <ThemedText style={{ marginLeft: 8, fontSize: 15, lineHeight: 24, fontWeight: 500 }} >{finalText("Clinic Address", translations, selectedLanguage)} </ThemedText>
-                    </View>
-                    <Icon type='arrowRight' />
-                </Pressable>
-            </View>
-            <View style={{ borderRadius: 8, borderColor: "#D9D9D9", borderWidth: 1, display: 'flex', flexDirection: 'column', paddingHorizontal: 16, paddingRight: 8, paddingVertical: 12, width: "100%", marginTop: 16 }} >
-                <Pressable 
-                    onPress={() => {
-                        router.replace("/clinicDetail/manageSlotAndTiming");
-                    }}
-                    style={{ paddingVertical: 8, display: 'flex', flexDirection:'row', justifyContent: 'space-between', alignItems: 'center' }} 
-                >
-                    <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }} >
-                        <Icon type='clinicSetting' />
-                        <ThemedText style={{ marginLeft: 8, fontSize: 15, lineHeight: 24, fontWeight: 500 }} >{finalText("Clinic Timings", translations, selectedLanguage)} </ThemedText>
-                    </View>
-                    <Icon type='arrowRight' />
-                </Pressable>
-                <Pressable 
-                    onPress={() => {
-                        router.replace("/clinicDetail/consultationFee");
-                    }}
-                    style={{ paddingVertical: 8, display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 8 }} 
-                >
-                    <View style={{ display: 'flex', alignItems: 'center', flexDirection: 'row' }} >
-                        <Icon type='clinicSetting' />
-                        <ThemedText style={{ marginLeft: 8, fontSize: 15, lineHeight: 24, fontWeight: 500 }} >{finalText("Consultation Fees", translations, selectedLanguage)} </ThemedText>
-                    </View>
-                    <Icon type='arrowRight' />
-                </Pressable>
-                <Pressable 
-                    onPress={() => {
-                        router.replace("/clinicDetail/blockSlots");
-                    }}
-                    style={{ paddingVertical: 8, display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 8 }} 
-                >
-                    <View style={{ display: 'flex', alignItems: 'center', flexDirection: 'row' }} >
-                        <Icon type='clinicSetting' />   
-                        <ThemedText style={{ marginLeft: 8, fontSize: 15, lineHeight: 24, fontWeight: 500 }} >{finalText("Block Slots", translations, selectedLanguage)} </ThemedText>
-                    </View>
-                    <Icon type='arrowRight' />
-                </Pressable>
-            </View>
-            <View style={{ borderRadius: 8, borderColor: "#D9D9D9", borderWidth: 1, display: 'flex', flexDirection: 'column', paddingHorizontal: 16, paddingRight: 8, paddingVertical: 12, width: "100%", marginTop: 16 }} >
-                <Pressable 
-                    onPress={() => {
-                        router.replace("/clinicDetail/appLanguage");
-                    }}
-                    style={{ paddingVertical: 8, display: 'flex', flexDirection:'row', justifyContent: 'space-between', alignItems: 'center' }} 
-                >
-                    <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }} >
-                        <Icon type='clinicSetting' />
-                        <ThemedText style={{ marginLeft: 8, fontSize: 15, lineHeight: 24, fontWeight: 500 }} >{finalText("App Language", translations, selectedLanguage)} </ThemedText>
-                    </View>
-                    <Icon type='arrowRight' />
-                </Pressable>
-                <Pressable 
-                    onPress={handleLogout}
-                    style={{ paddingVertical: 8, display: 'flex', flexDirection:'row', justifyContent: 'space-between', alignItems: 'center' }}
-                >
-                    <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }} >
-                        <Icon type='logout' />
-                        <ThemedText style={{ marginLeft: 8, fontSize: 15, lineHeight: 24, fontWeight: 500 }} >{finalText("Logout", translations, selectedLanguage)} </ThemedText>
-                    </View>
-                    <Icon type='arrowRight' />
-                </Pressable>
-           </View>
-           <MainFooter selectedNav='profile' />
-           {loader && <Loader />}
+            <ScrollView 
+                ref={scrollViewRef}
+                style={{ maxHeight: height - 340 }} 
+            >
+                <View style={{ marginTop: 16, borderRadius: 8, borderColor: "#D9D9D9", borderWidth: 1, display: 'flex', flexDirection: 'column', paddingHorizontal: 16, paddingRight: 8, paddingVertical: 12, width: "100%" }} >
+                    <Pressable
+                        onPress={() => {
+                            router.replace("/personalDetails");
+                        }}
+                        style={{ paddingVertical: 8, display: 'flex', flexDirection:'row', justifyContent: 'space-between', alignItems: 'center' }} 
+                    >
+                        <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }} >
+                            <Icon type='personalProfile' />
+                            <ThemedText style={{ marginLeft: 8, fontSize: 15, lineHeight: 24, fontWeight: 500 }} >{finalText("Personal Details", translations, selectedLanguage)}</ThemedText>
+                        </View>
+                        <Icon type='arrowRight' />
+                    </Pressable>
+                    <Pressable 
+                        onPress={() => {
+                            router.replace("/clinicDetail");
+                        }}
+                        style={{ paddingVertical: 8, display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 8 }} 
+                    >
+                        <View style={{ display: 'flex', alignItems: 'center', flexDirection: 'row' }} >
+                            <Icon type='clinicAddress' />
+                            <ThemedText style={{ marginLeft: 8, fontSize: 15, lineHeight: 24, fontWeight: 500 }} >{finalText("Clinic Address", translations, selectedLanguage)} </ThemedText>
+                        </View>
+                        <Icon type='arrowRight' />
+                    </Pressable>
+                </View>
+                <View style={{ borderRadius: 8, borderColor: "#D9D9D9", borderWidth: 1, display: 'flex', flexDirection: 'column', paddingHorizontal: 16, paddingRight: 8, paddingVertical: 12, width: "100%", marginTop: 16 }} >
+                    <Pressable 
+                        onPress={() => {
+                            router.replace("/clinicDetail/manageSlotAndTiming");
+                        }}
+                        style={{ paddingVertical: 8, display: 'flex', flexDirection:'row', justifyContent: 'space-between', alignItems: 'center' }} 
+                    >
+                        <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }} >
+                            <Icon type='clinicSetting' />
+                            <ThemedText style={{ marginLeft: 8, fontSize: 15, lineHeight: 24, fontWeight: 500 }} >{finalText("Clinic Timings", translations, selectedLanguage)} </ThemedText>
+                        </View>
+                        <Icon type='arrowRight' />
+                    </Pressable>
+                    <Pressable 
+                        onPress={() => {
+                            router.replace("/clinicDetail/consultationFee");
+                        }}
+                        style={{ paddingVertical: 8, display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 8 }} 
+                    >
+                        <View style={{ display: 'flex', alignItems: 'center', flexDirection: 'row' }} >
+                            <Icon type='clinicSetting' />
+                            <ThemedText style={{ marginLeft: 8, fontSize: 15, lineHeight: 24, fontWeight: 500 }} >{finalText("Consultation Fees", translations, selectedLanguage)} </ThemedText>
+                        </View>
+                        <Icon type='arrowRight' />
+                    </Pressable>
+                    <Pressable 
+                        onPress={() => {
+                            router.replace("/clinicDetail/blockSlots");
+                        }}
+                        style={{ paddingVertical: 8, display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 8 }} 
+                    >
+                        <View style={{ display: 'flex', alignItems: 'center', flexDirection: 'row' }} >
+                            <Icon type='clinicSetting' />   
+                            <ThemedText style={{ marginLeft: 8, fontSize: 15, lineHeight: 24, fontWeight: 500 }} >{finalText("Block Slots", translations, selectedLanguage)} </ThemedText>
+                        </View>
+                        <Icon type='arrowRight' />
+                    </Pressable>
+                </View>
+                <View style={{ borderRadius: 8, borderColor: "#D9D9D9", borderWidth: 1, display: 'flex', flexDirection: 'column', paddingHorizontal: 16, paddingRight: 8, paddingVertical: 12, width: "100%", marginTop: 16 }} >
+                    <Pressable 
+                        onPress={() => {
+                            router.replace("/clinicDetail/appLanguage");
+                        }}
+                        style={{ paddingVertical: 8, display: 'flex', flexDirection:'row', justifyContent: 'space-between', alignItems: 'center' }} 
+                    >
+                        <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }} >
+                            <Icon type='clinicSetting' />
+                            <ThemedText style={{ marginLeft: 8, fontSize: 15, lineHeight: 24, fontWeight: 500 }} >{finalText("App Language", translations, selectedLanguage)} </ThemedText>
+                        </View>
+                        <Icon type='arrowRight' />
+                    </Pressable>
+                    <Pressable 
+                        onPress={handleLogout}
+                        style={{ paddingVertical: 8, display: 'flex', flexDirection:'row', justifyContent: 'space-between', alignItems: 'center' }}
+                    >
+                        <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }} >
+                            <Icon type='logout' />
+                            <ThemedText style={{ marginLeft: 8, fontSize: 15, lineHeight: 24, fontWeight: 500 }} >{finalText("Logout", translations, selectedLanguage)} </ThemedText>
+                        </View>
+                        <Icon type='arrowRight' />
+                    </Pressable>
+                </View>
+            </ScrollView>
+            <MainFooter selectedNav='profile' />
+            {loader && <Loader />}
         </ThemedView>
     )
 };
