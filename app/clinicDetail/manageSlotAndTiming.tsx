@@ -213,99 +213,80 @@ const ManageSlotDurationAndTiming = () => {
                 {navData[1]?.isActive && !isAddSlots &&
                     <View style={{ marginTop: 24 }} >
                         <ThemedText style={{ fontSize: 16, lineHeight: 20, fontWeight: 600 }} >{finalText("Clinic Timings for each day", translations, selectedLanguage)} </ThemedText>
-                        <View 
-                            style= {{ 
-                                display: 'flex',
-                                borderRadius: 8,
-                                borderColor: "#DDDDDD",
-                                marginTop: 12,
-                                borderWidth: 1,
-                                paddingHorizontal: 12,
-                                height: height - 240,
-                                position: 'relative',
-                                backgroundColor: '#f2f2f2',
+                        {timings?.length > 0 ?
+                            <ScrollView
+                                ref={scrollViewRef}
+                                style={{ 
+                                    display: 'flex',
+                                    paddingVertical: 16,
+                                    maxHeight: height - 240,
+                                }}
+                            >
+                                <View style={{ paddingBottom: 16 }} >
+                                    {timings?.map((timing: any, index: number) => {
+                                        if (timing?.timings?.length > 0) {
+                                            return (
+                                                <View key={timing?.day} style={{ borderWidth: 1, borderColor: "#DDDDDD", borderRadius: 8, paddingHorizontal: 16, paddingVertical: 12, display: 'flex', flexDirection:  'row', alignItems: 'center', justifyContent: 'space-between', marginTop: index === 0 ? 0 : 12 }} >
+                                                    <View>
+                                                        <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+                                                            <Ionicons size={20} color={"#2DB9B0"} name='calendar' />
+                                                            <ThemedText style={{ fontSize: 16, lineHeight: 20, fontWeight: 600, marginLeft: 8 }} >
+                                                                {finalText(timing?.day, translations, selectedLanguage)}
+                                                            </ThemedText>
+                                                        </View>
+                                                        <View style={{ marginTop: 10, marginLeft: 20 }} >
+                                                            {timing?.timings?.map((eachTime: any, i: number) => {
+                                                                return (
+                                                                    <View key={eachTime?.startTime + "-" + eachTime?.end + timing?.day + "_" + i + "_" + index}  style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginBottom: 8 }} >
+                                                                        <Ionicons size={16} color={"#1EA6D6"} name='timer' />
+                                                                        <ThemedText style={{ fontSize: 12, lineHeight: 14, fontWeight: 400, marginLeft: 8 }} >
+                                                                            {eachTime?.startTime} - {eachTime?.endTime}
+                                                                        </ThemedText>
+                                                                    </View>
+                                                                )
+                                                            })}
+                                                        </View>
+                                                    </View>
+                                                    <CustomButton containerStyle={{ paddingVertical: 3 }} multiLingual={true} width='AUTO' title="Edit" onPress={() => handleClickEachDay(timing?.day)} />
+                                                </View>
+                                            )
+                                        } else {
+                                            return <></>
+                                        }
+                                    })}
+                                </View>
+                            </ScrollView>
+                        :
+                            <View style={{ 
+                                marginTop: 12, 
+                                height: 260,
+                                marginHorizontal: 4,
+                                marginBottom: 12,
+                                display: 'flex', 
+                                alignItems: 'center', 
+                                backgroundColor: Colors[colorScheme].cardBg,
                                 shadowColor: '#000000',
                                 shadowOffset: { width: 0, height: 4 },
                                 shadowOpacity: 0.1,
                                 shadowRadius: 12,
                                 elevation: 4,
-                                marginHorizontal: 4,
-                                marginBottom: 4
-                            }}
-                        >
-                            {timings?.length > 0 ?
-                                <ScrollView
-                                    ref={scrollViewRef}
-                                    style={{ 
-                                        display: 'flex',
-                                        paddingVertical: 16,
-                                        maxHeight: height - 320,
-                                    }}
-                                >
-                                    <View style={{ paddingBottom: 16 }} >
-                                        {timings?.map((timing: any, index: number) => {
-                                            if (timing?.timings?.length > 0) {
-                                                return (
-                                                    <View key={timing?.day} style={{ borderWidth: 1, borderColor: "#DDDDDD", borderRadius: 8, paddingHorizontal: 16, paddingVertical: 12, display: 'flex', flexDirection:  'row', alignItems: 'center', justifyContent: 'space-between', marginTop: index === 0 ? 0 : 12 }} >
-                                                        <View>
-                                                            <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-                                                                <Ionicons size={20} color={"#2DB9B0"} name='calendar' />
-                                                                <ThemedText style={{ fontSize: 16, lineHeight: 20, fontWeight: 600, marginLeft: 8 }} >
-                                                                    {finalText(timing?.day, translations, selectedLanguage)}
-                                                                </ThemedText>
-                                                            </View>
-                                                            <View style={{ marginTop: 10, marginLeft: 20 }} >
-                                                                {timing?.timings?.map((eachTime: any, i: number) => {
-                                                                    return (
-                                                                        <View key={eachTime?.startTime + "-" + eachTime?.end + timing?.day + "_" + i + "_" + index}  style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginBottom: 8 }} >
-                                                                            <Ionicons size={16} color={"#1EA6D6"} name='timer' />
-                                                                            <ThemedText style={{ fontSize: 12, lineHeight: 14, fontWeight: 400, marginLeft: 8 }} >
-                                                                                {eachTime?.startTime} - {eachTime?.endTime}
-                                                                            </ThemedText>
-                                                                        </View>
-                                                                    )
-                                                                })}
-                                                            </View>
-                                                        </View>
-                                                        <CustomButton containerStyle={{ paddingVertical: 2 }} multiLingual={true} width='AUTO' title="Edit" onPress={() => handleClickEachDay(timing?.day)} />
-                                                    </View>
-                                                )
-                                            } else {
-                                                return <></>
-                                            }
-                                        })}
-                                    </View>
-                                </ScrollView>
-                            :
-                                <View style={{ 
-                                    marginTop: 12, 
-                                    height: 260,
-                                    marginHorizontal: 4,
-                                    marginBottom: 12,
-                                    display: 'flex', 
-                                    alignItems: 'center', 
-                                    backgroundColor: Colors[colorScheme].cardBg,
-                                    shadowColor: '#000000',
-                                    shadowOffset: { width: 0, height: 4 },
-                                    shadowOpacity: 0.1,
-                                    shadowRadius: 12,
-                                    elevation: 4,
-                                    borderRadius: 12,
-                                }} >
-                                    <Image source={require('../../assets/images/noTasks.png')} style={{ height: 175, width: 200 }} resizeMode='contain' />
-                                    <ThemedText style={{ marginTop: 4, fontSize: 14, lineHeight: 21, fontWeight: 600, color: "red" }} >{finalText("No timing exist, Please click on 'Edit Timings' then click 'Add Timing'", translations, selectedLanguage)}</ThemedText>
-                                </View>
-                            }
-                            <View style={{ display: "flex", alignItems: "center", marginTop: 24, position: 'absolute', bottom: 12, right: 12, left: 12 }} >
-                                <CustomButton multiLingual={true} width='FULL' title="Add Timings" onPress={handlAddSlots} />
+                                borderRadius: 12,
+                            }} >
+                                <Image source={require('../../assets/images/noTasks.png')} style={{ height: 175, width: 200 }} resizeMode='contain' />
+                                <ThemedText style={{ marginTop: 4, fontSize: 14, lineHeight: 21, fontWeight: 600, color: "red" }} >{finalText("No timing exist, Please click on 'Edit Timings' then click 'Add Timing'", translations, selectedLanguage)}</ThemedText>
                             </View>
-                        </View>
+                        }
                     </View>
                 }
                 {isAddSlots && <ManageSlotTiming eachDayChange={eachDayChange} timings={ timings } setTimings={(data: any) => handleSave(data)} />}
                 {navData[0]?.isActive &&
                     <View style={{ display: "flex", alignItems: "center", position: 'absolute', bottom: 16, right: 16, left: 16 }} >
                         <CustomButton width='FULL' title={isEditable ? "Save Slot Duration" : "Edit Slot Duration"} onPress={handleSave} />
+                    </View>
+                }
+                {navData[1]?.isActive && !isAddSlots &&
+                    <View style={{ display: "flex", alignItems: "center", position: 'absolute', bottom: 16, right: 16, left: 16 }} >
+                        <CustomButton multiLingual={true} width='FULL' title="Add Timings" onPress={handlAddSlots} />
                     </View>
                 }
             </ThemedView>

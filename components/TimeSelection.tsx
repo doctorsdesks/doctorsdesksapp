@@ -5,6 +5,8 @@ import { ThemedView } from './ThemedView';
 import { ThemedText } from './ThemedText';
 import { finalText } from './Utils';
 import { useAppContext } from '@/context/AppContext';
+import { Colors } from '@/constants/Colors';
+import { useColorScheme } from '@/hooks/useColorScheme.web';
 
 const { width } = Dimensions.get('window');
 
@@ -29,9 +31,12 @@ const TimePicker: React.FC<TimePickerProps> = ({ handleTimeSelection, title, tim
   const minuteListRef = useRef<FlatList<any>>(null);
   const hourListRef = useRef<FlatList<any>>(null);
 
+  const colorScheme = useColorScheme() ?? 'light';
+
   useEffect(() => {
     if (time) {
         const [hh, other] = time?.split(":");
+        const [mm, pr] = other?.split(" ");
         if (parseInt(hh) > 12) {
             setSelectedPeriod("PM");
             let currentHh = parseInt(hh) - 12;
@@ -41,9 +46,8 @@ const TimePicker: React.FC<TimePickerProps> = ({ handleTimeSelection, title, tim
             setSelectedHour((currentHh).toString());
         } else {
             setSelectedHour(hh);
-            setSelectedPeriod("AM");
+            setSelectedPeriod(pr);
         }
-        const [mm] = other?.split(" ");
         setSelectedMinute(mm);
     }
   }, [time]);
@@ -117,7 +121,7 @@ const TimePicker: React.FC<TimePickerProps> = ({ handleTimeSelection, title, tim
     const isSelected = item === selectedItem;
     return (
       <Pressable onPress={() => handleItemPressed(type, item)} style={styles.item}>
-        <ThemedText style={[styles.text, isSelected && styles.selectedText]}>{item}</ThemedText>
+        <ThemedText lightColor={isSelected ? Colors[colorScheme].textSelected : Colors[colorScheme].textNotSelected} darkColor={isSelected ? Colors[colorScheme].textSelected : Colors[colorScheme].textNotSelected} style={styles.text}>{item}</ThemedText>
       </Pressable>
     );
   };
@@ -128,8 +132,8 @@ const TimePicker: React.FC<TimePickerProps> = ({ handleTimeSelection, title, tim
   };
 
   return (
-    <ThemedView>
-      <ThemedText style={{ fontSize: 16, lineHeight: 20, fontWeight: "600" }} >{finalText(title, translations, selectedLanguage)} </ThemedText>
+    <ThemedView style={{ padding: 16 }} >
+      <ThemedText style={{ fontSize: 16, lineHeight: 20, marginTop: 16, fontWeight: "600" }} >{finalText(title, translations, selectedLanguage)} </ThemedText>
       <View style={{ flexDirection: 'row', marginTop: 16 }}>
         <FlatList
           ref={hourListRef}
@@ -198,10 +202,6 @@ const styles = StyleSheet.create({
     fontSize: 20,
     lineHeight: 28,
     fontWeight: "600",
-    color: '#A9A9AB',
-  },
-  selectedText: {
-    color: '#32383D',
   },
   buttonContainer: {
     flexDirection: 'row',

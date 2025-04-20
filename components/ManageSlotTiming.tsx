@@ -1,17 +1,19 @@
 import CustomButton from '@/components/CustomButton';
 import { DaysForSlot } from '@/constants/Enums';
-import LowerPanel from '@/components/LowerPanel';
 import TimeSelection from '@/components/TimeSelection';
 import CustomSwitch from '@/components/CustomSwitch';
 import { router } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import { BackHandler, Dimensions, Pressable, StyleSheet, View } from 'react-native';
+import { BackHandler, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { ThemedView } from './ThemedView';
 import { ThemedText } from './ThemedText';
 import { finalText } from './Utils';
 import { useAppContext } from '@/context/AppContext';
 import Icon from './Icons';
 import Toast from 'react-native-toast-message';
+import { Colors } from '@/constants/Colors';
+import { useColorScheme } from '@/hooks/useColorScheme.web';
+import CustomModal from './CustomModal';
 
 export interface ManageSlotTimingProps {
     timings: any[];
@@ -21,7 +23,7 @@ export interface ManageSlotTimingProps {
 
 const ManageSlotTiming: React.FC<ManageSlotTimingProps> = ({ timings, setTimings, eachDayChange }) => {
     const { translations, selectedLanguage } = useAppContext();
-    const { height } = Dimensions.get('window');
+    const scrollViewRef = React.useRef(null);
     const [allDaysSelected, setAllDaysSelected] = useState<boolean>(false);
     const [days, setDays] = useState<Array<DaysForSlot>>([
         {
@@ -72,6 +74,7 @@ const ManageSlotTiming: React.FC<ManageSlotTimingProps> = ({ timings, setTimings
     const [endTime, setEndTime] = useState<string>("");
     const [lowerPanel, setLowerPanel] = useState<boolean>(false);
     const [lowerPanelChild, setLowerPanelChild] = useState<any>();
+    const colorScheme = useColorScheme() ?? 'light';
 
     useEffect(() => {
         const backAction = () => {
@@ -246,68 +249,71 @@ const ManageSlotTiming: React.FC<ManageSlotTimingProps> = ({ timings, setTimings
 
     return (
         <ThemedView style={styles.container} >
-            <View style={{ marginTop: 24, marginHorizontal: 16, height, position: 'relative' }} >
-                <View style={{ borderWidth: 1, borderColor: "#DDDDDDDD", borderRadius: 8, backgroundColor: "#F9F9F9", padding: 16 }} >
-                    <View>
-                        <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }} >
-                            <ThemedText style={{ fontSize: 16, fontWeight: 600 }} >{finalText("Select Week Days", translations, selectedLanguage)} </ThemedText>
-                            {!eachDayChange && <CustomSwitch isActive={allDaysSelected} onClick={handleAllDays} />}
-                        </View>
-                        <View style={{ display: 'flex', flexDirection: "row", alignItems: 'center', justifyContent: 'space-between', marginTop: 24 }} >
-                            {eachDayChange && eachDayChange !== null ?
-                                <View style={{ paddingHorizontal: 8, paddingVertical: 4, borderColor: "#2DB9B0", borderWidth: 1, borderRadius: 32, backgroundColor: "#2DB9B0" }} >
-                                    <ThemedText style={{ textAlign: 'center', fontSize: 14, lineHeight: 19, fontWeight: 700, color: "#ffffff" }} >{finalText(eachDayChange, translations, selectedLanguage)}</ThemedText>
-                                </View>
-                            :
-                                days?.map((day: DaysForSlot) => {
-                                    return (
-                                        <Pressable
-                                            key={day?.label}
-                                            id={day?.label} 
-                                            style={{ height: 32, width: 32, display: 'flex', alignItems: "center", justifyContent: 'center', borderColor: "#2DB9B0", borderWidth: 1, borderRadius: 32, backgroundColor: day?.isSelected ? "#2DB9B0" : "#F9F9F9" }}
-                                            onPress={() => handleDaySelect(day?.day)}
-                                        >
-                                            <ThemedText style={{ textAlign: 'center', fontSize: 14, lineHeight: 19, fontWeight: day?.isSelected ? 700 : 600, color: day?.isSelected ? "#FFFFFF" : "#32383D" }} >{finalText(day?.label, translations, selectedLanguage)} </ThemedText>
-                                        </Pressable>
-                                    )
-                                })
-                            }
-                        </View>
+            <View style={{ marginTop: 24 }} >
+                <View style={{ borderWidth: 1, borderColor: Colors[colorScheme].borderColor, borderRadius: 8, backgroundColor: Colors[colorScheme].cardBackgroud, padding: 16 }} >
+                    <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }} >
+                        <ThemedText style={{ fontSize: 16, fontWeight: 600 }} >{finalText("Select Week Days", translations, selectedLanguage)} </ThemedText>
+                        {!eachDayChange && <CustomSwitch isActive={allDaysSelected} onClick={handleAllDays} />}
                     </View>
-                    <View style={{ marginTop: 24 }} >
-                        <ThemedText style={{ fontSize: 16, fontWeight: 600 }} >{finalText("Timings", translations, selectedLanguage)} </ThemedText>
-                        {sessions?.length > 0 && 
-                            <View style={{ marginTop: 16 }} >
-                                {sessions?.map((session: {[key: string]: string}, index: number) => {
-                                    return(
-                                        <View key={session?.startTime} style={{ marginBottom: 12, display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}} >
-                                            <View style={{ paddingHorizontal: 16, paddingVertical: 12, borderWidth: 1, borderRadius: 8, borderColor: "#D9D9D9", display: 'flex', flexDirection: 'row' }} >
-                                                <View style={{ display:'flex', flexDirection: 'row' }} >
-                                                    <ThemedText style={{ fontSize: 14, lineHeight: 20, fontWeight: 600, color: "#1EA6D6" }} >{finalText("Timing", translations, selectedLanguage)} </ThemedText>
-                                                    <ThemedText style={{ marginLeft: 4, fontSize: 14, lineHeight: 20, fontWeight: 600, color: "#1EA6D6" }} >{index+1}</ThemedText>
-                                                </View>
-                                                <View  style={{ marginLeft: 16, marginRight: 12, height: 20, width: 2, backgroundColor: "#D9D9D9" }} />
-                                                <ThemedText style={{ fontSize: 14, lineHeight: 20, fontWeight: 400, color: "#32383D" }} >{session?.startTime} - {session?.endTime} </ThemedText>
-                                            </View>
-                                            <Pressable onPress={() => handleDeleteSession(index)} >
-                                                <Icon type='delete' />
-                                            </Pressable>
-                                        </View>
-                                    )
-                                })}
+                    <View style={{ display: 'flex', flexDirection: "row", alignItems: 'center', justifyContent: 'space-between', marginTop: 24 }} >
+                        {eachDayChange && eachDayChange !== null ?
+                            <View style={{ paddingHorizontal: 8, paddingVertical: 4, borderColor: "#2DB9B0", borderWidth: 1, borderRadius: 32, backgroundColor: "#2DB9B0" }} >
+                                <ThemedText lightColor='#ffffff' darkColor='#ffffff' style={{ textAlign: 'center', fontSize: 14, lineHeight: 19, fontWeight: 700 }} >{finalText(eachDayChange, translations, selectedLanguage)}</ThemedText>
                             </View>
+                        :
+                            days?.map((day: DaysForSlot) => {
+                                return (
+                                    <Pressable
+                                        key={day?.label}
+                                        id={day?.label} 
+                                        style={{ height: 32, width: 32, paddingLeft: 3, display: 'flex', alignItems: "center", justifyContent: 'center', borderColor: "#2DB9B0", borderWidth: 1, borderRadius: 32, backgroundColor: day?.isSelected ? "#2DB9B0" : "#F9F9F9" }}
+                                        onPress={() => handleDaySelect(day?.day)}
+                                    >
+                                        <ThemedText style={{ textAlign: 'center', fontSize: 14, lineHeight: 19, fontWeight: day?.isSelected ? 700 : 600, color: day?.isSelected ? "#FFFFFF" : "#32383D" }} >{finalText(day?.label, translations, selectedLanguage)} </ThemedText>
+                                    </Pressable>
+                                )
+                            })
                         }
+                    </View>
+                    <View>
+                        <ThemedText style={{ fontSize: 16, fontWeight: 600, marginTop: 16 }} >{finalText("Timings", translations, selectedLanguage)} </ThemedText>
+                        <ScrollView
+                            ref={scrollViewRef}
+                            style={{ maxHeight: 316 }} 
+                        >
+                            {sessions?.length > 0 && 
+                                <View style={{ marginTop: 16 }} >
+                                    {sessions?.map((session: {[key: string]: string}, index: number) => {
+                                        return(
+                                            <View key={session?.startTime} style={{ marginBottom: 12, display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}} >
+                                                <View style={{ paddingHorizontal: 16, paddingVertical: 12, borderWidth: 1, borderRadius: 8, borderColor: "#D9D9D9", display: 'flex', flexDirection: 'row' }} >
+                                                    <View style={{ display:'flex', flexDirection: 'row' }} >
+                                                        <ThemedText style={{ fontSize: 14, lineHeight: 20, fontWeight: 600, color: "#1EA6D6" }} >{finalText("Timing", translations, selectedLanguage)} </ThemedText>
+                                                        <ThemedText style={{ marginLeft: 4, fontSize: 14, lineHeight: 20, fontWeight: 600, color: "#1EA6D6" }} >{index+1}</ThemedText>
+                                                    </View>
+                                                    <View  style={{ marginLeft: 16, marginRight: 12, height: 20, width: 2, backgroundColor: "#D9D9D9" }} />
+                                                    <ThemedText style={{ fontSize: 14, lineHeight: 20, fontWeight: 400, color: "#32383D" }} >{session?.startTime} - {session?.endTime} </ThemedText>
+                                                </View>
+                                                <Pressable onPress={() => handleDeleteSession(index)} >
+                                                    <Icon type='delete' />
+                                                </Pressable>
+                                            </View>
+                                        )
+                                    })}
+                                </View>
+                            }
+                        </ScrollView>
                         <View style={{ marginTop: 16, display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
                             <View style={{ display: 'flex', flexDirection: 'column' }}>
                                 <ThemedText style={{ fontSize: 11, lineHeight: 15, fontWeight: 600 }} >{finalText("Start Time", translations, selectedLanguage)} </ThemedText>
                                 <Pressable 
-                                    style={{ borderWidth: 1, borderRadius: 8, borderColor: "#D9D9D9", backgroundColor: "#FFFFFF", paddingHorizontal: 10, paddingVertical: 12, display: 'flex', flexDirection: 'row', alignItems: 'center', marginTop: 8 }} 
+                                    style={{ borderWidth: 1, borderRadius: 8, borderColor: "#D9D9D9", backgroundColor: Colors[colorScheme].background, paddingHorizontal: 10, paddingVertical: 12, display: 'flex', flexDirection: 'row', alignItems: 'center', marginTop: 8 }} 
                                     onPress={() => handleOpenTime("start")}
                                 >
                                     {startTime === "" ? 
-                                        <ThemedText style={{ fontSize: 14, lineHeight: 19, fontWeight: 400, color: "#757575" }} >{finalText("Select Time", translations, selectedLanguage)} </ThemedText>
+                                        <ThemedText style={{ fontSize: 12, lineHeight: 16, fontWeight: 400, color: "#757575" }} >{finalText("Select Time", translations, selectedLanguage)} </ThemedText>
                                     :
-                                        <ThemedText style={{ fontSize: 14, lineHeight: 19, fontWeight: 400, color: "#757575" }} >
+                                        <ThemedText style={{ fontSize: 12, lineHeight: 16, fontWeight: 400, color: "#757575" }} >
                                             {startTime}
                                         </ThemedText>
                                     }
@@ -323,9 +329,9 @@ const ManageSlotTiming: React.FC<ManageSlotTimingProps> = ({ timings, setTimings
                                     onPress={() => handleOpenTime("end")}
                                 >
                                     {endTime === "" ? 
-                                        <ThemedText style={{ fontSize: 14, lineHeight: 19, fontWeight: 400, color: "#757575" }} >{finalText("Select Time", translations, selectedLanguage)} </ThemedText>
+                                        <ThemedText style={{ fontSize: 12, lineHeight: 16, fontWeight: 400, color: "#757575" }} >{finalText("Select Time", translations, selectedLanguage)} </ThemedText>
                                     :
-                                        <ThemedText style={{ fontSize: 14, lineHeight: 19, fontWeight: 400, color: "#757575" }} >
+                                        <ThemedText style={{ fontSize: 12, lineHeight: 16, fontWeight: 400, color: "#757575" }} >
                                             {endTime}
                                         </ThemedText>
                                     }
@@ -334,8 +340,8 @@ const ManageSlotTiming: React.FC<ManageSlotTimingProps> = ({ timings, setTimings
                                     </View>
                                 </Pressable>
                             </View>
-                            <View style={{  marginTop: 23, marginLeft: 2, display: 'flex', alignItems: 'center', justifyContent: 'center' }} >
-                                <Pressable style={{ backgroundColor: startTime !== "" && endTime !== "" ? '#009688' : '#99E4DF', borderRadius: 8, paddingHorizontal: 5, paddingVertical: 3 }} onPress={handleAddSession} >
+                            <View style={{  marginTop: 23, display: 'flex', alignItems: 'center', justifyContent: 'center' }} >
+                                <Pressable style={{ backgroundColor: startTime !== "" && endTime !== "" ? '#009688' : '#99E4DF', borderRadius: 8, paddingHorizontal: 7, paddingVertical: 4 }} onPress={handleAddSession} >
                                     <ThemedText style={{ fontSize: 14, lineHeight: 18, fontWeight: 700, color: "#fff"  }} >{finalText("Add", translations, selectedLanguage)} </ThemedText>
                                 </Pressable>
                             </View>
@@ -343,10 +349,12 @@ const ManageSlotTiming: React.FC<ManageSlotTimingProps> = ({ timings, setTimings
                     </View>
                 </View>
             </View>
-            <View style={{ display: "flex", alignItems: "center", position: 'absolute', bottom: 16, right: 16, left: 16 }} >
+            <View style={{ display: "flex", alignItems: "center", position: 'absolute', bottom: 72, right: 16, left: 16 }} >
                 <CustomButton  multiLingual={true} width='FULL' title="Save Timings" onPress={handleAddFinal}  />
             </View>
-            {lowerPanel && <LowerPanel children={lowerPanelChild} closeLoserPanel={() => setLowerPanel(false)} />}
+            <CustomModal visible={lowerPanel} onClose={() => setLowerPanel(false)} customHeight={360}>
+                <View>{lowerPanelChild}</View>
+            </CustomModal>
         </ThemedView>
     );
 };
@@ -354,8 +362,7 @@ const ManageSlotTiming: React.FC<ManageSlotTimingProps> = ({ timings, setTimings
 
 const styles = StyleSheet.create({
     container: {
-        height: "90%",
-        position: 'relative'
+        height: "100%",
     },
 });
 

@@ -6,9 +6,10 @@ interface CustomModalProps {
     visible: boolean;
     onClose: () => void;
     children: React.ReactNode;
+    customHeight?: any; 
 }
 
-const CustomModal: React.FC<CustomModalProps> = ({ visible, onClose, children }) => {
+const CustomModal: React.FC<CustomModalProps> = ({ visible, onClose, children, customHeight }) => {
     const colorScheme = useColorScheme() ?? 'light';
     const colors = Colors[colorScheme];
     const { height } = Dimensions.get('window');
@@ -27,7 +28,7 @@ const CustomModal: React.FC<CustomModalProps> = ({ visible, onClose, children })
                         {
                             backgroundColor: colors.background,
                             borderColor: colors.borderColorSelected,
-                            height: height * 0.5 // 50% of screen height
+                            height: customHeight ? customHeight : height * 0.5 // 50% of screen height
                         }
                     ]}
                     onPress={e => e.stopPropagation()}
@@ -50,6 +51,7 @@ const styles = StyleSheet.create({
         borderTopLeftRadius: 20,
         borderTopRightRadius: 20,
         borderWidth: 1,
+        borderBottomWidth: 0,
         shadowColor: "#000",
         shadowOffset: {
             width: 0,

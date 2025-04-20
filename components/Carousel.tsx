@@ -1,8 +1,9 @@
 import React, { useRef, useState } from 'react';
 import { View, Text, Image, StyleSheet, ScrollView, Dimensions, Animated } from 'react-native';
 import { ThemedText } from './ThemedText';
+import { ThemedView } from './ThemedView';
 
-const { width, height } = Dimensions.get('window');
+const { width } = Dimensions.get('window');
 
 const carouselItems = [
   {
@@ -39,7 +40,7 @@ const Carousel = () => {
   };
 
   return (
-    <View style={[styles.container, { height: height, position: 'relative' }]}>
+    <ThemedView style={[styles.container, { position: 'relative' }]}>
       <Animated.ScrollView
         ref={scrollViewRef}
         horizontal
@@ -89,7 +90,7 @@ const Carousel = () => {
           );
         })}
       </View>
-    </View>
+    </ThemedView>
   );
 };
 

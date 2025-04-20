@@ -37,7 +37,12 @@ const MainHeader: React.FC<MainHeaderProps> = ({ selectedNav, title = "" }) => {
                 router.replace("/dashboard/profile");
                 break;
             case "manageSlotTiming":
-                router.replace("/clinicDetail/manageSlotAndTiming");
+                router.replace({
+                    pathname: "/clinicDetail/manageSlotAndTiming",
+                    params: {
+                        selectedNav: "Clinic Timing",
+                    }
+                });
                 break;
             case "consultationFee":
                 router.replace("/dashboard/profile");
