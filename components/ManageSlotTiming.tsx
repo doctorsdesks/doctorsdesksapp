@@ -249,7 +249,7 @@ const ManageSlotTiming: React.FC<ManageSlotTimingProps> = ({ timings, setTimings
 
     return (
         <ThemedView style={styles.container} >
-            <View style={{ marginTop: 24 }} >
+            <View style={{ marginTop: 16 }} >
                 <View style={{ borderWidth: 1, borderColor: Colors[colorScheme].borderColor, borderRadius: 8, backgroundColor: Colors[colorScheme].cardBackgroud, padding: 16 }} >
                     <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }} >
                         <ThemedText style={{ fontSize: 16, fontWeight: 600 }} >{finalText("Select Week Days", translations, selectedLanguage)} </ThemedText>
@@ -277,6 +277,7 @@ const ManageSlotTiming: React.FC<ManageSlotTimingProps> = ({ timings, setTimings
                     </View>
                     <View>
                         <ThemedText style={{ fontSize: 16, fontWeight: 600, marginTop: 16 }} >{finalText("Timings", translations, selectedLanguage)} </ThemedText>
+                        <ThemedText style={{ fontSize: 14, lineHeight: 18, marginTop: 12, fontWeight: 600, color: "#3B82F6" }} >{finalText("Kindly click on 'Add' then click on 'Save Timings' to add new session", translations, selectedLanguage)}. </ThemedText>
                         <ScrollView
                             ref={scrollViewRef}
                             style={{ maxHeight: 316 }} 

@@ -284,12 +284,21 @@ const PersonalDetailsSetting = () => {
         let newDoctorData = { ...doctorData };
         let personalDetails = [...newDoctorData?.personalData];
         if(type === "ADD"){
-            personalDetails = personalDetails.map((item: any) => {
-                if (item.id === id) {
-                    return { ...item, value: [ ...item?.value, newValue] }; 
-                }
-                return item;
-            });
+            const languages = personalDetails?.find((item: any) => item?.id === id)?.value;
+            if (languages?.length < 3) {
+                personalDetails = personalDetails.map((item: any) => {
+                    if (item.id === id) {
+                        return { ...item, value: [ ...item?.value, newValue] }; 
+                    }
+                    return item;
+                });
+            } else {
+                Toast.show({
+                    type: 'error',  
+                    text1: `You can select maximum 3 langauges only!`,
+                    visibilityTime: 3000,
+                });
+            }
         } else if(type === "REMOVE"){
             personalDetails = personalDetails.map((item: any) => {
                 if (item.id === id) {
