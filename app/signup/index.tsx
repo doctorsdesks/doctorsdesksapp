@@ -304,12 +304,21 @@ const SignUp = () => {
     const handleChangeLanguage = (newValue: string, id: string, type: string) => {
         let pDUpdatedData = [...personalDetails];
         if(type === "ADD"){
-            pDUpdatedData = pDUpdatedData.map((item: any) => {
-                if (item.id === id) {
-                    return { ...item, value: [ ...item?.value, newValue] }; 
-                }
-                return item;
-            });
+            const languages = pDUpdatedData?.find((item: any) => item?.id === id)?.value;
+            if (languages?.length < 3) {
+                pDUpdatedData = pDUpdatedData.map((item: any) => {
+                    if (item.id === id) {
+                        return { ...item, value: [ ...item?.value, newValue] }; 
+                    }
+                    return item;
+                });
+            } else {
+                Toast.show({
+                    type: 'error',  
+                    text1: `You can select maximum 3 langauges only!`,
+                    visibilityTime: 3000,
+                });
+            }
         } else if(type === "REMOVE"){
             pDUpdatedData = pDUpdatedData.map((item: any) => {
                 if (item.id === id) {

@@ -108,7 +108,7 @@ const Slot: React.FC<SlotProps> = ({ slot, onSelectSlot, isSelected }) => {
 
 const styles = StyleSheet.create({
     container: {
-        width: 102,
+        width: 92,
     },
     slot: {
         paddingVertical: 14,

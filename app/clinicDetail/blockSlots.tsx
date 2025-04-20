@@ -180,13 +180,13 @@ const BlockSlots = () => {
                             <ThemedText style={{ marginTop: 24, fontSize: 18, lineHeight: 18, fontWeight: 700 }} >{finalText(`No Slot Available`, translations, selectedLanguage)}!</ThemedText>
                         </View>
                     : 
-                    <View  style={{ marginTop: 12, marginBottom: 12, display:'flex', flexDirection: 'row', flexWrap: 'wrap', gap: 16 }}>
-                        {slotsToShow?.map((slot: any) => {
-                            return (
-                                <Slot key={slot?.startTime} isSelected={slot?.isSelected} slot={slot} onSelectSlot={handleSelect} />
-                            );
-                        })}
-                    </View>
+                        <View style={{ marginTop: 12, marginBottom: 12, display:'flex', flexDirection: 'row', flexWrap: 'wrap', gap: 16, justifyContent: 'center' }}>
+                            {slotsToShow?.map((slot: any) => {
+                                return (
+                                    <Slot key={slot?.startTime} isSelected={slot?.isSelected} slot={slot} onSelectSlot={handleSelect} />
+                                );
+                            })}
+                        </View>
                     }
                 </ScrollView>
             </View>
