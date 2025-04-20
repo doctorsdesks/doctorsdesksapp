@@ -153,10 +153,10 @@ const BlockSlots = () => {
     return (
         <ThemedView style={styles.container} >
             <MainHeader selectedNav="block" />
-            <View style={{ marginTop: 24 }} >
+            <View style={{ marginTop: 12 }} >
                 <AppointmentDateSelector handleDateChange={handleDateChange} />
             </View>
-            <View style={{ height: height - 320 }} >
+            <View style={{ height: height * 0.65 }} >
                 <ScrollView
                     ref={scrollViewRef} 
                     style={{ marginTop: 20 }}>
@@ -190,7 +190,7 @@ const BlockSlots = () => {
                     }
                 </ScrollView>
             </View>
-            {!loader && <View style={{ display: "flex", alignItems: "center", position: 'absolute', bottom: 16, right: 16, left: 16 }} >
+            {!loader && <View style={{ display: "flex", alignItems: "center", position: 'absolute', bottom: 16, right: 16, left: 16, paddingBottom: 16 }} >
                 <CustomButton multiLingual={true} width='FULL' title="Block Slots" onPress={handleBlock}  isDisabled={handleDisable()} />
             </View>}
             {loader && <Loader />}
@@ -202,7 +202,7 @@ const styles = StyleSheet.create({
     container: {
         paddingHorizontal: 16,
         paddingTop: 62,
-        height: "100%",
+        flex: 1,
         position: 'relative'
     },
 });

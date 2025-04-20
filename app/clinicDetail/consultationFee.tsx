@@ -8,11 +8,12 @@ import { StringObject } from '@/constants/Enums';
 import { useAppContext } from '@/context/AppContext';
 import { router } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import { BackHandler, StyleSheet, View } from 'react-native';
+import { BackHandler, Dimensions, StyleSheet, View } from 'react-native';
 import Toast from 'react-native-toast-message';
 
 const ConsultationFee = () => {
     const { doctorDetails } = useAppContext();
+    const { height } = Dimensions.get("window");
     const [loader, setLoader] = useState<boolean>(true);
     const [isEditable, setIsEditable] = useState<boolean>(false);
     const [data, setData] = useState<Array<StringObject>>([
@@ -134,7 +135,7 @@ const ConsultationFee = () => {
         :
             <ThemedView style={styles.container} >
                 <MainHeader selectedNav='consultationFee' />
-                <View style={{ marginTop: 32, borderWidth: 1, borderRadius: 8, borderColor: "#DDDDDDDD", padding: 16 }} >
+                <View style={{ marginTop: 32, borderWidth: 1, borderRadius: 8, borderColor: "#DDDDDDDD", padding: 16, maxHeight: height * 0.4 }} >
                     {data?.map((item: StringObject) => {
                         return (
                             <View key={item?.id} style={{ marginBottom: 16, paddingBottom: 12 }} >
@@ -143,8 +144,8 @@ const ConsultationFee = () => {
                         )
                     })}
                 </View>
-                <View style={{ display: "flex", alignItems: "center", position: 'absolute', bottom: 16, right: 16, left: 16 }} >
-                        <CustomButton multiLingual={true} width='FULL' title={isEditable ? "Save Fees" : "Edit Fees"} onPress={handleSave} />
+                <View style={{ display: "flex", alignItems: "center", position: 'absolute', bottom: 16, right: 16, left: 16, paddingBottom: 16 }} >
+                     <CustomButton multiLingual={true} width='FULL' title={isEditable ? "Save Fees" : "Edit Fees"} onPress={handleSave} />
                 </View>
             </ThemedView>
     );
@@ -154,7 +155,7 @@ const styles = StyleSheet.create({
     container: {
         paddingHorizontal: 16,
         paddingTop: 62,
-        height: "100%",
+        flex: 1,
         position: 'relative'
     },
 });

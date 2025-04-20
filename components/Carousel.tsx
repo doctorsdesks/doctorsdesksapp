@@ -3,7 +3,7 @@ import { View, Text, Image, StyleSheet, ScrollView, Dimensions, Animated } from 
 import { ThemedText } from './ThemedText';
 import { ThemedView } from './ThemedView';
 
-const { width } = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
 
 const carouselItems = [
   {
@@ -56,7 +56,7 @@ const Carousel = () => {
         scrollEventThrottle={16} // Change from 280 to 16 for smoother event updates
       >
         {carouselItems.map((item, index) => (
-          <View style={[styles.carouselItem, { height: 516 }]} key={index}>
+          <View style={[styles.carouselItem, { height: height * 0.7 }]} key={index}>
             <Image source={item.image} style={styles.image} resizeMode='contain' />
             <ThemedText type='title' style={{ marginBottom: 12 }} >{item?.title}</ThemedText>
             <ThemedText type='subtitle' lightColor='#8C8C8C' darkColor='#8C8C8C' style={{ marginBottom: 12, marginHorizontal: 24 }}>{item.description}</ThemedText>
@@ -105,7 +105,7 @@ const styles = StyleSheet.create({
   },
   image: {
     width: width - 24,
-    height: 400,
+    height: height * 0.5,
     marginBottom: 20,
     alignSelf: 'flex-start',
   },
@@ -113,8 +113,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     position: 'absolute',
-    top: 536,
-    left: (width-24)/2 -40,
+    top: height * 0.7,
+    width: '100%',
+    alignSelf: 'center',
   },
   bar: {
     height: 8,

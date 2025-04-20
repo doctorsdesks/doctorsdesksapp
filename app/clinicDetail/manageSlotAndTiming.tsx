@@ -198,7 +198,7 @@ const ManageSlotDurationAndTiming = () => {
                 {!isAddSlots && <Navbar data={navData} onClick={handleNavClick} />}
                 {/* For slot duration Nav */}
                 {navData[0]?.isActive && 
-                    <View style={{ marginTop: 42 }} >
+                    <View style={{ marginTop: 24, height: height * 0.4 }} >
                         <ThemedText style={{ fontSize: 14, lineHeight: 18, marginBottom: 16, fontWeight: 600, color: "#3B82F6" }} >{finalText("Slot duration is time for seeing one patient", translations, selectedLanguage)}. </ThemedText>
                         {isEditable ?
                             <CustomInput2 data={slotDurationObject} onChange={(value) => handleSlotChange(value)} />
@@ -211,7 +211,7 @@ const ManageSlotDurationAndTiming = () => {
                 }
                 {/* For clinic timings Nav */}
                 {navData[1]?.isActive && !isAddSlots &&
-                    <View style={{ marginTop: 24 }} >
+                    <View style={{ marginTop: 24, height: (height * 0.7 - 16) }} >
                         <ThemedText style={{ fontSize: 16, lineHeight: 20, fontWeight: 600 }} >{finalText("Clinic Timings for each day", translations, selectedLanguage)} </ThemedText>
                         {timings?.length > 0 ?
                             <ScrollView
@@ -280,12 +280,12 @@ const ManageSlotDurationAndTiming = () => {
                 }
                 {isAddSlots && <ManageSlotTiming eachDayChange={eachDayChange} timings={ timings } setTimings={(data: any) => handleSave(data)} />}
                 {navData[0]?.isActive &&
-                    <View style={{ display: "flex", alignItems: "center", position: 'absolute', bottom: 16, right: 16, left: 16 }} >
+                    <View style={{ display: "flex", alignItems: "center", position: 'absolute', bottom: 16, right: 16, left: 16, paddingBottom: 16 }} >
                         <CustomButton width='FULL' title={isEditable ? "Save Slot Duration" : "Edit Slot Duration"} onPress={handleSave} />
                     </View>
                 }
                 {navData[1]?.isActive && !isAddSlots &&
-                    <View style={{ display: "flex", alignItems: "center", position: 'absolute', bottom: 16, right: 16, left: 16 }} >
+                    <View style={{ display: "flex", alignItems: "center", position: 'absolute', bottom: 16, right: 16, left: 16, paddingBottom: 16 }} >
                         <CustomButton multiLingual={true} width='FULL' title="Add Timings" onPress={handlAddSlots} />
                     </View>
                 }
@@ -297,7 +297,7 @@ const styles = StyleSheet.create({
     container: {
         paddingHorizontal: 16,
         paddingTop: 62,
-        height: "100%",
+        flex: 1,
         position: 'relative'
     },
 });

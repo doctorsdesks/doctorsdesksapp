@@ -376,8 +376,8 @@ const PersonalDetailsSetting = () => {
                 <MainHeader selectedNav='personalDetails' />
                 <Navbar data={navData} onClick={handleNavClick} />
                 {navData[0]?.isActive ?
-                    <View style={{ height: height - 100 }} >
-                        {showImage && <View style={{ display: 'flex', alignItems: "center", justifyContent: 'center', marginTop: 32 }} >
+                    <View style={{ height: height * 0.7 }} >
+                        {showImage && <View style={{ display: 'flex', alignItems: "center", justifyContent: 'center', marginTop: 20 }} >
                             <View style={{ position: 'relative' }} >
                                 <View style={{ position: 'absolute', right: 4, top: 8, zIndex: 2 }} >
                                     {doctorDetails?.docStatus === DocStatusType.VERIFIED ? 
@@ -403,7 +403,7 @@ const PersonalDetailsSetting = () => {
                             style={{ 
                                 display: 'flex',
                                 borderRadius: 8,
-                                maxHeight: isEditable ? isKeyboardOpen ? height - 426 : height - 366 : height - 336,
+                                maxHeight: isEditable ? isKeyboardOpen ? height * 0.42 : height * 0.6 : height * 0.6,
                                 borderColor: "#DDDDDD",
                                 marginTop: 16,
                                 borderWidth: 1,
@@ -419,9 +419,6 @@ const PersonalDetailsSetting = () => {
                                         )
                                     })}
                         </ScrollView>
-                        <View style={{ display: "flex", alignItems: "center", position: 'absolute', bottom: 16, right: 0, left: 0, zIndex: 2 }} >
-                            <CustomButton multiLingual={true} width='FULL' title={isEditable ? "Save Personal Details" : "Edit Personal Details"} onPress={handleButtonClick} />
-                        </View>
                     </View>
                 :   
                     <View style={{ marginTop: 32 }} >
@@ -526,6 +523,9 @@ const PersonalDetailsSetting = () => {
                         </ScrollView>
                     </View>
                 }
+                {navData[0]?.isActive && !isKeyboardOpen && <View style={styles.buttonContainer}>
+                    <CustomButton multiLingual={true} width='FULL' title={isEditable ? "Save Personal Details" : "Edit Personal Details"} onPress={handleButtonClick} />
+                </View>}
             </ThemedView>
     );
 };
@@ -534,7 +534,7 @@ const styles = StyleSheet.create({
     container: {
         paddingHorizontal: 16,
         paddingTop: 62,
-        height: "100%",
+        flex: 1,
         position: 'relative'
     },
     profileImage: {
@@ -546,6 +546,16 @@ const styles = StyleSheet.create({
     icon: {
         width: 24,
         height: 24
+    },
+    buttonContainer: {
+        display: "flex",
+        alignItems: "center",
+        position: 'absolute',
+        bottom: 16, // Increased from 16 to ensure visibility
+        right: 16,
+        left: 16,
+        zIndex: 999, // Higher zIndex to ensure it's above everything
+        paddingBottom: 16, // Additional padding for devices with home indicators
     }
 })
 
