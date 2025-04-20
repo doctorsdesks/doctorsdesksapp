@@ -196,7 +196,7 @@ const ClinicDetailsSetting = () => {
         :
             <ThemedView style={styles.container} >
                 <MainHeader selectedNav='clinicDetails' />
-                <View style={{ height: height - 100 }} >
+                <View style={{ height: height * 0.75 }} >
                     <ScrollView
                         ref={scrollViewRef}
                         style={{ 
@@ -207,7 +207,7 @@ const ClinicDetailsSetting = () => {
                             borderWidth: 1,
                             paddingHorizontal: 12,
                             paddingVertical: 16,
-                            maxHeight: isKeyboardOpen ? height - 460 : height - 160,
+                            maxHeight: isKeyboardOpen ? height * 0.44 : height * 0.75,
                         }}
                     >
                         {clinicData?.clinicInfo?.map((item: any) => {
@@ -219,9 +219,9 @@ const ClinicDetailsSetting = () => {
                         })}
                     </ScrollView>
                 </View>
-                <View style={{ display: "flex", alignItems: "center", position: 'absolute', left: 16, right: 16, bottom: 16, zIndex: 2 }} >
+                {!isKeyboardOpen && <View style={{ display: "flex", alignItems: "center", position: 'absolute', left: 16, right: 16, bottom: 16, zIndex: 2, paddingBottom: 16 }} >
                     <CustomButton width='FULL' title={isEditable ? "Save Address" : "Edit Address"} onPress={handleButtonClick} />
-                </View>
+                </View>}
             </ThemedView>
     );
 };
@@ -230,7 +230,7 @@ const styles = StyleSheet.create({
     container: {
         paddingHorizontal: 16,
         paddingTop: 62,
-        height: "100%",
+        flex: 1,
         position: 'relative'
     },
 });

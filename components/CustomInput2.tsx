@@ -116,9 +116,14 @@ const CustomInput2: React.FC<CustomInput2Props> = ({ data, onChange, handleFocus
         </ThemedText>
         {data?.isDisabled ? 
           <View
-            style={[styles.input, { backgroundColor: Colors[colorScheme].cardBackgroud }]}
+            style={[styles.input, { backgroundColor: Colors[colorScheme].cardBackgroud, display: 'flex', flexDirection: 'row', paddingVertical: data?.inputType === "AMOUNT" ? 0 : 10, paddingLeft: 0, paddingRight: 10, alignItems: 'center' }]}
           >
-            <ThemedText>
+            {data?.inputType === "AMOUNT" && 
+              <View style={{ height: 42, backgroundColor: "#2DB9B0", width: 40, display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', borderBottomLeftRadius: 4, borderTopLeftRadius: 4  }} >
+                <Icon type='rupee' />
+              </View>
+            }
+            <ThemedText style={{ paddingLeft: 10 }} >
               {value}
             </ThemedText>
           </View>

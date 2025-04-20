@@ -4,7 +4,7 @@ import TimeSelection from '@/components/TimeSelection';
 import CustomSwitch from '@/components/CustomSwitch';
 import { router } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import { BackHandler, Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { BackHandler, Dimensions, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { ThemedView } from './ThemedView';
 import { ThemedText } from './ThemedText';
 import { finalText } from './Utils';
@@ -23,6 +23,7 @@ export interface ManageSlotTimingProps {
 
 const ManageSlotTiming: React.FC<ManageSlotTimingProps> = ({ timings, setTimings, eachDayChange }) => {
     const { translations, selectedLanguage } = useAppContext();
+    const { height } = Dimensions.get('window');
     const scrollViewRef = React.useRef(null);
     const [allDaysSelected, setAllDaysSelected] = useState<boolean>(false);
     const [days, setDays] = useState<Array<DaysForSlot>>([
@@ -280,7 +281,7 @@ const ManageSlotTiming: React.FC<ManageSlotTimingProps> = ({ timings, setTimings
                         <ThemedText style={{ fontSize: 14, lineHeight: 18, marginTop: 12, fontWeight: 600, color: "#3B82F6" }} >{finalText("Kindly click on 'Add' then click on 'Save Timings' to add new session", translations, selectedLanguage)}. </ThemedText>
                         <ScrollView
                             ref={scrollViewRef}
-                            style={{ maxHeight: 316 }} 
+                            style={{ maxHeight: Math.min(height * 0.4, 316) }} 
                         >
                             {sessions?.length > 0 && 
                                 <View style={{ marginTop: 16 }} >
@@ -350,7 +351,7 @@ const ManageSlotTiming: React.FC<ManageSlotTimingProps> = ({ timings, setTimings
                     </View>
                 </View>
             </View>
-            <View style={{ display: "flex", alignItems: "center", position: 'absolute', bottom: 72, right: 16, left: 16 }} >
+            <View style={{ display: "flex", alignItems: "center", position: 'absolute', bottom: 16, right: 16, left: 16, paddingBottom: 16 }} >
                 <CustomButton  multiLingual={true} width='FULL' title="Save Timings" onPress={handleAddFinal}  />
             </View>
             <CustomModal visible={lowerPanel} onClose={() => setLowerPanel(false)} customHeight={360}>
@@ -363,7 +364,7 @@ const ManageSlotTiming: React.FC<ManageSlotTimingProps> = ({ timings, setTimings
 
 const styles = StyleSheet.create({
     container: {
-        height: "100%",
+        flex: 1,
     },
 });
 

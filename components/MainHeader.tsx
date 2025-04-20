@@ -1,6 +1,5 @@
-import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
-import { Pressable, StyleSheet } from 'react-native';
+import { Dimensions, Pressable, StyleSheet } from 'react-native';
 import { router } from 'expo-router';
 import { useAppContext } from '@/context/AppContext';
 import { finalText } from './Utils';
@@ -15,6 +14,7 @@ interface MainHeaderProps {
 
 const MainHeader: React.FC<MainHeaderProps> = ({ selectedNav, title = "" }) => {
     const { translations, selectedLanguage } = useAppContext();
+    const { width } = Dimensions.get('window');
 
     const handleBackNav = () => {
         switch (selectedNav) {
@@ -108,8 +108,8 @@ const MainHeader: React.FC<MainHeaderProps> = ({ selectedNav, title = "" }) => {
     }
 
     return (
-        <ThemedView style={{ display: 'flex', position: 'relative', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginBottom: 16 }} >
-            {selectedNav !== "home" && <Pressable style={{ position: 'absolute', left: 0 }} onPress={handleBackNav}>
+        <ThemedView style={[styles.headerContainer, { width }]} >
+            {selectedNav !== "home" && <Pressable style={{ position: 'absolute', left: 16, top: 0, height: 32 }} onPress={handleBackNav}>
                 <Icon type="goBack" />
             </Pressable>}
             <ThemedText style={styles.text} >{finalText(showtext(), translations, selectedLanguage)}</ThemedText>
@@ -118,10 +118,31 @@ const MainHeader: React.FC<MainHeaderProps> = ({ selectedNav, title = "" }) => {
 };
 
 const styles = StyleSheet.create({
-    text: { 
-        fontSize: 16, 
+    headerContainer: {
+        display: 'flex',
+        position: 'relative',
+        flexDirection: 'row',
+        marginLeft: -16,
+        height: 48,
+        alignItems: 'center',
+        justifyContent: 'center',
+        paddingBottom: 16,
+        // Bottom border shadow effect
+        borderBottomWidth: 1,
+        borderBottomColor: 'rgba(128, 128, 128, 0.1)', // More visible in both themes
+        // iOS shadow - only at bottom
+        shadowColor: 'rgba(128, 128, 128, 0.5)', // Gray shadow works in both themes
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.2,
+        shadowRadius: 2,
+        // No elevation to avoid all-around shadow on Android
+        backgroundColor: 'transparent',
+        zIndex: 10
+    },
+    text: {
+        fontSize: 16,
         fontWeight: 600, 
-        lineHeight: 22,
+        lineHeight: 32,
         textTransform: "capitalize"
     }
 })
