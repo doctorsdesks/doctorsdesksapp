@@ -15,7 +15,6 @@ import { URLS } from '@/constants/Urls';
 import axios from 'axios';
 import { router } from 'expo-router';
 import Loader from '@/components/Loader';
-import MainHeader from '@/components/MainHeader';
 import { ThemedView } from '@/components/ThemedView';
 import SearchSelect from '@/components/SearchSelect';
 import { ThemedText } from '@/components/ThemedText';
@@ -373,7 +372,6 @@ const PersonalDetailsSetting = () => {
             <Loader />
         :
             <ThemedView style={styles.container} >
-                <MainHeader selectedNav='personalDetails' />
                 <Navbar data={navData} onClick={handleNavClick} />
                 {navData[0]?.isActive ?
                     <View style={{ height: height * 0.7 }} >
@@ -403,7 +401,6 @@ const PersonalDetailsSetting = () => {
                             style={{ 
                                 display: 'flex',
                                 borderRadius: 8,
-                                maxHeight: isEditable ? isKeyboardOpen ? height * 0.42 : height * 0.6 : height * 0.6,
                                 borderColor: "#DDDDDD",
                                 marginTop: 16,
                                 borderWidth: 1,
@@ -427,9 +424,7 @@ const PersonalDetailsSetting = () => {
                             style={{ 
                                 display: 'flex',
                                 borderRadius: 8,
-                                maxHeight: height - 200,
                                 borderColor: "#DDDDDD",
-                                marginTop: 16,
                                 borderWidth: 1,
                                 paddingHorizontal: 12,
                                 paddingVertical: 12,
@@ -533,7 +528,6 @@ const PersonalDetailsSetting = () => {
 const styles = StyleSheet.create({
     container: {
         paddingHorizontal: 16,
-        paddingTop: 62,
         flex: 1,
         position: 'relative'
     },

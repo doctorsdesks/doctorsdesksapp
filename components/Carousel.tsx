@@ -40,7 +40,7 @@ const Carousel = () => {
   };
 
   return (
-    <ThemedView style={[styles.container, { position: 'relative' }]}>
+    <ThemedView style={[styles.container]}>
       <Animated.ScrollView
         ref={scrollViewRef}
         horizontal

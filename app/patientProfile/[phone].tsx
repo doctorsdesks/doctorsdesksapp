@@ -4,7 +4,6 @@ import { View, StyleSheet, Dimensions, Image, Pressable, BackHandler } from 'rea
 import Svg, { Path, Rect, G, Defs, ClipPath } from 'react-native-svg';
 import { finalText, getPatient } from '@/components/Utils';
 import Toast from 'react-native-toast-message';
-import MainHeader from '@/components/MainHeader';
 import { ThemedView } from '@/components/ThemedView';
 import { ThemedText } from '@/components/ThemedText';
 import { useAppContext } from '@/context/AppContext';
@@ -78,7 +77,6 @@ const PatientProfile = () => {
     if (loading) {
         return (
             <ThemedView style={styles.container} >
-                <MainHeader selectedNav="patientProfile" />
                 <Loader />
             </ThemedView>
         );
@@ -87,7 +85,6 @@ const PatientProfile = () => {
     if (error || !patientDetails) {
         return (
             <ThemedView style={styles.container} >
-                <MainHeader selectedNav="patientProfile" />
                 <ThemedText  style={styles.errorText} >{finalText(error || 'Patient not found', translations, selectedLanguage)} </ThemedText>
             </ThemedView>
         );
@@ -100,7 +97,6 @@ const PatientProfile = () => {
 
     return (
         <ThemedView style={styles.container} >
-            <MainHeader selectedNav="patientProfile" title={patientDetails?.name} />
             <View style={[styles.profileCard, { width: width }]}>
                 <View style={styles.profileHeader}>
                     {patientDetails?.imageUrl !== "" ? 
@@ -238,12 +234,10 @@ const PatientProfile = () => {
 const styles = StyleSheet.create({
     container: {
         paddingHorizontal: 16,
-        paddingTop: 62,
-        height: "100%",
+        flex: 1,
         position: 'relative',
     },
     profileCard: {
-        marginTop: 20,
         backgroundColor: '#2DB9B0',
         borderRadius: 24,
         borderTopLeftRadius: 0,
