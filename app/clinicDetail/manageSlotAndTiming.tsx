@@ -1,7 +1,6 @@
 import CustomButton from '@/components/CustomButton';
 import CustomInput2 from '@/components/CustomInput2';
 import Loader from '@/components/Loader';
-import MainHeader from '@/components/MainHeader';
 import ManageSlotTiming from '@/components/ManageSlotTiming';
 import Navbar, { NavbarObject } from '@/components/Navbar';
 import { ThemedText } from '@/components/ThemedText';
@@ -194,7 +193,6 @@ const ManageSlotDurationAndTiming = () => {
             <Loader />
         :
             <ThemedView style={styles.container} >
-                <MainHeader selectedNav={ isAddSlots ? 'manageSlotTiming' : 'manageSlotAndTiming'} />
                 {!isAddSlots && <Navbar data={navData} onClick={handleNavClick} />}
                 {/* For slot duration Nav */}
                 {navData[0]?.isActive && 
@@ -211,7 +209,7 @@ const ManageSlotDurationAndTiming = () => {
                 }
                 {/* For clinic timings Nav */}
                 {navData[1]?.isActive && !isAddSlots &&
-                    <View style={{ marginTop: 24, height: (height * 0.7 - 16) }} >
+                    <View style={{ marginTop: 24 }} >
                         <ThemedText style={{ fontSize: 16, lineHeight: 20, fontWeight: 600 }} >{finalText("Clinic Timings for each day", translations, selectedLanguage)} </ThemedText>
                         {timings?.length > 0 ?
                             <ScrollView
@@ -219,7 +217,7 @@ const ManageSlotDurationAndTiming = () => {
                                 style={{ 
                                     display: 'flex',
                                     paddingVertical: 16,
-                                    maxHeight: height - 240,
+                                    maxHeight: height - 260,
                                 }}
                             >
                                 <View style={{ paddingBottom: 16 }} >
@@ -296,7 +294,6 @@ const ManageSlotDurationAndTiming = () => {
 const styles = StyleSheet.create({
     container: {
         paddingHorizontal: 16,
-        paddingTop: 62,
         flex: 1,
         position: 'relative'
     },

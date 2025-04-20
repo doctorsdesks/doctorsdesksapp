@@ -1,7 +1,6 @@
 import CustomButton from '@/components/CustomButton';
 import CustomInput2 from '@/components/CustomInput2';
 import Loader from '@/components/Loader';
-import MainHeader from '@/components/MainHeader';
 import { ThemedView } from '@/components/ThemedView';
 import { getClinics, updateClinic } from '@/components/Utils';
 import { StringObject } from '@/constants/Enums';
@@ -134,7 +133,6 @@ const ConsultationFee = () => {
             <Loader />
         :
             <ThemedView style={styles.container} >
-                <MainHeader selectedNav='consultationFee' />
                 <View style={{ marginTop: 32, borderWidth: 1, borderRadius: 8, borderColor: "#DDDDDDDD", padding: 16, maxHeight: height * 0.4 }} >
                     {data?.map((item: StringObject) => {
                         return (
@@ -154,7 +152,6 @@ const ConsultationFee = () => {
 const styles = StyleSheet.create({
     container: {
         paddingHorizontal: 16,
-        paddingTop: 62,
         flex: 1,
         position: 'relative'
     },

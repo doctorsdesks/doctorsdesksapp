@@ -1,6 +1,4 @@
 import Loader from '@/components/Loader';
-import MainFooter from '@/components/MainFooter';
-import MainHeader from '@/components/MainHeader';
 import { ThemedView } from '@/components/ThemedView';
 import { finalText, logout } from '@/components/Utils';
 import { useAppContext } from '@/context/AppContext';
@@ -54,7 +52,6 @@ const Profile = () => {
 
     return (
         <ThemedView style={styles.container} >
-            <MainHeader selectedNav='profile' />
             <View style={{ position: 'relative', width: width, marginLeft: -16 }} >
                 <LinearGradient
                     colors={['#2DB9B0', '#14534F']}
@@ -85,7 +82,8 @@ const Profile = () => {
             </View>
             <ScrollView 
                 ref={scrollViewRef}
-                style={{ maxHeight: height - 340 }} 
+                style={{ maxHeight: height - 320  }} 
+                contentContainerStyle={{ paddingBottom: 20 }}
             >
                 <View style={{ marginTop: 16, borderRadius: 8, borderColor: "#D9D9D9", borderWidth: 1, display: 'flex', flexDirection: 'column', paddingHorizontal: 16, paddingRight: 8, paddingVertical: 12, width: "100%" }} >
                     <Pressable
@@ -176,7 +174,6 @@ const Profile = () => {
                     </Pressable>
                 </View>
             </ScrollView>
-            <MainFooter selectedNav='profile' />
             {loader && <Loader />}
         </ThemedView>
     )
@@ -185,9 +182,7 @@ const Profile = () => {
 const styles = StyleSheet.create({
     container: {
         paddingHorizontal: 16,
-        paddingTop: 62,
-        height: "100%",
-        position: 'relative'
+        paddingBottom: 80, // Increased bottom padding to account for footer
     },
     profileImage: {
         width: 100,

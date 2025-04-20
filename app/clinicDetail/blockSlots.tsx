@@ -1,7 +1,6 @@
 import AppointmentDateSelector from '@/components/AppointmentDateSelector';
 import CustomButton from '@/components/CustomButton';
 import Loader from '@/components/Loader';
-import MainHeader from '@/components/MainHeader';
 import Slot from '@/components/Slot';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
@@ -152,11 +151,10 @@ const BlockSlots = () => {
 
     return (
         <ThemedView style={styles.container} >
-            <MainHeader selectedNav="block" />
             <View style={{ marginTop: 12 }} >
                 <AppointmentDateSelector handleDateChange={handleDateChange} />
             </View>
-            <View style={{ height: height * 0.65 }} >
+            <View style={{ height: height * 0.6 }} >
                 <ScrollView
                     ref={scrollViewRef} 
                     style={{ marginTop: 20 }}>
@@ -201,7 +199,6 @@ const BlockSlots = () => {
 const styles = StyleSheet.create({
     container: {
         paddingHorizontal: 16,
-        paddingTop: 62,
         flex: 1,
         position: 'relative'
     },

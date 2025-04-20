@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { View } from 'react-native';
 import Onboarding from '../components/Onboarding';
 import { getSecureKey, getTranslations } from '@/components/Utils';
 import { router } from 'expo-router';
 import { useAppContext } from '@/context/AppContext';
 import Loader from '@/components/Loader';
 import Toast from 'react-native-toast-message';
-import { ThemedView } from '@/components/ThemedView';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const OnboardingScreen = () => {
     const { setSelectedLanguage, setTranslations } = useAppContext();
@@ -66,9 +65,9 @@ const OnboardingScreen = () => {
     return (
         loader ? <Loader />
         :
-            <ThemedView>
+            <SafeAreaView style={{ flex: 1 }}>
                 <Onboarding />
-            </ThemedView>
+            </SafeAreaView>
     );
 };
 

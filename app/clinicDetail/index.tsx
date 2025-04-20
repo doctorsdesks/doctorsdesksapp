@@ -9,7 +9,6 @@ import { signUpDetailsInitial } from '@/context/InitialState';
 import CustomRadio from '@/components/CustomRadio';
 import { router } from 'expo-router';
 import Loader from '@/components/Loader';
-import MainHeader from '@/components/MainHeader';
 import { ThemedView } from '@/components/ThemedView';
 
 const ClinicDetailsSetting = () => {
@@ -195,7 +194,6 @@ const ClinicDetailsSetting = () => {
             <Loader />
         :
             <ThemedView style={styles.container} >
-                <MainHeader selectedNav='clinicDetails' />
                 <View style={{ height: height * 0.75 }} >
                     <ScrollView
                         ref={scrollViewRef}
@@ -229,7 +227,6 @@ const ClinicDetailsSetting = () => {
 const styles = StyleSheet.create({
     container: {
         paddingHorizontal: 16,
-        paddingTop: 62,
         flex: 1,
         position: 'relative'
     },

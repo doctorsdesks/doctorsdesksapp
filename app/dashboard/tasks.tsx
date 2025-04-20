@@ -4,8 +4,6 @@ import CustomInput2 from '@/components/CustomInput2';
 import CustomPopUp from '@/components/CustomPopUp';
 import Icon from '@/components/Icons';
 import Loader from '@/components/Loader';
-import MainFooter from '@/components/MainFooter';
-import MainHeader from '@/components/MainHeader';
 import Navbar, { NavbarObject } from '@/components/Navbar';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
@@ -161,12 +159,12 @@ const Tasks = () => {
 
     return (
         <ThemedView style={styles.container} >
-            <MainHeader selectedNav="task" />
             <Navbar data={navData} onClick={handleNavClick} />
             <View style={{ height: height - 180 }} >
                 <ScrollView
                     ref={scrollViewRef} 
-                    style={{ marginTop: 20 }}>
+                    contentContainerStyle={{ paddingBottom: 20, marginTop: 20 }}
+                >
                     {filteredAppointments?.length === 0 ?
                         <View style={{ 
                             marginTop: 12, 
@@ -212,7 +210,6 @@ const Tasks = () => {
                     </ThemedView>
                 </CustomPopUp>
             }
-            <MainFooter selectedNav='task' />
             {loader && <Loader />}
         </ThemedView>
     );
@@ -221,9 +218,8 @@ const Tasks = () => {
 const styles = StyleSheet.create({
     container: {
         paddingHorizontal: 16,
-        paddingTop: 62,
-        height: "100%",
-        position: 'relative'
+        paddingTop: 20,
+        paddingBottom: 80, // Increased bottom padding to account for footer
     },
     closeButton: {
         padding: 8,

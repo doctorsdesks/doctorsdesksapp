@@ -7,17 +7,7 @@ import { Pressable, StyleSheet } from 'react-native';
 
 export default function () {
     const { allowBack } = useLocalSearchParams();
-    const { signUpDetails, setSignUpDetails } = useAppContext();
-
-    const colorScheme = useColorScheme() || 'light';
     
-    // const handleBackPress = () => {
-    //     if( signUpDetails?.phoneOTPDetails?.otpTriggered) {
-    //         setSignUpDetails({ ...signUpDetails, phoneOTPDetails: { ...signUpDetails.phoneOTPDetails, otpTriggered: false }})
-    //     } else {
-    //         router.replace('/')
-    //     }
-    // }
 
     const handleBackPress = (currentPage: string) => {
         if (currentPage === "login") {
@@ -25,9 +15,6 @@ export default function () {
         } else if(currentPage === "numberPassword") {
             router.replace('/login')
         } 
-        // else if (currentPage === "singup") {
-        //     router.replace('/login/numberPassword');
-        // }
     }
 
     return (

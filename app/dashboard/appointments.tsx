@@ -1,8 +1,6 @@
 import AppointmentCardTwo from '@/components/AppointmentCardTwo';
 import AppointmentDateSelector from '@/components/AppointmentDateSelector';
 import Loader from '@/components/Loader';
-import MainFooter from '@/components/MainFooter';
-import MainHeader from '@/components/MainHeader';
 import Navbar, { NavbarObject } from '@/components/Navbar';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
@@ -152,7 +150,6 @@ const Appointments = () => {
 
     return (
         <ThemedView style={styles.container} >
-            <MainHeader selectedNav="appointment" />
             <Navbar data={navData} onClick={handleNavClick} source="appointment" />
             <View style={{ marginTop: 24 }} >
                 <AppointmentDateSelector handleDateChange={handleDateChange} />
@@ -160,14 +157,15 @@ const Appointments = () => {
             <View style={{ height: height - 320 }} >
                 <ScrollView
                     ref={scrollViewRef} 
-                    style={{ marginTop: 20 }}>
+                    style={{ marginTop: 20, height: height - 320 }}
+                    contentContainerStyle={{ paddingBottom: 20 }}
+                >
                     {filteredAppointments?.length === 0 ?
                         <View style={{ 
-                            marginTop: 12, 
-                            height: 320,
+                            marginTop: 20,
                             marginHorizontal: 4,
-                            marginBottom: 12,
-                            display: 'flex', 
+                            marginBottom: 20,
+                            padding: 20,
                             alignItems: 'center', 
                             backgroundColor: Colors[colorScheme].cardBg,
                             shadowColor: '#000000',
@@ -188,7 +186,6 @@ const Appointments = () => {
                     })}
                 </ScrollView>
             </View>
-            <MainFooter selectedNav='appointment' />
             {loader && <Loader />}
         </ThemedView>
     );
@@ -197,9 +194,8 @@ const Appointments = () => {
 const styles = StyleSheet.create({
     container: {
         paddingHorizontal: 16,
-        paddingTop: 62,
-        height: "100%",
-        position: 'relative'
+        paddingTop: 20,
+        paddingBottom: 80, // Increased bottom padding to account for footer
     },
 });
 

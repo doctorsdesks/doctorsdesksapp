@@ -1,11 +1,11 @@
 import React from 'react';
-import { View, StyleSheet, Dimensions } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import CustomButton from './CustomButton';
 import Carousel from './Carousel';
 import { router } from 'expo-router';
 import { ThemedView } from './ThemedView';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
-const { height } = Dimensions.get('window');
 
 const Onboarding = () => {
 
@@ -14,25 +14,28 @@ const Onboarding = () => {
   };
 
   return (
-    <ThemedView style={styles.container}>
-      <Carousel />
-      <View style={styles.buttonContainer}>
-        <CustomButton width='FULL' title="Get Started" onPress={handlePress} />
-      </View>
-    </ThemedView>
+    <SafeAreaView style={{ flex: 1 }} >
+      <ThemedView style={styles.container}>
+        <Carousel />
+        <View style={styles.buttonContainer}>
+          <CustomButton width='FULL' title="Get Started" onPress={handlePress} />
+        </View>
+      </ThemedView>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    height: height,
+    flex: 1,
     position: 'relative',
   },
   buttonContainer: {
     position: 'absolute',
-    bottom: 64, // Increased from 16 to ensure visibility
+    bottom: 16, // Increased from 16 to ensure visibility
     left: 16,
     right: 16,
+    paddingBottom: 16,
     alignItems: 'center',
     zIndex: 999, // Higher zIndex to ensure it's above everything
   },

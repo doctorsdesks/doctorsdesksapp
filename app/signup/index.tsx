@@ -447,7 +447,7 @@ const style = StyleSheet.create({
         paddingHorizontal: 16, 
         paddingTop: 16,
         paddingBottom: 20,
-        height: "100%"
+        flex: 1,
     }
 });
 

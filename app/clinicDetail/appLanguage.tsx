@@ -1,5 +1,3 @@
-import CustomText from '@/components/CustomText';
-import MainHeader from '@/components/MainHeader';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { finalText } from '@/components/Utils';
@@ -37,7 +35,6 @@ const AppLanguage = () => {
 
     return (
         <ThemedView style={styles.container} >
-            <MainHeader selectedNav='appLanguage' />
             <ThemedText  style={{ fontSize: 16, marginTop: 32, lineHeight: 20, fontWeight: 600 }} >{finalText("Select Language", translations, selectedLanguage)} </ThemedText>
             <View style={{ 
                     display: 'flex',
@@ -71,9 +68,7 @@ const AppLanguage = () => {
 const styles = StyleSheet.create({
     container: {
         paddingHorizontal: 16,
-        paddingTop: 62,
-        height: "100%",
-        position: 'relative'
+        flex: 1,
     },
 });
 

@@ -45,7 +45,7 @@ const PatientList = (props: any) => {
 const styles = StyleSheet.create({
     list: {
         position: 'absolute',
-        top: 116,
+        top: 76,
         left: 16,
         right: 16,
         height: 290,
