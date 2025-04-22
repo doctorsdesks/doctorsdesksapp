@@ -42,7 +42,11 @@ const Slot: React.FC<SlotProps> = ({ slot, onSelectSlot, isSelected }) => {
 
     const getBgColor = () => {
         if (slot?.slotStatus === "LOCKED") {
-            return Colors[colorSchema].slotLockedBg;
+            if (isSelected) { 
+                return Colors[colorSchema].slotBackgroundSelectedUnlock;
+            } else {
+                return Colors[colorSchema].slotLockedBg;
+            }
         } else if (slot?.slotStatus === "BOOKED") {
             return Colors[colorSchema].slotBookedBg;
         } else if (isSelected) {
@@ -54,7 +58,11 @@ const Slot: React.FC<SlotProps> = ({ slot, onSelectSlot, isSelected }) => {
 
     const getTextColor = () => {
         if (slot?.slotStatus === "LOCKED") {
-            return Colors[colorSchema].slotLockedText;
+            if (isSelected) { 
+                return Colors[colorSchema].slotSelectedUnockedText;
+            } else {
+                return Colors[colorSchema].slotLockedText;
+            }
         } else if (slot?.slotStatus === "BOOKED") {
             return Colors[colorSchema].slotBookedText;
         } else if (isSelected) {
@@ -66,7 +74,11 @@ const Slot: React.FC<SlotProps> = ({ slot, onSelectSlot, isSelected }) => {
 
     const getBorderColor = () => {
         if (slot?.slotStatus === "LOCKED") {
-            return Colors[colorSchema].slotLockedBg;
+            if (isSelected) { 
+                return Colors[colorSchema].slotBackgroundSelectedUnlock;
+            } else {
+                return Colors[colorSchema].slotLockedBg;
+            }
         } else if (slot?.slotStatus === "BOOKED") {
             return Colors[colorSchema].slotBookedBg;
         } else if (isSelected) {
@@ -78,7 +90,11 @@ const Slot: React.FC<SlotProps> = ({ slot, onSelectSlot, isSelected }) => {
 
     const getIcon = () => {
         if (slot?.slotStatus === "LOCKED" || isSelected) {
-            return <Icon type="lock" fill={getTextColor()} />
+            if (slot?.slotStatus === "LOCKED" && isSelected) {
+                return <Ionicons name='lock-open-outline' size={12} style={{ color: getTextColor() }} />
+            } else {
+                return <Icon type="lock" fill={getTextColor()} />
+            }
         } else if (slot?.slotStatus === "BOOKED") {
             return <Ionicons name='checkmark-circle-sharp' size={12} style={{ color: getTextColor() }} />
         } else {
@@ -97,7 +113,7 @@ const Slot: React.FC<SlotProps> = ({ slot, onSelectSlot, isSelected }) => {
                     alignItems: 'center',
                     justifyContent: 'center'
                 }]}
-                onPress={() => slot?.slotStatus === "OPEN" && onSelectSlot(slot)}
+                onPress={() => (slot?.slotStatus === "OPEN" || slot?.slotStatus === "LOCKED") && onSelectSlot(slot)}
             >
                 {getIcon()}
                 <ThemedText style={{ fontSize: 12, lineHeight: 12, marginLeft: 8, fontWeight: 600, color: getTextColor() }} >{getSlotTime()}</ThemedText>

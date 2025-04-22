@@ -14,7 +14,7 @@ import { BackHandler, Dimensions, Image, ScrollView, StyleSheet, View } from 're
 import Toast from 'react-native-toast-message';
 
 const BlockSlots = () => {
-    const { height } = Dimensions.get('window');
+    const { height, width } = Dimensions.get('window');
     const scrollViewRef = React.useRef(null);
     const { doctorDetails, translations, selectedLanguage } = useAppContext();
     const [selectedDay, setSelectedDay] = useState<string>("");
@@ -115,17 +115,23 @@ const BlockSlots = () => {
         setLoader(true);
         const selectedSlots = getSelectedSlots();
         const appointments: any = []
+        const unblockSlots: any = []
         selectedSlots?.forEach((slot: any) => {
-            appointments.push({
-                doctorId: doctorDetails?.phone,
-                date: selectedDay,
-                startTime: slot?.startTime,
-                endTime: slot?.endTime,
-                isLockedByDoctor: true
-            });
+            if (slot?.slotStatus === "LOCKED") {
+                unblockSlots.push({ appointmentId: slot?.appointmentId });
+            } else {
+                appointments.push({
+                    doctorId: doctorDetails?.phone,
+                    date: selectedDay,
+                    startTime: slot?.startTime,
+                    endTime: slot?.endTime,
+                    isLockedByDoctor: true
+                });
+            }
         })
         const payload = {
-            appointments: appointments
+            appointments: appointments,
+            unblockSlots: unblockSlots
         }
         const respnose = await blockSlots(payload);
         if (respnose.status === "SUCCESS") {
@@ -149,15 +155,65 @@ const BlockSlots = () => {
         setSlotsToShow(finalSlots);
     }
 
+    const getBorderColor = (type?: string) => {
+        if (type === "LOCKED") {
+            return Colors[colorScheme].slotLockedBg;
+        } else if (type === "BOOKED") {
+            return Colors[colorScheme].slotBookedBg;
+        } else if (type === "SELECT_TO_LOCK") {
+            return Colors[colorScheme].slotBackgroundSelected;
+        } else if (type === "SELECT_TO_UNLOCK") {
+            return Colors[colorScheme].slotBackgroundSelectedUnlock;
+        } else {
+            return Colors[colorScheme].borderColor;
+        }
+    }
+
+    const getBgColor = (type?: string) => {
+        if (type === "LOCKED") {
+            return Colors[colorScheme].slotLockedBg;
+        } else if (type === "BOOKED") {
+            return Colors[colorScheme].slotBookedBg;
+        } else if (type === "SELECT_TO_LOCK") {
+            return Colors[colorScheme].slotBackgroundSelected;
+        } else if (type === "SELECT_TO_UNLOCK") {
+            return Colors[colorScheme].slotBackgroundSelectedUnlock;
+        } else {
+            return Colors[colorScheme].background;
+        }
+    }
+
     return (
         <ThemedView style={styles.container} >
             <View style={{ marginTop: 12 }} >
                 <AppointmentDateSelector handleDateChange={handleDateChange} />
             </View>
-            <View style={{ height: height * 0.6 }} >
+            <View style={{ marginTop: 12, borderWidth: 1, borderRadius: 12, borderColor: Colors[colorScheme].borderColor, width: width - 32, paddingVertical: 12, paddingHorizontal: 12, display: 'flex', flexDirection: 'row', flexWrap: 'wrap', rowGap: 10, justifyContent: 'space-around' }}>
+                <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center'}} >
+                    <View style={{ height: 16, width: 16, marginRight: 6, backgroundColor: getBgColor(""), borderWidth: 1, borderColor: getBorderColor(""), borderRadius: 4 }} />
+                    <ThemedText style={{ fontSize: 12, lineHeight: 16, fontWeight: 600 }} >{finalText("Open Slot", translations, selectedLanguage)}</ThemedText>
+                </View>
+                <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center'}} >
+                    <View style={{ height: 16, width: 16, marginRight: 6, backgroundColor: getBgColor("LOCKED"), borderWidth: 1, borderColor: getBorderColor("LOCKED"), borderRadius: 4 }} />
+                    <ThemedText style={{ fontSize: 12, lineHeight: 16, fontWeight: 600 }} >{finalText("Locked Slot", translations, selectedLanguage)}</ThemedText>
+                </View>
+                <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center'}} >
+                    <View style={{ height: 16, width: 16, marginRight: 6, backgroundColor: getBgColor("BOOKED"), borderWidth: 1, borderColor: getBorderColor("BOOKED"), borderRadius: 4 }} />
+                    <ThemedText style={{ fontSize: 12, lineHeight: 16, fontWeight: 600 }} >{finalText("Booked Slot", translations, selectedLanguage)}</ThemedText>
+                </View>
+                <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center'}} >
+                    <View style={{ height: 16, width: 16, marginRight: 6, backgroundColor: getBgColor("SELECT_TO_LOCK"), borderWidth: 1, borderColor: getBorderColor("SELECT_TO_LOCK"), borderRadius: 4 }} />
+                    <ThemedText style={{ fontSize: 12, lineHeight: 16, fontWeight: 600 }} >{finalText("Selected to Lock", translations, selectedLanguage)}</ThemedText>
+                </View>
+                <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center'}} >
+                    <View style={{ height: 16, width: 16, marginRight: 6, backgroundColor: getBgColor("SELECT_TO_UNLOCK"), borderWidth: 1, borderColor: getBorderColor("SELECT_TO_UNLOCK"), borderRadius: 4 }} />
+                    <ThemedText style={{ fontSize: 12, lineHeight: 16, fontWeight: 600 }} >{finalText("Selected to Unlock", translations, selectedLanguage)}</ThemedText>
+                </View>
+            </View>
+            <View style={{ height: height * 0.52 }} >
                 <ScrollView
                     ref={scrollViewRef} 
-                    style={{ marginTop: 20 }}>
+                    style={{ marginTop: 16 }}>
                     {slotsToShow?.length === 0 ?
                         <View style={{ 
                             marginTop: 12, 
