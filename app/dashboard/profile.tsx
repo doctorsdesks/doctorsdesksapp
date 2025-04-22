@@ -144,7 +144,7 @@ const Profile = () => {
                     >
                         <View style={{ display: 'flex', alignItems: 'center', flexDirection: 'row' }} >
                             <Icon type='clinicSetting' />   
-                            <ThemedText style={{ marginLeft: 8, fontSize: 15, lineHeight: 24, fontWeight: 500 }} >{finalText("Block Slots", translations, selectedLanguage)} </ThemedText>
+                            <ThemedText style={{ marginLeft: 8, fontSize: 15, lineHeight: 24, fontWeight: 500 }} >{finalText("Block & Unblock Slots", translations, selectedLanguage)} </ThemedText>
                         </View>
                         <Icon type='arrowRight' />
                     </Pressable>
