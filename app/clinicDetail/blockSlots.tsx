@@ -245,7 +245,7 @@ const BlockSlots = () => {
                 </ScrollView>
             </View>
             {!loader && <View style={{ display: "flex", alignItems: "center", position: 'absolute', bottom: 16, right: 16, left: 16, paddingBottom: 16 }} >
-                <CustomButton multiLingual={true} width='FULL' title="Block Slots" onPress={handleBlock}  isDisabled={handleDisable()} />
+                <CustomButton multiLingual={true} width='FULL' title="Submit" onPress={handleBlock}  isDisabled={handleDisable()} />
             </View>}
             {loader && <Loader />}
         </ThemedView>
