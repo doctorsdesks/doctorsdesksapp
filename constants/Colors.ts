@@ -8,6 +8,7 @@ const tintColorDark = '#fff';
 
 export const Colors = {
   light: {
+    bannerDefaultBg: "#2DB9B0",
     text: '#11181C',
     background: '#fcfcfc',
     cardBg: "#ffffff",
@@ -51,6 +52,7 @@ export const Colors = {
     textNotSelected: "#A9A9AB",
   },
   dark: {
+    bannerDefaultBg: "#2DB9B0",
     text: '#ECEDEE',
     background: '#151718',
     cardBg: "#000000",
