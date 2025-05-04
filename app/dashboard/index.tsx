@@ -9,7 +9,7 @@ import PatientList from '@/components/PatientList';
 import SearchBar from '@/components/SearchBar';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
-import { finalText, formatDateToYYYYMMDD, getAppointments, getDfo, getDoctorDetails, getPatientList, getSecureKey, getTranslations } from '@/components/Utils';
+import { finalText, formatDateToYYYYMMDD, getAppointments, getDfo, getDoctorDetails, getPatientList, getSecureKey } from '@/components/Utils';
 import { Colors } from '@/constants/Colors';
 import { AppointmentStatus, DocStatusType, PatientListProps } from '@/constants/Enums';
 import { URLS } from '@/constants/Urls';
@@ -20,14 +20,12 @@ import axios from 'axios';
 import { router } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { Dimensions, Image, Pressable, ScrollView, StyleSheet, View } from 'react-native';
-import { Path, Rect, Svg } from 'react-native-svg';
 import Toast from 'react-native-toast-message';
 
 
 const Home = () => {
     const { setDoctorDetails, setDfo, translations, selectedLanguage } = useAppContext();
-    const scrollViewRef = React.useRef(null);
-    const { width, height } = Dimensions.get('window');
+    const { width } = Dimensions.get('window');
     const [isListOpened, setIsListOpened] = useState<boolean>(false);
     const [loader, setLoader] = useState<boolean>(true);
     const [appointments, setAppointments] = useState<Array<any>>([]);

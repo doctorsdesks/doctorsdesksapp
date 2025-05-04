@@ -60,14 +60,3 @@ const SearchBar: React.FC<SearchBarProps> = ({ searchPatients, listOpened, showP
 };
 
 export default SearchBar;
-
-const styles = StyleSheet.create({
-    input: {
-        borderWidth: 1,
-        borderRadius: 4,
-        padding: 10,
-        fontSize: 16,
-        borderColor: '#303135',
-        width: "90%",
-    },
-});
