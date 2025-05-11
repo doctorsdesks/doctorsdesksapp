@@ -1,12 +1,15 @@
 import Icon from '@/components/Icons';
+import { Colors } from '@/constants/Colors';
 import { useAppContext } from '@/context/AppContext';
 import { signUpDetailsInitial } from '@/context/InitialState';
+import { useColorScheme } from '@/hooks/useColorScheme.web';
 import { router, Stack } from 'expo-router';
 import React from 'react';
 import { Pressable, StyleSheet } from 'react-native';
 
 export default function () {
     const { signUpHeaderData, setSignUpHeaderData, signUpDetails, setSignUpDetails } = useAppContext();
+    const colorScheme = useColorScheme() ?? 'light';
     return (
         <Stack>
             <Stack.Screen
@@ -46,7 +49,7 @@ export default function () {
                                 })
                             }
                         }}>
-                            <Icon type='goBack' />
+                            <Icon type='goBack' fill={Colors[colorScheme].icon} />
                         </Pressable>
                     ),
                     headerTitleAlign: 'center',

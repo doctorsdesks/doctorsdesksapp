@@ -7,11 +7,14 @@ import { finalText } from '@/components/Utils';
 import { ThemedView } from '@/components/ThemedView';
 import { ThemedText } from '@/components/ThemedText';
 import Icon from '@/components/Icons';
+import { Colors } from '@/constants/Colors';
+import { useColorScheme } from '@/hooks/useColorScheme.web';
 
 export default function ClinicDetailLayout() {
     const pathname = usePathname();
     const { translations, selectedLanguage } = useAppContext();
     const { width } = Dimensions.get('window');
+    const colorScheme = useColorScheme() ?? 'light';
     
     // Determine the current route for header
     const [currentRoute, setCurrentRoute] = useState('clinicDetails');
@@ -102,7 +105,7 @@ export default function ClinicDetailLayout() {
                     style={{ position: 'absolute', left: 16, top: 12, height: 32 }} 
                     onPress={handleBackNav}
                 >
-                    <Icon type="goBack" />
+                    <Icon type='goBack' fill={Colors[colorScheme].icon} />
                 </Pressable>
                 <ThemedText style={styles.headerText}>
                     {finalText(getHeaderTitle(), translations, selectedLanguage)}
@@ -138,7 +141,6 @@ const styles = StyleSheet.create({
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.2,
         shadowRadius: 2,
-        backgroundColor: '#FFFFFF',
         zIndex: 100,
     },
     headerText: {

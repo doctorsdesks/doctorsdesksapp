@@ -9,12 +9,15 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { DocStatusType } from '@/constants/Enums';
 import { ThemedText } from '@/components/ThemedText';
 import Icon from '@/components/Icons';
+import { Colors } from '@/constants/Colors';
+import { useColorScheme } from '@/hooks/useColorScheme.web';
 
 const Profile = () => {
     const { setDoctorDetails, doctorDetails, translations, selectedLanguage } = useAppContext();
     const { width, height } = Dimensions.get('window');
     const scrollViewRef = React.useRef(null);
     const [loader, setLoader] = useState<boolean>(false);
+    const colorScheme = useColorScheme() ?? 'light';
 
     const handleLogout = async () => {
         setLoader(true);
@@ -76,7 +79,7 @@ const Profile = () => {
                     }
                 </View>
             </View>
-            <View style={{ marginTop: 56, display: 'flex', alignItems: 'center' }}>
+            <View style={{ marginTop: 56, display: 'flex', alignItems: 'center', marginBottom: 12 }}>
                 <ThemedText style={{ fontSize: 14, lineHeight: 14, fontWeight: 500 }} >Dr. {doctorDetails?.name}</ThemedText>
                 <ThemedText style={{ fontSize: 12, lineHeight: 12, fontWeight: 400, marginTop: 6 }} >{getQualification()}</ThemedText>
             </View>
@@ -93,10 +96,10 @@ const Profile = () => {
                         style={{ paddingVertical: 8, display: 'flex', flexDirection:'row', justifyContent: 'space-between', alignItems: 'center' }} 
                     >
                         <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }} >
-                            <Icon type='personalProfile' />
+                            <Icon type='personalProfile' fill={Colors[colorScheme].icon} />
                             <ThemedText style={{ marginLeft: 8, fontSize: 15, lineHeight: 24, fontWeight: 500 }} >{finalText("Personal Details", translations, selectedLanguage)}</ThemedText>
                         </View>
-                        <Icon type='arrowRight' />
+                        <Icon type='arrowRight' fill={Colors[colorScheme].icon} />
                     </Pressable>
                     <Pressable 
                         onPress={() => {
@@ -105,10 +108,10 @@ const Profile = () => {
                         style={{ paddingVertical: 8, display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 8 }} 
                     >
                         <View style={{ display: 'flex', alignItems: 'center', flexDirection: 'row' }} >
-                            <Icon type='clinicAddress' />
+                            <Icon type='clinicAddress' fill={Colors[colorScheme].icon} />
                             <ThemedText style={{ marginLeft: 8, fontSize: 15, lineHeight: 24, fontWeight: 500 }} >{finalText("Clinic Address", translations, selectedLanguage)} </ThemedText>
                         </View>
-                        <Icon type='arrowRight' />
+                        <Icon type='arrowRight' fill={Colors[colorScheme].icon} />
                     </Pressable>
                 </View>
                 <View style={{ borderRadius: 8, borderColor: "#D9D9D9", borderWidth: 1, display: 'flex', flexDirection: 'column', paddingHorizontal: 16, paddingRight: 8, paddingVertical: 12, width: "100%", marginTop: 16 }} >
@@ -119,10 +122,10 @@ const Profile = () => {
                         style={{ paddingVertical: 8, display: 'flex', flexDirection:'row', justifyContent: 'space-between', alignItems: 'center' }} 
                     >
                         <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }} >
-                            <Icon type='clinicSetting' />
+                            <Icon type='clinicSetting' fill={Colors[colorScheme].icon} />
                             <ThemedText style={{ marginLeft: 8, fontSize: 15, lineHeight: 24, fontWeight: 500 }} >{finalText("Clinic Timings", translations, selectedLanguage)} </ThemedText>
                         </View>
-                        <Icon type='arrowRight' />
+                        <Icon type='arrowRight' fill={Colors[colorScheme].icon} />
                     </Pressable>
                     <Pressable 
                         onPress={() => {
@@ -131,10 +134,10 @@ const Profile = () => {
                         style={{ paddingVertical: 8, display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 8 }} 
                     >
                         <View style={{ display: 'flex', alignItems: 'center', flexDirection: 'row' }} >
-                            <Icon type='clinicSetting' />
+                            <Icon type='clinicSetting' fill={Colors[colorScheme].icon} />
                             <ThemedText style={{ marginLeft: 8, fontSize: 15, lineHeight: 24, fontWeight: 500 }} >{finalText("Consultation Fees", translations, selectedLanguage)} </ThemedText>
                         </View>
-                        <Icon type='arrowRight' />
+                        <Icon type='arrowRight' fill={Colors[colorScheme].icon} />
                     </Pressable>
                     <Pressable 
                         onPress={() => {
@@ -143,10 +146,10 @@ const Profile = () => {
                         style={{ paddingVertical: 8, display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 8 }} 
                     >
                         <View style={{ display: 'flex', alignItems: 'center', flexDirection: 'row' }} >
-                            <Icon type='clinicSetting' />   
+                            <Icon type='clinicSetting' fill={Colors[colorScheme].icon} />   
                             <ThemedText style={{ marginLeft: 8, fontSize: 15, lineHeight: 24, fontWeight: 500 }} >{finalText("Block & Unblock Slots", translations, selectedLanguage)} </ThemedText>
                         </View>
-                        <Icon type='arrowRight' />
+                        <Icon type='arrowRight' fill={Colors[colorScheme].icon} />
                     </Pressable>
                 </View>
                 <View style={{ borderRadius: 8, borderColor: "#D9D9D9", borderWidth: 1, display: 'flex', flexDirection: 'column', paddingHorizontal: 16, paddingRight: 8, paddingVertical: 12, width: "100%", marginTop: 16 }} >
@@ -157,20 +160,20 @@ const Profile = () => {
                         style={{ paddingVertical: 8, display: 'flex', flexDirection:'row', justifyContent: 'space-between', alignItems: 'center' }} 
                     >
                         <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }} >
-                            <Icon type='clinicSetting' />
+                            <Icon type='clinicSetting' fill={Colors[colorScheme].icon} />
                             <ThemedText style={{ marginLeft: 8, fontSize: 15, lineHeight: 24, fontWeight: 500 }} >{finalText("App Language", translations, selectedLanguage)} </ThemedText>
                         </View>
-                        <Icon type='arrowRight' />
+                        <Icon type='arrowRight' fill={Colors[colorScheme].icon} />
                     </Pressable>
                     <Pressable 
                         onPress={handleLogout}
                         style={{ paddingVertical: 8, display: 'flex', flexDirection:'row', justifyContent: 'space-between', alignItems: 'center' }}
                     >
                         <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }} >
-                            <Icon type='logout' />
+                            <Icon type='logout' fill={Colors[colorScheme].icon} />
                             <ThemedText style={{ marginLeft: 8, fontSize: 15, lineHeight: 24, fontWeight: 500 }} >{finalText("Logout", translations, selectedLanguage)} </ThemedText>
                         </View>
-                        <Icon type='arrowRight' />
+                        <Icon type='arrowRight' fill={Colors[colorScheme].icon} />
                     </Pressable>
                 </View>
             </ScrollView>

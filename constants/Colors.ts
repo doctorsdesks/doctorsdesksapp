@@ -87,7 +87,7 @@ export const Colors = {
     crossIcon: "#212B46",
     bannerInfoBg: "#FFB73F",
     bannerInfoText: "#fff",
-    bannerInfoSubText: "#32383D",
+    bannerInfoSubText: "#757575",
     appointmentIcon: "#1EA6D6",
     slotLockedBg: "#EA4E63",
     slotLockedText: "#ffffff",

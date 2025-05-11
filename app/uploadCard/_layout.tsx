@@ -1,3 +1,6 @@
+import Icon from '@/components/Icons';
+import { Colors } from '@/constants/Colors';
+import { useColorScheme } from '@/hooks/useColorScheme.web';
 import { Ionicons } from '@expo/vector-icons';
 import { router, Stack, useLocalSearchParams } from 'expo-router';
 import React from 'react';
@@ -5,6 +8,7 @@ import { Pressable, StyleSheet } from 'react-native';
 
 export default function () {
     const { docType } = useLocalSearchParams();
+    const colorScheme = useColorScheme() ?? 'light';
     return (
         <Stack>
             <Stack.Screen
@@ -18,7 +22,7 @@ export default function () {
                                 currentStep: "IDP"
                             }
                         })}>
-                            <Ionicons style={styles.icon} name="arrow-back" size={24} color="black" />
+                            <Icon type='goBack' fill={Colors[colorScheme].icon} />
                         </Pressable>
                     ),
                     headerTitleAlign: 'center',

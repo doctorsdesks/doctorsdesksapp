@@ -4,7 +4,7 @@ import Loader from '@/components/Loader';
 import Navbar, { NavbarObject } from '@/components/Navbar';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
-import { finalText, formatDateToYYYYMMDD, getAppointments } from '@/components/Utils';
+import { finalText, formatDateToYYYYMMDD, getAppointments, getSecureKey } from '@/components/Utils';
 import { Colors } from '@/constants/Colors';
 import { AppointmentStatus, AppointmentType } from '@/constants/Enums';
 import { URLS } from '@/constants/Urls';
@@ -113,12 +113,14 @@ const Appointments = () => {
             appointmentUpdateType: status,
             updatedBy: "DOCTOR"
         }
-        const url = URLS.BASE + URLS.GET_APPOINTMENTS + "/" + appointmentId;
+        const url = URLS.BASE + URLS.GET_APPOINTMENTS + "/update?id=" + appointmentId;
+        const authToken = await getSecureKey("userAuthtoken");
         try {
             const response = await axios.post(url, updateData,
               {
                 headers: {
-                  'X-Requested-With': 'doctorsdesks_web_app',
+                    'X-Requested-With': 'nirvaanhealth_web_app',
+                    "Authorization": `Bearer ${authToken}`
                 },
               }
             );
@@ -157,7 +159,7 @@ const Appointments = () => {
             <View style={{ height: height - 320 }} >
                 <ScrollView
                     ref={scrollViewRef} 
-                    style={{ marginTop: 20, height: height - 320 }}
+                    style={{ height: height - 320 }}
                     contentContainerStyle={{ paddingBottom: 20 }}
                 >
                     {filteredAppointments?.length === 0 ?
@@ -180,10 +182,11 @@ const Appointments = () => {
                         </View>
                     : 
                         filteredAppointments?.map((appointment: any, index: number) => {
-                        return (
-                            <AppointmentCardTwo key={appointment?._id} lastAppointment={index === filteredAppointments?.length - 1} firstAppointment={index === 0} status={appointment?.status} name={appointment?.doctorName} number={appointment?.patientId} startTime={appointment?.startTime} handleStatusUpdate={(status: string) => handleStatusUpdate(status, appointment?._id)} />
-                        );
-                    })}
+                            return (
+                                <AppointmentCardTwo key={appointment?._id} lastAppointment={index === filteredAppointments?.length - 1} firstAppointment={index === 0} status={appointment?.status} name={appointment?.doctorName} number={appointment?.patientId} startTime={appointment?.startTime} handleStatusUpdate={(status: string) => handleStatusUpdate(status, appointment?._id)} />
+                            );
+                        })
+                    }
                 </ScrollView>
             </View>
             {loader && <Loader />}
@@ -194,7 +197,7 @@ const Appointments = () => {
 const styles = StyleSheet.create({
     container: {
         paddingHorizontal: 16,
-        paddingTop: 20,
+        paddingTop: 12,
         paddingBottom: 80, // Increased bottom padding to account for footer
     },
 });

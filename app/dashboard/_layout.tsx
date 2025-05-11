@@ -177,7 +177,7 @@ export default function DashboardLayout() {
                         style={{ position: 'absolute', left: 16, top: 12, height: 32 }} 
                         onPress={handleBackNav}
                     >
-                        <Icon type="goBack" />
+                        <Icon type='goBack' fill={Colors[colorSchema].icon} />
                     </Pressable>
                     <ThemedText style={styles.headerText}>
                         {finalText(getHeaderTitle(), translations, selectedLanguage)}
@@ -292,7 +292,6 @@ const styles = StyleSheet.create({
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.2,
         shadowRadius: 2,
-        backgroundColor: '#FFFFFF',
         zIndex: 100,
     },
     headerText: {
