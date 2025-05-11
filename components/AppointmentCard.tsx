@@ -98,7 +98,7 @@ const AppointmentCard: React.FC<AppointmentCardProps> = ({ appointment, width, h
                         <ThemedText style={{ fontSize: 40, lineHeight: 52, fontWeight: 700 }}>{capitalizeWords(appointment?.patientName)?.substring(0,1)}</ThemedText>
                     }
                 </View>
-                <View style={{ marginLeft: 24, display: 'flex', width: width - 236 }} >
+                <View style={{ marginLeft: 24, display: 'flex', width: width - 216 }} >
                     <ThemedText style={{ fontSize: 16, fontWeight: 600 }}>{capitalizeWords(appointment?.patientName)}</ThemedText>
                     <View style={{ marginTop: 6, display: 'flex', flexDirection: 'row', alignItems: 'center' }} >
                         <Icon type="calendarEmpty" />
@@ -106,7 +106,7 @@ const AppointmentCard: React.FC<AppointmentCardProps> = ({ appointment, width, h
                     </View>
                     <View style={{ marginTop: 6, display: 'flex', flexDirection: 'row', alignItems: 'center' }} >
                         <Icon type="watchEmpty" />
-                        <ThemedText style={{ marginLeft: 8, fontSize: 12, lineHeight: 16, fontWeight: 400, color: "#32383D" }}>{changeTimeToAmPm(appointment?.startTime)}</ThemedText>
+                        <ThemedText style={{ marginLeft: 8, fontSize: 12, lineHeight: 16, fontWeight: 400 }}>{changeTimeToAmPm(appointment?.startTime)}</ThemedText>
                     </View>
                     <View style={{ marginTop: 6, marginBottom: 10, paddingHorizontal: 6, paddingVertical: 6, borderRadius: 40, backgroundColor: "#1EA6D6", display: 'flex', alignItems: 'center', justifyContent: 'center' }} >
                         <ThemedText style={{ fontSize: 11, lineHeight: 16, fontWeight: 600, color: "#FFFFFF" }} >{finalText(appointment?.appointmentType === "OPD" ? "Normal Appointment" : "Emergency Appointment", translations, selectedLanguage)} </ThemedText>

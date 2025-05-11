@@ -68,7 +68,7 @@ const Slot: React.FC<SlotProps> = ({ slot, onSelectSlot, isSelected }) => {
         } else if (isSelected) {
             return "#fff";
         } else {
-            return "#000";
+            return Colors[colorSchema].text;
         }
     }
 

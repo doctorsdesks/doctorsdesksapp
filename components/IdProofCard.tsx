@@ -44,7 +44,7 @@ const IdProofCard: React.FC<IdProofCardProps> = ({ data, type }) => {
         >
             <View style={{ display: 'flex', justifyContent: 'flex-start', flexDirection: 'row', alignItems: 'center' }} >
                 {getIcon()}
-                <ThemedText style={{ marginLeft: 12, color: "#32383D", fontSize: 14, fontWeight: 600 }} >
+                <ThemedText style={{ marginLeft: 12, fontSize: 14, fontWeight: 600 }} >
                     {data?.label}
                 </ThemedText>
             </View>

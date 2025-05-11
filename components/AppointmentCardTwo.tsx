@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Pressable, View } from 'react-native';
+import { Dimensions, Pressable, View } from 'react-native';
 import { AppointmentStatus } from '@/constants/Enums';
 import { changeTimeToAmPm, finalText } from './Utils';
 import { ThemedView } from './ThemedView';
@@ -20,6 +20,7 @@ interface AppointmentCardTwoProps {
 const AppointmentCardTwo: React.FC<AppointmentCardTwoProps> = ({ lastAppointment, firstAppointment, name, number, startTime, status, handleStatusUpdate }) => {
     const { translations, selectedLanguage } = useAppContext();
     const [parentHeight, setParentHeight] = useState(0);
+    const { width } = Dimensions.get("window");
 
     const handleLayout = (event: any) => {
         const { height } = event.nativeEvent.layout;
@@ -83,7 +84,7 @@ const AppointmentCardTwo: React.FC<AppointmentCardTwoProps> = ({ lastAppointment
                     marginLeft: 36,
                 }}
             >
-                <ThemedText style={{ fontSize: 14, lineHeight: 16, fontWeight: 600 }}>{changeTimeToAmPm(startTime)}</ThemedText>
+                <ThemedText style={{ fontSize: 14, lineHeight: 16, fontWeight: 600, width: 62 }}>{changeTimeToAmPm(startTime)}</ThemedText>
             </View>
             <View style={{ paddingVertical: 10 }} >
                 <View
@@ -96,11 +97,11 @@ const AppointmentCardTwo: React.FC<AppointmentCardTwoProps> = ({ lastAppointment
                         borderLeftWidth: 8,
                         borderLeftColor: "#2DB9B0",
                         borderRadius: 8,
-                        width: 240
+                        width: width - 152
                     }}
                 >
-                    <ThemedText style={{ fontSize: 14, lineHeight: 16, fontWeight: 600 }} >{name}</ThemedText>
-                    <ThemedText style={{ fontSize: 11, lineHeight: 16, fontWeight: 400, marginTop: 8 }} >{number}</ThemedText>
+                    <ThemedText style={{ fontSize: 14, lineHeight: 16, fontWeight: 600 }} lightColor='#000' darkColor='#000' >{name}</ThemedText>
+                    <ThemedText style={{ fontSize: 11, lineHeight: 16, fontWeight: 400, marginTop: 8 }} lightColor='#333' darkColor='#333' >{number}</ThemedText>
                     <Pressable
                         style={{
                             borderRadius: 4,

@@ -9,6 +9,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import { Ionicons } from '@expo/vector-icons';
 import { Path, Svg } from 'react-native-svg';
 import Icon from './Icons';
+import { finalText } from './Utils';
 
 interface CustomInput2Props {
   data: {
@@ -22,6 +23,7 @@ interface CustomInput2Props {
     placeholder?: string;
     isDisabled?: boolean;
     isError?: boolean;
+    initials?: string;
   };
   onChange: (value: string, id: string) => void;
   handleFocus?: () => void;
@@ -31,7 +33,7 @@ interface CustomInput2Props {
 const CustomInput2: React.FC<CustomInput2Props> = ({ data, onChange, handleFocus, handleBlur }) => {
   const [isFocused, setIsFocused] = useState(false);
   const [isError, setIsError] = useState(false);
-  const { label, value, isMandatory, errorMessage, placeholder, inputType, id, isDisabled } = data;
+  const { label, value, isMandatory, errorMessage, placeholder, inputType, id, isDisabled, initials } = data;
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [showPassword, setShowPassword] = useState<boolean>(false);
 
@@ -149,7 +151,7 @@ const CustomInput2: React.FC<CustomInput2Props> = ({ data, onChange, handleFocus
           <View style={{ position: 'relative' }} >
             <TextInput
               placeholderTextColor={'#8C8C8C'}
-              style={[styles.input, isFocused && styles.inputFocused, isError && styles.inputError, { paddingLeft: data?.inputType === "AMOUNT" ? 48 : 8, color: Colors[colorScheme].text }]}
+              style={[styles.input, isFocused && styles.inputFocused, isError && styles.inputError, { paddingLeft: (data?.inputType === "AMOUNT" || (data?.initials && data?.initials !== "")) ? 48 : 8, color: Colors[colorScheme].text }]}
               value={value}
               onChangeText={onLocalChange}
               onBlur={handleBlurLocal}
@@ -163,6 +165,11 @@ const CustomInput2: React.FC<CustomInput2Props> = ({ data, onChange, handleFocus
                   : 'default'
               }
             />
+            {data?.initials && data?.initials !== "" &&
+              <View style={{ height: "100%", backgroundColor: "#2DB9B0", zIndex: 2, width: 40, position: 'absolute', display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', borderBottomLeftRadius: 6, borderTopLeftRadius: 6  }} >
+                <ThemedText style={{ fontSize: 16, lineHeight: 16 }} >{data?.initials}</ThemedText>
+              </View>
+            }
             {data?.inputType === "AMOUNT" && 
               <View style={{ height: "100%", backgroundColor: "#2DB9B0", zIndex: 2, width: 40, position: 'absolute', display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', borderBottomLeftRadius: 6, borderTopLeftRadius: 6  }} >
                 <Icon type='rupee' />

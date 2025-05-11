@@ -294,7 +294,7 @@ const ManageSlotTiming: React.FC<ManageSlotTimingProps> = ({ timings, setTimings
                                                         <ThemedText style={{ marginLeft: 4, fontSize: 14, lineHeight: 20, fontWeight: 600, color: "#1EA6D6" }} >{index+1}</ThemedText>
                                                     </View>
                                                     <View  style={{ marginLeft: 16, marginRight: 12, height: 20, width: 2, backgroundColor: "#D9D9D9" }} />
-                                                    <ThemedText style={{ fontSize: 14, lineHeight: 20, fontWeight: 400, color: "#32383D" }} >{session?.startTime} - {session?.endTime} </ThemedText>
+                                                    <ThemedText style={{ fontSize: 14, lineHeight: 20, fontWeight: 400, color: "#1EA6D6" }} >{session?.startTime} - {session?.endTime} </ThemedText>
                                                 </View>
                                                 <Pressable onPress={() => handleDeleteSession(index)} >
                                                     <Icon type='delete' />
@@ -315,7 +315,7 @@ const ManageSlotTiming: React.FC<ManageSlotTimingProps> = ({ timings, setTimings
                                     {startTime === "" ? 
                                         <ThemedText style={{ fontSize: 12, lineHeight: 16, fontWeight: 400, color: "#757575" }} >{finalText("Select Time", translations, selectedLanguage)} </ThemedText>
                                     :
-                                        <ThemedText style={{ fontSize: 12, lineHeight: 16, fontWeight: 400, color: "#757575" }} >
+                                        <ThemedText style={{ fontSize: 12, lineHeight: 16, fontWeight: 400 }} >
                                             {startTime}
                                         </ThemedText>
                                     }
@@ -327,13 +327,13 @@ const ManageSlotTiming: React.FC<ManageSlotTimingProps> = ({ timings, setTimings
                             <View style={{ display: 'flex', flexDirection: 'column' }}>
                                 <ThemedText style={{ fontSize: 11, lineHeight: 15, fontWeight: 600 }} >{finalText("End Time", translations, selectedLanguage)} </ThemedText>
                                 <Pressable 
-                                    style={{ borderWidth: 1, borderRadius: 8, borderColor: "#D9D9D9", backgroundColor: "#FFFFFF", paddingHorizontal: 10, paddingVertical: 12, display: 'flex', flexDirection: 'row', alignItems: 'center', marginTop: 8 }}
+                                    style={{ borderWidth: 1, borderRadius: 8, borderColor: "#D9D9D9", backgroundColor: Colors[colorScheme].background, paddingHorizontal: 10, paddingVertical: 12, display: 'flex', flexDirection: 'row', alignItems: 'center', marginTop: 8 }}
                                     onPress={() => handleOpenTime("end")}
                                 >
                                     {endTime === "" ? 
                                         <ThemedText style={{ fontSize: 12, lineHeight: 16, fontWeight: 400, color: "#757575" }} >{finalText("Select Time", translations, selectedLanguage)} </ThemedText>
                                     :
-                                        <ThemedText style={{ fontSize: 12, lineHeight: 16, fontWeight: 400, color: "#757575" }} >
+                                        <ThemedText style={{ fontSize: 12, lineHeight: 16, fontWeight: 400 }} >
                                             {endTime}
                                         </ThemedText>
                                     }

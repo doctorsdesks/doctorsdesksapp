@@ -59,6 +59,7 @@ export const signUpDetailsInitial = {
             inputType: "TEXT",
             value: "",
             label: "Full Name",
+            initials: "Dr.",
             isMandatory: true,
             errorMessage: "Please provide your full name.",
             placeholder: "Enter your full name",

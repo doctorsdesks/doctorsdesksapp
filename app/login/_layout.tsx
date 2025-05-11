@@ -1,5 +1,5 @@
 import Icon from '@/components/Icons';
-import { useAppContext } from '@/context/AppContext';
+import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme.web';
 import { router, Stack, useLocalSearchParams } from 'expo-router';
 import React from 'react';
@@ -7,6 +7,7 @@ import { Pressable, StyleSheet } from 'react-native';
 
 export default function () {
     const { allowBack } = useLocalSearchParams();
+    const colorScheme = useColorScheme() ?? 'light';
     
 
     const handleBackPress = (currentPage: string) => {
@@ -32,7 +33,7 @@ export default function () {
                         title: 'Login',
                         headerLeft: () => (
                             <Pressable onPress={() => handleBackPress("login")}>
-                                <Icon type='goBack' />
+                                <Icon type='goBack' fill={Colors[colorScheme].icon} />
                             </Pressable>
                         ),
                         headerTitleAlign: 'center',
@@ -52,7 +53,7 @@ export default function () {
                         title: 'Sign up',
                         headerLeft: () => (
                             <Pressable onPress={() =>handleBackPress("numberPassword")}>
-                                <Icon type='goBack' />
+                                <Icon type='goBack' fill={Colors[colorScheme].icon} />
                             </Pressable>
                         ),
                         headerTitleAlign: 'center',

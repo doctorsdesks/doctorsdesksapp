@@ -7,7 +7,7 @@ import Loader from '@/components/Loader';
 import Navbar, { NavbarObject } from '@/components/Navbar';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
-import { finalText, getAppointments } from '@/components/Utils';
+import { finalText, getAppointments, getSecureKey } from '@/components/Utils';
 import { Colors } from '@/constants/Colors';
 import { AppointmentStatus } from '@/constants/Enums';
 import { URLS } from '@/constants/Urls';
@@ -122,12 +122,14 @@ const Tasks = () => {
             appointmentUpdateType: status,
             updatedBy: "DOCTOR"
         }
-        const url = URLS.BASE + URLS.GET_APPOINTMENTS + "/" + appointmentId;
+        const url = URLS.BASE + URLS.GET_APPOINTMENTS + "/update?id=" + appointmentId;
+        const authToken = await getSecureKey("userAuthtoken");
         try {
             const response = await axios.post(url, updateData,
               {
                 headers: {
-                  'X-Requested-With': 'doctorsdesks_web_app',
+                  'X-Requested-With': 'nirvaanhealth_web_app',
+                  "Authorization": `Bearer ${authToken}`
                 },
               }
             );
@@ -140,9 +142,7 @@ const Tasks = () => {
                 });
             }
             setLoader(false);
-            const today = new Date();
-            const formattedDate = today.toISOString().split('T')[0];
-            getAllAppointments(formattedDate);
+            getAllAppointments(doctorDetails?.phone);
         } catch (error: any) {
                 Toast.show({
                     type: 'error',  
@@ -168,7 +168,7 @@ const Tasks = () => {
                     {filteredAppointments?.length === 0 ?
                         <View style={{ 
                             marginTop: 12, 
-                            height: 320,
+                            height: height * 0.65,
                             marginHorizontal: 4,
                             marginBottom: 12,
                             display: 'flex', 

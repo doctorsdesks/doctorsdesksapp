@@ -57,14 +57,15 @@ export default function Layout() {
           flexDirection: "row", 
           alignItems: "center"
         }}
-        text1NumberOfLines={2}
+        text1NumberOfLines={3}
         text1Style={{ 
-          fontSize: 16, 
+          fontSize: 14, 
           fontWeight: "600",
           flexShrink: 1,
           width: TOAST_WIDTH - 80 // Account for padding and close button
         }}
-        text2Style={{ fontSize: 14 }}
+        text2Style={{ fontSize: 12 }}
+        text3Style={{ fontSize: 12 }}
         renderTrailingIcon={() => (
           <Pressable onPress={() => Toast.hide()} style={{ justifyContent: "center", alignItems: "center", padding: 10 }}>
             <Ionicons name='close-circle-outline' size={20} color={Colors[colorScheme].successBorder} />
@@ -86,14 +87,17 @@ export default function Layout() {
           flexDirection: "row", 
           alignItems: "center"
         }}
-        text1NumberOfLines={2}
+        text1NumberOfLines={3}
         text1Style={{ 
-          fontSize: 16, 
+          fontSize: 14, 
           fontWeight: "600",
           flexShrink: 1,
           width: TOAST_WIDTH - 80 // Account for padding and close button
         }}
-        text2Style={{ fontSize: 14 }}
+        text2Style={{ fontSize: 12, flexShrink: 1,
+          width: TOAST_WIDTH - 80 }}
+        text3Style={{ fontSize: 12, flexShrink: 1,
+          width: TOAST_WIDTH - 80 }}
         renderTrailingIcon={() => (
           <Pressable onPress={() => Toast.hide()} style={{ justifyContent: "center", alignItems: "center", padding: 10 }}>
             <Ionicons name='close-circle-outline' size={20} color={Colors[colorScheme].errorBorder} />

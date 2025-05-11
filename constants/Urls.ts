@@ -17,4 +17,5 @@ export const URLS = {
     DFO: "/v1/dfo",
     GET_SLOTS: "/v1/slots",
     BLOCK_SLOTS: "/v1/appointment/lock",
+    GET_BANNERS: "/v1/banner",
 }

@@ -256,12 +256,12 @@ const ManageSlotDurationAndTiming = () => {
                             </ScrollView>
                         :
                             <View style={{ 
-                                marginTop: 12, 
-                                height: 260,
+                                marginTop: 12,
                                 marginHorizontal: 4,
                                 marginBottom: 12,
                                 display: 'flex', 
-                                alignItems: 'center', 
+                                alignItems: 'center',
+                                height: height * 0.6,
                                 backgroundColor: Colors[colorScheme].cardBg,
                                 shadowColor: '#000000',
                                 shadowOffset: { width: 0, height: 4 },
@@ -271,7 +271,7 @@ const ManageSlotDurationAndTiming = () => {
                                 borderRadius: 12,
                             }} >
                                 <Image source={require('../../assets/images/noTasks.png')} style={{ height: 175, width: 200 }} resizeMode='contain' />
-                                <ThemedText style={{ marginTop: 4, fontSize: 14, lineHeight: 21, fontWeight: 600, color: "red" }} >{finalText("No timing exist, Please click on 'Edit Timings' then click 'Add Timing'", translations, selectedLanguage)}</ThemedText>
+                                <ThemedText style={{ marginTop: 8, marginHorizontal: 8, fontSize: 14, lineHeight: 21, fontWeight: 600, color: "red" }} >{finalText("No timing exist, Please click on 'Edit Timings' then click 'Add Timing'", translations, selectedLanguage)}</ThemedText>
                             </View>
                         }
                     </View>

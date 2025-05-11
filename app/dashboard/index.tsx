@@ -9,7 +9,7 @@ import PatientList from '@/components/PatientList';
 import SearchBar from '@/components/SearchBar';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
-import { finalText, formatDateToYYYYMMDD, getAppointments, getDfo, getDoctorDetails, getPatientList, getSecureKey } from '@/components/Utils';
+import { finalText, formatDateToYYYYMMDD, getAppointments, getBanners, getDfo, getDoctorDetails, getPatientList, getSecureKey } from '@/components/Utils';
 import { Colors } from '@/constants/Colors';
 import { AppointmentStatus, DocStatusType, PatientListProps } from '@/constants/Enums';
 import { URLS } from '@/constants/Urls';
@@ -92,12 +92,32 @@ const Home = () => {
         if (response.status === "SUCCESS") {
             const docDetails = response.data;
             setDoctorDetails(docDetails);
-            if (docDetails?.docStatus === DocStatusType.NOT_VERIFIED) {
+            findBanners(docNumber ,docDetails?.docStatus)
+            if (docDetails?.docStatus === DocStatusType.BLOCKED) {
+                router.replace("/successSignUp/block");
+            }
+            setLoader(false);
+        } else {
+            Toast.show({
+                type: 'error',
+                text1: response.error,
+                visibilityTime: 3000,
+            });
+            setLoader(false);
+        }
+    }
+
+    const findBanners = async (phone: string, docStatus: string) => {
+        const response = await getBanners(phone);
+        if (response.status === "SUCCESS") {
+            let currentBanners = response.data?.banners || [];
+            if (docStatus === DocStatusType.NOT_VERIFIED) {
                 const notVerifiedItem = {
                     "id": "not_verified",
                     "label": "You are not verified!",
                     "subLabel": "Verification is in progress",
                     "bannerType": "INFO",
+                    "iconType": "notVerifiedBanner",
                     "isHidden": false,
                     "buttonData": {
                       "type": "PRIMARY",
@@ -107,17 +127,15 @@ const Home = () => {
                       "pathToGo": ""
                     }
                 };
-                const currentBanners = [...bannerItems];
                 currentBanners.push(notVerifiedItem);
+
                 setBannerItems(currentBanners);
             }
-            if (docDetails?.docStatus === DocStatusType.BLOCKED) {
-                router.replace("/successSignUp/block");
-            }
+            setBannerItems(currentBanners);
             setLoader(false);
         } else {
             Toast.show({
-                type: 'error',
+                type: 'error',  
                 text1: response.error,
                 visibilityTime: 3000,
             });
@@ -302,7 +320,7 @@ const Home = () => {
                             onPress={() => setShowClinicReminder(false)}
                             style={styles.closeButton}
                         >
-                            <Icon type='cross' />
+                            <Icon type='cross' fill={Colors[colorScheme].icon} />
                         </Pressable>
                         <Image source={require('../../assets/images/clinicReminder.png')} style={styles.image} resizeMode='contain' />
                         <ThemedText style={{ fontSize: 16, lineHeight: 20, fontWeight: 600, marginTop: 24 }} >{finalText("Ready to receive patients", translations, selectedLanguage)}?</ThemedText>

@@ -227,7 +227,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     lineHeight: 20,
     fontWeight: '600',
-    color: '#32383D',
   },
   daySelector: {
     paddingVertical: 8,
