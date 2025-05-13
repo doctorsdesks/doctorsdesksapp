@@ -198,6 +198,13 @@ const Home = () => {
                 const today = new Date();
                 const formattedDate = formatDateToYYYYMMDD(today)
                 getAllAppointments(doctorId, formattedDate);
+            } else {
+                Toast.show({
+                    type: 'error',  
+                    text1: "Something wrong happened! Please try again.",
+                    visibilityTime: 3000,
+                });
+                setLoader(false);
             }
         } catch (error: any) {
             Toast.show({

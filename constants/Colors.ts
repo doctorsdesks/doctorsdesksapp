@@ -50,9 +50,11 @@ export const Colors = {
     slotBookedBg: "#99E4DF",
     slotBookedText: "#23918A",
     textNotSelected: "#A9A9AB",
+    iconDisabled: "#D9D9D9"
   },
   dark: {
     bannerDefaultBg: "#2DB9B0",
+    iconDisabled: "#666666",
     text: '#ECEDEE',
     background: '#151718',
     cardBg: "#000000",

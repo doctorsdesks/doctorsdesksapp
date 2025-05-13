@@ -10,18 +10,21 @@ import { useAppContext } from '@/context/AppContext';
 import { ThemedView } from './ThemedView';
 import { ThemedText } from './ThemedText';
 import Icon from './Icons';
+import { Colors } from '@/constants/Colors';
+import { useColorScheme } from '@/hooks/useColorScheme.web';
 
 interface AppointmentDateSelectorProps {
     handleDateChange: (date: string) => void;
+    source?: string;
 }
 
-const AppointmentDateSelector: React.FC<AppointmentDateSelectorProps> = ({ handleDateChange }) => {
+const AppointmentDateSelector: React.FC<AppointmentDateSelectorProps> = ({ handleDateChange, source }) => {
   const { translations, selectedLanguage } = useAppContext();
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [daysToRender, setDaysToRender] = useState<Array<string>>([]);
   const [selectedDay, setSelectedDay] = useState<string>("");
-  const [loader, setLoader] = useState<boolean>(false);
   const flatListRef = useRef<FlatList>(null);
+  const colorScheme = useColorScheme() ?? 'light';
   
   useEffect(() => {
     if (currentMonth) {
@@ -47,7 +50,13 @@ const AppointmentDateSelector: React.FC<AppointmentDateSelectorProps> = ({ handl
         } else {
           finalDate = date;
         }
-        const dateForCurrentMonth = new Date(year, month - 1, parseInt(date));
+        let dateForCurrentMonth = new Date(year, month - 1, parseInt(date));
+        if (isLeftDisabled(currentMonth)) {
+          if (parseInt(date) < new Date().getDate()) {
+            finalDate = new Date().getDate()
+            dateForCurrentMonth = new Date(year, month - 1, finalDate);
+          }
+        }
         const dayForCurrentMonth = formatDay(dateForCurrentMonth);
         const finalDay = `${dayForCurrentMonth} ${finalDate}`;
         setSelectedDay(finalDay);
@@ -102,6 +111,27 @@ const AppointmentDateSelector: React.FC<AppointmentDateSelectorProps> = ({ handl
     return days;
   };
 
+  const isLeftDisabled = (monthSet: any) => {
+    const cMonth = new Date(monthSet);
+    const today = new Date();
+    const month = cMonth.getMonth();
+    const year = cMonth.getFullYear();
+    if (source === "blockSlot" && today.getMonth() === month && today.getFullYear() === year) {
+      return true;
+    } else return false;
+  }
+
+  const isSlotDisabled = (item: string) => {
+    if (isLeftDisabled(currentMonth)) {
+      const today = new Date();
+      const currentDate = formatDate(today)
+      const slotDate = item?.split(" ")[1];
+      if (parseInt(slotDate) < currentDate) {
+        return true;
+      } else return false;
+    } else return false;
+  }
+
   const changeMonth = (direction: string) => {
     setCurrentMonth((prev) => {
       const newMonth = new Date(prev);
@@ -126,7 +156,6 @@ const AppointmentDateSelector: React.FC<AppointmentDateSelectorProps> = ({ handl
   const formatDate = (date: Date) => date.getDate();
 
   const handleDaySelect = (day: string) => {
-    setLoader(!loader);
     let [currentDay, date] = day?.split(" ");
     setSelectedDay(day);
     const year = currentMonth.getFullYear();
@@ -141,16 +170,12 @@ const AppointmentDateSelector: React.FC<AppointmentDateSelectorProps> = ({ handl
     handleDateChange(newDate);
   }
 
-  // const isDaySelected = (day: Date) => {
-  //   return formatDay(day) == formatDay(selectedDay) && formatDate(day).toString() == formatDate(selectedDay).toString()
-  // };
-
 
   return (
     <ThemedView>
         <View style={styles.monthSelector}>
-            <Pressable onPress={() => changeMonth('left')}>
-              <Icon type="arrowCircleLeft" />
+            <Pressable onPress={() => !isLeftDisabled(currentMonth) && changeMonth('left')}>
+              <Icon type="arrowCircleLeft" fill={isLeftDisabled(currentMonth) ? Colors[colorScheme].iconDisabled : "#1EA6D6"} />
             </Pressable>
             <View style={{ display: 'flex', flexDirection: 'row' }}>
                 <ThemedText style={styles.monthText} >{finalText(formatMonthYear(currentMonth).split(' ')[0], translations, selectedLanguage)}</ThemedText>
@@ -180,11 +205,11 @@ const AppointmentDateSelector: React.FC<AppointmentDateSelectorProps> = ({ handl
                         width: 62,
                         alignItems: 'center',
                         marginHorizontal: 5,
-                        backgroundColor: item === selectedDay ? '#1EA6D6' : "#fff",
+                        backgroundColor: isSlotDisabled(item) ? Colors[colorScheme].iconDisabled : item === selectedDay ? '#1EA6D6' : "#fff",
                         borderWidth: 1,
                         borderColor: item === selectedDay ? '#1EA6D6' : "#D9D9D9", 
                     }} 
-                    onPress={() => handleDaySelect(item)} 
+                    onPress={() => !isSlotDisabled(item) && handleDaySelect(item)} 
                 >
                     <View style={{ 
                         display: 'flex', 

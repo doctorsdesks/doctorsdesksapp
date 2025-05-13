@@ -101,8 +101,8 @@ const Icon: React.FC<IconProps> = ({ type, fill }) => {
         case "arrowCircleLeft":
             return (
                 <Svg width="32" height="32" viewBox="0 0 32 32" fill="none" >
-                    <Path d="M18.5 10L12.5 16L18.5 22" stroke="#1EA6D6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                    <Path d="M4 16C4 22.625 9.375 28 16 28C22.625 28 28 22.625 28 16C28 9.375 22.625 4 16 4C9.375 4 4 9.375 4 16Z" stroke="#1EA6D6" stroke-width="1.5" stroke-miterlimit="10"/>
+                    <Path d="M18.5 10L12.5 16L18.5 22" stroke={fill ?? "#1EA6D6"} stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <Path d="M4 16C4 22.625 9.375 28 16 28C22.625 28 28 22.625 28 16C28 9.375 22.625 4 16 4C9.375 4 4 9.375 4 16Z" stroke={fill ?? "#1EA6D6"} stroke-width="1.5" stroke-miterlimit="10"/>
                 </Svg>
             );
             break;

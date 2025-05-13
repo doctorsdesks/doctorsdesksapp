@@ -147,6 +147,7 @@ const BlockSlots = () => {
     }
 
     const handleDateChange = (date: string) => {
+        setLoader(true);
         setSelectedDay(date);
         const currentSlots = [...slotsToShow];
         const finalSlots = currentSlots?.map((slot: any) => {
@@ -186,7 +187,7 @@ const BlockSlots = () => {
     return (
         <ThemedView style={styles.container} >
             <View style={{ marginTop: 12 }} >
-                <AppointmentDateSelector handleDateChange={handleDateChange} />
+                <AppointmentDateSelector handleDateChange={handleDateChange} source="blockSlot" />
             </View>
             <View style={{ marginTop: 12, borderWidth: 1, borderRadius: 12, borderColor: Colors[colorScheme].borderColor, width: width - 32, paddingVertical: 12, paddingHorizontal: 12, display: 'flex', flexDirection: 'row', flexWrap: 'wrap', rowGap: 10, justifyContent: 'space-around' }}>
                 <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center'}} >

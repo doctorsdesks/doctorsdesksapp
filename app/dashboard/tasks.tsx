@@ -118,9 +118,13 @@ const Tasks = () => {
     }
 
     const updateAppointment = async (status: string, appointmentId: string) => {
-        const updateData = {
+        setLoader(true)
+        const updateData: any = {
             appointmentUpdateType: status,
             updatedBy: "DOCTOR"
+        }
+        if (status === "CANCEL") {
+            updateData.reasonForCancel = cancelReason?.value;
         }
         const url = URLS.BASE + URLS.GET_APPOINTMENTS + "/update?id=" + appointmentId;
         const authToken = await getSecureKey("userAuthtoken");
@@ -135,14 +139,22 @@ const Tasks = () => {
             );
             const { data, status } = response;
             if (status === 201){
+                setShowCancelPopUp(false)
                 Toast.show({
                     type: 'success',  
                     text1: data.message,
                     visibilityTime: 3000,
                 });
+                setLoader(false);
+                getAllAppointments(doctorDetails?.phone);
+            } else {
+                Toast.show({
+                    type: 'error',  
+                    text1: "Something wrong happened! Please try again.",
+                    visibilityTime: 3000,
+                });
+                setLoader(false);
             }
-            setLoader(false);
-            getAllAppointments(doctorDetails?.phone);
         } catch (error: any) {
                 Toast.show({
                     type: 'error',  
