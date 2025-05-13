@@ -1,13 +1,13 @@
 {
   "expo": {
-    "name": "Nirvaan Health",
+    "name": "Nirvah Care",
     "slug": "doctorsdesksapp",
     "plugins": [
       "expo-router"
     ],
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/loaderImage.png",
+    "icon": "./assets/images/appstore.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "jsEngine": "jsc",
@@ -23,11 +23,11 @@
     "android": {
       "googleServicesFile": "./google-services.json",
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/loaderImage.png",
+        "foregroundImage": "./assets/images/appstore.png",
         "backgroundColor": "#fcfcfc",
-        "monochromeImage": "./assets/images/loaderImage.png"
+        "monochromeImage": "./assets/images/appstore.png"
       },
-      "icon": "./assets/images/loaderImage.png",
+      "icon": "./assets/images/appstore.png",
       "usesCleartextTraffic": true,
       "package": "com.doctorsdesks.doctorsdesksapp",
       "permissions": [
@@ -41,7 +41,7 @@
     "web": {
       "bundler": "metro",
       "output": "static",
-      "favicon": "./assets/images/loaderImage.png"
+      "favicon": "./assets/images/appstore.png"
     },
     "experiments": {
       "typedRoutes": true

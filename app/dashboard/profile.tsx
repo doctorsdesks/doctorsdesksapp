@@ -49,7 +49,7 @@ const Profile = () => {
 
     const getQualification = () => {
         let finalString = doctorDetails?.graduation;
-        finalString = finalString + ", " + doctorDetails?.specialisation;
+        finalString = finalText(finalString, translations, selectedLanguage) + ", " + finalText(doctorDetails?.specialisation, translations, selectedLanguage);
         return finalString;
     }
 

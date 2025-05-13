@@ -98,7 +98,7 @@ const AppointmentCard: React.FC<AppointmentCardProps> = ({ appointment, width, h
                         <ThemedText style={{ fontSize: 40, lineHeight: 52, fontWeight: 700 }}>{capitalizeWords(appointment?.patientName)?.substring(0,1)}</ThemedText>
                     }
                 </View>
-                <View style={{ marginLeft: 24, display: 'flex', width: width - 216 }} >
+                <View style={{ marginLeft: 24, display: 'flex', width: width - 236 }} >
                     <ThemedText style={{ fontSize: 16, fontWeight: 600 }}>{capitalizeWords(appointment?.patientName)}</ThemedText>
                     <View style={{ marginTop: 6, display: 'flex', flexDirection: 'row', alignItems: 'center' }} >
                         <Icon type="calendarEmpty" />
