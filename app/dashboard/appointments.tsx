@@ -160,6 +160,7 @@ const Appointments = () => {
                 <ScrollView
                     ref={scrollViewRef} 
                     style={{ height: height - 320 }}
+                    showsVerticalScrollIndicator={false}
                     contentContainerStyle={{ paddingBottom: 20 }}
                 >
                     {filteredAppointments?.length === 0 ?

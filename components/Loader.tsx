@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { View, Animated, StyleSheet, Text, Easing, Dimensions, Image } from 'react-native';
 import { ThemedView } from './ThemedView';
 
-const {height, width} = Dimensions.get('window');
+const {width} = Dimensions.get('window');
 
 const Loader = () => {
   const rotateValue = useRef(new Animated.Value(0)).current;
@@ -50,7 +50,7 @@ const Loader = () => {
       <Animated.View style={[styles.loaderContainer, animatedStyle]}>
         <View style={styles.textWrapper}>
           <Image 
-            source={require('../assets/images/loaderImage.png')} 
+            source={require('../assets/images/loader.png')} 
             style={styles.image} 
             resizeMode='contain' 
           />

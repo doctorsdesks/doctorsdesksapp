@@ -93,7 +93,7 @@ const AnimatedSplash = ({ onAnimationComplete }: { onAnimationComplete: () => vo
         ]}
       >
         <Animated.Image
-          source={require('../assets/images/loaderImage.png')}
+          source={require('../assets/images/loader.png')}
           style={styles.image}
           resizeMode="contain"
         />
@@ -109,7 +109,7 @@ const AnimatedSplash = ({ onAnimationComplete }: { onAnimationComplete: () => vo
         ]}
       >
         <Animated.Image
-          source={colorScheme === 'light' ? require('../assets/images/logoImage.png') : require('../assets/images/logoImage.png')}
+          source={colorScheme === 'light' ? require('../assets/images/splash.png') : require('../assets/images/splash.png')}
           style={styles.image}
           resizeMode="contain"
         />

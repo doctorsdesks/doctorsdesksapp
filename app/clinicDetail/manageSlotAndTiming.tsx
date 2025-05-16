@@ -214,6 +214,7 @@ const ManageSlotDurationAndTiming = () => {
                         {timings?.length > 0 ?
                             <ScrollView
                                 ref={scrollViewRef}
+                                showsVerticalScrollIndicator={false}
                                 style={{ 
                                     display: 'flex',
                                     paddingVertical: 16,

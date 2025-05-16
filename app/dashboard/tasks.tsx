@@ -175,6 +175,7 @@ const Tasks = () => {
             <View style={{ height: height - 180 }} >
                 <ScrollView
                     ref={scrollViewRef} 
+                    showsVerticalScrollIndicator={false}
                     contentContainerStyle={{ paddingBottom: 20, marginTop: 20 }}
                 >
                     {filteredAppointments?.length === 0 ?

@@ -7,12 +7,12 @@
     ],
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/appstore.png",
+    "icon": "./assets/images/logo.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "jsEngine": "jsc",
     "splash": {
-      "image": "./assets/images/logoImage.png",
+      "image": "./assets/images/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#fcfcfc"
     },
@@ -23,11 +23,11 @@
     "android": {
       "googleServicesFile": "./google-services.json",
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/appstore.png",
+        "foregroundImage": "./assets/images/logo.png",
         "backgroundColor": "#fcfcfc",
-        "monochromeImage": "./assets/images/appstore.png"
+        "monochromeImage": "./assets/images/logo.png"
       },
-      "icon": "./assets/images/appstore.png",
+      "icon": "./assets/images/logo.png",
       "usesCleartextTraffic": true,
       "package": "com.doctorsdesks.doctorsdesksapp",
       "permissions": [
@@ -41,7 +41,7 @@
     "web": {
       "bundler": "metro",
       "output": "static",
-      "favicon": "./assets/images/appstore.png"
+      "favicon": "./assets/images/logo.png"
     },
     "experiments": {
       "typedRoutes": true

@@ -213,7 +213,8 @@ const BlockSlots = () => {
             </View>
             <View style={{ height: height * 0.52 }} >
                 <ScrollView
-                    ref={scrollViewRef} 
+                    ref={scrollViewRef}
+                    showsVerticalScrollIndicator={false} 
                     style={{ marginTop: 16 }}>
                     {slotsToShow?.length === 0 ?
                         <View style={{ 

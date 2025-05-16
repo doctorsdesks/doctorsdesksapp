@@ -281,6 +281,7 @@ const ManageSlotTiming: React.FC<ManageSlotTimingProps> = ({ timings, setTimings
                         <ThemedText style={{ fontSize: 14, lineHeight: 18, marginTop: 12, fontWeight: 600, color: "#3B82F6" }} >{finalText("Kindly click on 'Add' then click on 'Save Timings' to add new session", translations, selectedLanguage)}. </ThemedText>
                         <ScrollView
                             ref={scrollViewRef}
+                            showsVerticalScrollIndicator={false}
                             style={{ maxHeight: Math.min(height * 0.4, 316) }} 
                         >
                             {sessions?.length > 0 && 
