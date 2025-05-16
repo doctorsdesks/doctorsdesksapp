@@ -398,6 +398,7 @@ const PersonalDetailsSetting = () => {
                         </View>}
                         <ScrollView
                             ref={scrollViewRef}
+                            showsVerticalScrollIndicator={false}
                             style={{ 
                                 display: 'flex',
                                 borderRadius: 8,
@@ -421,6 +422,7 @@ const PersonalDetailsSetting = () => {
                     <View style={{ marginTop: 32 }} >
                         <ScrollView
                             ref={scrollDocRef}
+                            showsVerticalScrollIndicator={false}
                             style={{ 
                                 display: 'flex',
                                 borderRadius: 8,

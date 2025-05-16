@@ -86,6 +86,7 @@ const Profile = () => {
             <ScrollView 
                 ref={scrollViewRef}
                 style={{ maxHeight: height - 320  }} 
+                showsVerticalScrollIndicator={false}
                 contentContainerStyle={{ paddingBottom: 20 }}
             >
                 <View style={{ marginTop: 16, borderRadius: 8, borderColor: "#D9D9D9", borderWidth: 1, display: 'flex', flexDirection: 'column', paddingHorizontal: 16, paddingRight: 8, paddingVertical: 12, width: "100%" }} >

@@ -197,6 +197,7 @@ const ClinicDetailsSetting = () => {
                 <View style={{ height: height * 0.75 }} >
                     <ScrollView
                         ref={scrollViewRef}
+                        showsVerticalScrollIndicator={false}
                         style={{ 
                             display: 'flex',
                             borderRadius: 8,

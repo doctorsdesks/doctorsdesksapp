@@ -259,6 +259,7 @@ const Home = () => {
             }
             <ScrollView
                 contentContainerStyle={{ paddingBottom: 20 }} // Add padding to ensure content doesn't go behind footer
+                showsVerticalScrollIndicator={false}
             >
                 <View style={{ marginTop: 20 }} >
                     {bannerItems?.map((banner: any) => {

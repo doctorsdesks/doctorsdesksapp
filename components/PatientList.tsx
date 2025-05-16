@@ -15,7 +15,7 @@ const PatientList = (props: any) => {
     <ThemedView style={styles.list}>
         <ScrollView
             ref={scrollViewRef}
-            showsVerticalScrollIndicator={true}
+            showsVerticalScrollIndicator={false}
             nestedScrollEnabled={true}
             style={styles.scrollView}>
             {props?.patientList?.map((patient: any, i: number) => (

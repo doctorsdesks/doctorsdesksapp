@@ -422,6 +422,7 @@ const SignUp = () => {
                 {showImage && step === "PD" && <ImageUpload imageUrl={imageUrl} setImageUrl={setImageUrl}  />}
                 <ScrollView
                     ref={scrollViewRef}
+                    showsVerticalScrollIndicator={false}
                     style={{ 
                         display: 'flex',
                         borderRadius: 8,
