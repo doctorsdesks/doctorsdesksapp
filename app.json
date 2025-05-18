@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "Nirvah Care",
+    "name": "Nirvah Care Doctor",
     "slug": "doctorsdesksapp",
     "plugins": [
       "expo-router"
