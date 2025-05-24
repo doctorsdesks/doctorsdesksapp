@@ -537,3 +537,98 @@ export const uploadFile = async (fileUri: any, fileName: string, phoneNumber: st
         }
     }
   }
+
+  export const triggerOtp = async (payload: any) => {
+    const url = URLS.BASE + URLS.TRIGGER_OTP;
+        try {
+            const response = await axios.post(url, payload,
+              {
+                headers: {
+                  'X-Requested-With': 'nirvaanhealth_web_app',
+                },
+              }
+            );
+            const { data, status } = response;
+            console.info("one", payload, response, data, status)
+            if (status === 201){
+              return {
+                status: "SUCCESS",
+                data: data.data,
+                message: data.message
+              }
+            } else {
+              return {
+                status: "FAILURE",
+                error: "Something wrong. Please try again.",
+              }
+            }
+        } catch (error: any) {
+          return {
+            status: "FAILURE",
+            error: error?.response?.data?.message || "Something went wrong!"
+          }
+        }
+  }
+
+  export const verifyOtp = async (payload: any) => {
+    const url = URLS.BASE + URLS.VERIFY_OTP;
+        try {
+            const response = await axios.post(url, payload,
+              {
+                headers: {
+                  'X-Requested-With': 'nirvaanhealth_web_app',
+                },
+              }
+            );
+            const { data, status } = response;
+            console.info("two", payload, response, data, status)
+            if (status === 201){
+              return {
+                status: "SUCCESS",
+                data: data.data,
+                message: data.message
+              }
+            } else {
+              return {
+                status: "FAILURE",
+                error: "Something wrong. Please try again.",
+              }
+            }
+        } catch (error: any) {
+          return {
+            status: "FAILURE",
+            error: error?.response?.data?.message || "Something went wrong!"
+          }
+        }
+  }
+
+  export const resetPassword = async (payload: any) => {
+    const url = URLS.BASE + URLS.RESET_PASSWORD;
+        try {
+            const response = await axios.post(url, payload,
+              {
+                headers: {
+                  'X-Requested-With': 'nirvaanhealth_web_app',
+                },
+              }
+            );
+            const { data, status } = response;
+            if (status === 201){
+              return {
+                status: "SUCCESS",
+                data: data.data,
+                message: data.message
+              }
+            } else {
+              return {
+                status: "FAILURE",
+                error: "Something wrong. Please try again.",
+              }
+            }
+        } catch (error: any) {
+          return {
+            status: "FAILURE",
+            error: error?.response?.data?.message || "Something went wrong!"
+          }
+        }
+  }

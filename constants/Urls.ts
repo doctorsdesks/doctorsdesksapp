@@ -18,4 +18,7 @@ export const URLS = {
     GET_SLOTS: "/v1/slots",
     BLOCK_SLOTS: "/v1/appointment/lock",
     GET_BANNERS: "/v1/banner",
+    TRIGGER_OTP: "/v1/message/trigger_otp",
+    VERIFY_OTP: "/v1/message/verify_otp",
+    RESET_PASSWORD: "/v1/user/reset_password",
 }

@@ -20,7 +20,7 @@ const Login = () => {
     useEffect(() => {
         if(signUpDetails){
             const details = signUpDetails?.loginDetails;
-            const finalDetails = details?.filter((item: { id: string }) => item?.id !== "confirmPassword" );
+            const finalDetails = details?.filter((item: { id: string }) => item?.id !== "confirmPassword" && item?.id !== "otp" );
             setLoginDetails(finalDetails);
         }
     }, [signUpDetails]);
@@ -147,10 +147,19 @@ const Login = () => {
         router.replace("/login/numberPassword");
     }
 
+    const handleForgotPassword = () => {
+        router.replace("/login/forgotPassword");
+    }
+
     return (
         <ThemedView style={style.container} >
             {renderValue()}
-            <View style={{ marginTop: 4, display: 'flex', flexDirection: 'row', justifyContent: 'center' }} >
+            <Pressable style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center' }} onPress={handleForgotPassword}>
+                <ThemedText type='link' >
+                    Forgot Password
+                </ThemedText>
+            </Pressable>
+            <View style={{ marginTop: 12, display: 'flex', flexDirection: 'row', justifyContent: 'center' }} >
                 <ThemedText type='subtitle' >
                     Don't have an account ?
                 </ThemedText>

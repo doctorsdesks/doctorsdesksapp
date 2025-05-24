@@ -1,19 +1,17 @@
 import CustomButton from '@/components/CustomButton';
 import React, { useEffect } from 'react';
-import { BackHandler, Pressable, StyleSheet, View } from 'react-native';
+import { BackHandler, StyleSheet, View } from 'react-native';
 import { router } from 'expo-router';
 import Loader from '@/components/Loader';
 import { useAppContext } from '@/context/AppContext';
 import { ThemedView } from '@/components/ThemedView';
 import CustomInput2 from '@/components/CustomInput2';
-import { ThemedText } from '@/components/ThemedText';
 import { signUpDetailsInitial } from '@/context/InitialState';
-import axios from 'axios';
 import Toast from 'react-native-toast-message';
 import CustomOTP from '@/components/CustomOTP';
-import { triggerOtp, verifyOtp } from '@/components/Utils';
+import { resetPassword, triggerOtp, verifyOtp } from '@/components/Utils';
 
-const NumberPassword = () => {
+const ForgotPassword = () => {
     const { signUpDetails, setSignUpDetails } = useAppContext();
     const [loginDetails, setLoginDetails] = React.useState<any>([]);
     const [numberVerified, setNumberVerified] = React.useState<boolean>(false);
@@ -59,9 +57,8 @@ const NumberPassword = () => {
         });
         setLoginDetails(currentData);
         if (id === "number" && finalValue?.length === 10) {
-            setNumberIcon("processing");
             setOtpLoader(true);
-            console.info("two", finalValue)
+            setNumberIcon("processing");
             if (testNumbers.includes(finalValue)) {
                 const currentData = loginDetails.map((item: any) => {
                     if (item?.id === "number") {
@@ -112,44 +109,30 @@ const NumberPassword = () => {
         }
     }
 
-    const handleContinue = () => {
-        checkIfUserExist();
-    }
-
-    const checkIfUserExist = async () => {
+    const handleContinue = async () => {
         setLoader(true);
-        
-        const phone = loginDetails?.find((item: { id: string }) => item?.id === "number")?.value;
-        
-        const url = "http://docter-api-service-lb-413222422.ap-south-1.elb.amazonaws.com/v1/user/doctor/" + phone;
-        try {
-            const response = await axios.get(url,
-                {
-                  headers: {
-                    'X-Requested-With': 'nirvaanhealth_web_app',
-                  },
-                }
-              );
-            const { data } = response;
-            if (data.data) {
-                Toast.show({
-                    type: 'error',  
-                    text1: `User exist with ${phone} number.`,
-                    visibilityTime: 3000,
-                });
-            } else {
-                const newSignupDetails = { ...signUpDetailsInitial };
-                newSignupDetails.loginDetails = loginDetails;
-                setSignUpDetails(newSignupDetails);
-                router.replace('/signup');
-            }
-        } catch (error: any) {
+        const number = loginDetails?.find((item: { id: string }) => item?.id === "number")?.value;
+        const password = loginDetails?.find((item: { id: string }) => item?.id === "password")?.value;
+        const payload = {
+            phone: number,
+            password: password,
+            userType: "DOCTOR"
+        }
+        const response = await resetPassword(payload);
+        if (response.status === "SUCCESS") {
             Toast.show({
-                type: 'error',  
-                text1: error.response.data.message || "Something went wrong!",
+                type: 'success',  
+                text1: 'Password reset successfully!',
                 visibilityTime: 3000,
             });
-        } finally {
+            setLoader(false);
+            router.replace("/login");
+        } else {
+            Toast.show({
+                type: 'error',  
+                text1: response.error,
+                visibilityTime: 3000,
+            });
             setLoader(false);
         }
     }
@@ -180,10 +163,10 @@ const NumberPassword = () => {
     const handleOTPComplete = (otp: string) => {
         setOtpLoader(true);
         const phone = loginDetails?.find((item: { id: string }) => item?.id === "number")?.value;
-        console.info("one", phone)
         if (testNumbers.includes(phone)) {
             if (otp === '1234') {
                 setNumberVerified(true);
+                setNumberIcon("verifiedField");
                 const currentData = loginDetails.map((item: any) => {
                     if (item.id === "otp") {
                         return { ...item, isHidden: true}; 
@@ -191,7 +174,6 @@ const NumberPassword = () => {
                     return item;
                 });
                 setLoginDetails(currentData);
-                setNumberIcon("verifiedField");
                 setOtpLoader(false);
             } else {
                 const currentData = loginDetails.map((item: any) => {
@@ -214,7 +196,6 @@ const NumberPassword = () => {
     };
 
     const verify_otp = async (payload: any) => {
-        console.info("asd", payload);
         const response = await verifyOtp(payload);
         if (response.status === "SUCCESS") {
             Toast.show({
@@ -223,7 +204,6 @@ const NumberPassword = () => {
                 visibilityTime: 3000,
             });
             setNumberVerified(true);
-            setNumberIcon("verifiedField");
             const currentData = loginDetails.map((item: any) => {
                 if (item.id === "otp") {
                     return { ...item, isHidden: true}; 
@@ -231,6 +211,7 @@ const NumberPassword = () => {
                 return item;
             });
             setLoginDetails(currentData);
+            setNumberIcon("verifiedField");
             setOtpLoader(false);
         } else {
             Toast.show({
@@ -245,8 +226,8 @@ const NumberPassword = () => {
                 return item;
             });
             setLoginDetails(currentData);
-            setOtpLoader(false);
             setNumberIcon("notVerifiedField");
+            setOtpLoader(false);
         }
     }
 
@@ -292,25 +273,11 @@ const NumberPassword = () => {
         return false;
     }
 
-    const handleLoginClick = () => {
-        router.replace("/login");
-    }
-
     return (
         <ThemedView style={style.container} >
             {renderValue()}
-            <View style={{ marginTop: 4, display: 'flex', flexDirection: 'row', justifyContent: 'center' }} >
-                <ThemedText type='subtitle' >
-                    Already have an account ?
-                </ThemedText>
-                <Pressable onPress={handleLoginClick} style={{ marginLeft: 4 }}  >
-                    <ThemedText type="subtitle" style={{ fontWeight: 600, color: "#1EA6D6" }}>
-                        Login
-                    </ThemedText>
-                </Pressable>
-            </View>
             <View style={{ display: "flex", alignItems: "center", marginTop: 24 }} >
-                <CustomButton width='FULL' title="Continue" onPress={handleContinue} isDisabled={handleDisable()} />
+                <CustomButton width='FULL' title="Reset Password" onPress={handleContinue} isDisabled={handleDisable()} />
             </View>
             {loader || otpLoader && <Loader />}
         </ThemedView>
@@ -325,4 +292,4 @@ const style = StyleSheet.create({
     },
 });
 
-export default NumberPassword;
+export default ForgotPassword;

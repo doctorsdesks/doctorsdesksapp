@@ -15,7 +15,9 @@ export default function () {
             router.replace('/')
         } else if(currentPage === "numberPassword") {
             router.replace('/login')
-        } 
+        } else if (currentPage === "forgotPassword") {
+            router.replace('/login')
+        }
     }
 
     return (
@@ -53,6 +55,20 @@ export default function () {
                         title: 'Sign up',
                         headerLeft: () => (
                             <Pressable onPress={() =>handleBackPress("numberPassword")}>
+                                <Icon type='goBack' fill={Colors[colorScheme].icon} />
+                            </Pressable>
+                        ),
+                        headerTitleAlign: 'center',
+                    }
+                }
+            />
+            <Stack.Screen
+                name="forgotPassword"
+                options={
+                    {
+                        title: 'Reset Password',
+                        headerLeft: () => (
+                            <Pressable onPress={() =>handleBackPress("forgotPassword")}>
                                 <Icon type='goBack' fill={Colors[colorScheme].icon} />
                             </Pressable>
                         ),
