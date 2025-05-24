@@ -1,4 +1,3 @@
-import { useAppContext } from '@/context/AppContext';
 import React, { useEffect, useState } from 'react';
 import { View, Text, TextInput, StyleSheet, Pressable } from 'react-native';
 import { ThemedText } from './ThemedText';
@@ -9,7 +8,6 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import { Ionicons } from '@expo/vector-icons';
 import { Path, Svg } from 'react-native-svg';
 import Icon from './Icons';
-import { finalText } from './Utils';
 
 interface CustomInput2Props {
   data: {
@@ -28,9 +26,10 @@ interface CustomInput2Props {
   onChange: (value: string, id: string) => void;
   handleFocus?: () => void;
   handleBlur?: (value: string) => void;
+  rightIcon?: string;
 }
 
-const CustomInput2: React.FC<CustomInput2Props> = ({ data, onChange, handleFocus, handleBlur }) => {
+const CustomInput2: React.FC<CustomInput2Props> = ({ data, onChange, handleFocus, handleBlur, rightIcon }) => {
   const [isFocused, setIsFocused] = useState(false);
   const [isError, setIsError] = useState(false);
   const { label, value, isMandatory, errorMessage, placeholder, inputType, id, isDisabled, initials } = data;
@@ -153,6 +152,7 @@ const CustomInput2: React.FC<CustomInput2Props> = ({ data, onChange, handleFocus
               placeholderTextColor={'#8C8C8C'}
               style={[styles.input, isFocused && styles.inputFocused, isError && styles.inputError, { paddingLeft: (data?.inputType === "AMOUNT" || (data?.initials && data?.initials !== "")) ? 48 : 8, color: Colors[colorScheme].text }]}
               value={value}
+              maxLength={inputType === 'NUMBER' && data?.id === "number" ? 10 : undefined}
               onChangeText={onLocalChange}
               onBlur={handleBlurLocal}
               onFocus={handleFocusLocal}
@@ -179,6 +179,11 @@ const CustomInput2: React.FC<CustomInput2Props> = ({ data, onChange, handleFocus
               <Pressable onPress={() => setShowPassword(!showPassword)} style={{ height: "100%", backgroundColor: "#2DB9B0", zIndex: 2, width: 40, position: 'absolute', right:  0, display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', borderBottomRightRadius: 4, borderTopRightRadius: 4  }} >
                 {showPassword ? <Ionicons name='eye' size={24} /> : <Ionicons name='eye-off-outline' size={24} />}
               </Pressable>
+            }
+            {rightIcon && rightIcon !== "" &&
+              <ThemedView style={{ height: "100%", borderWidth: 1, borderLeftWidth: 0, borderColor: isFocused ? "#2DB9B0" : '#ccc', zIndex: 2, width: 40, position: 'absolute', right:  0, display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', borderBottomRightRadius: 4, borderTopRightRadius: 4  }} >
+                <Icon type={rightIcon} />
+              </ThemedView>
             }
           </View>
         }
