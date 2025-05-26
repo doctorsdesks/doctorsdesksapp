@@ -55,7 +55,14 @@ const NumberPassword = () => {
                     return { ...item, value: finalValue};
                 }
             }
-            return { ...item, isHidden: id === "number" && item?.id === "otp" ? finalValue?.length === 10 ? false : true : false };
+            if (item?.id === "otp") {
+                if (id === "number" )
+                    return { ...item, isHidden: true }
+                else {
+                    return { ...item, isHidden: numberVerified ? true : false }
+                }
+            }
+            return { ...item };
         });
         setLoginDetails(currentData);
         if (id === "number" && finalValue?.length === 10) {
@@ -266,6 +273,7 @@ const NumberPassword = () => {
                 return (
                     <CustomOTP length={item?.otpLength} isError={item?.isError ?? false} onOTPComplete={handleOTPComplete} />
                 )
+                break;
             default:
                 break;
         }
