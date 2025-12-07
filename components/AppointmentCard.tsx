@@ -1,4 +1,3 @@
-import React from 'react';
 import { Image, View } from 'react-native';
 import { capitalizeWords, changeTimeToAmPm, finalText } from './Utils';
 import { AppointmentStatus } from '@/constants/Enums';
@@ -12,6 +11,7 @@ interface AppointmentCardProps {
     appointment: Appointment;
     width: number;
     handleStatusUpdate?: (status: string, id: string) => void;
+    source?: string;
 }
 
 export interface Appointment {
@@ -30,7 +30,7 @@ export interface Appointment {
     status: string,
 }
 
-const AppointmentCard: React.FC<AppointmentCardProps> = ({ appointment, width, handleStatusUpdate }) => {
+const AppointmentCard: React.FC<AppointmentCardProps> = ({ appointment, width, handleStatusUpdate, source }) => {
     const { translations, selectedLanguage } = useAppContext();
 
     const getStatusBGColor = (status: string) => {
@@ -87,7 +87,7 @@ const AppointmentCard: React.FC<AppointmentCardProps> = ({ appointment, width, h
     return (
         <ThemedView 
             key={appointment?._id} 
-            style={{ borderWidth: 1, borderRadius: 12, borderColor: "#D9D9D9", padding: 16, marginBottom: 16 }}
+            style={{ borderWidth: source === "notification" ? 0 : 1, borderRadius: 12, borderColor: "#D9D9D9", padding: 16, paddingHorizontal: source === "notification" ? 0 : 16 , marginBottom: source === "notification" ? 0 : 16 }}
         >
             <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', borderBottomWidth: appointment?.status === AppointmentStatus.PENDING ? 1 : 0, borderBottomColor: "#F1F1F1" }} >
                 <View style={{ height: 70, width: 70, borderRadius: 100, display: 'flex', alignItems: 'center', flexDirection: 'row', justifyContent: 'center', backgroundColor: "#2DB9B0" }} >

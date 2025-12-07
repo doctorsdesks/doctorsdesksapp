@@ -64,3 +64,18 @@ export interface PatientListProps {
 export const CONFIGS = {
     SPECIALISATION: "SPECIALISATION"
 }
+
+export interface NotificationType {
+    id: string;
+    title: string;
+    body: string;
+    image: any;
+    icon?: string;
+    metadata: {
+        notificationId: string;
+        category: string;
+        appointmentId: string;
+    },
+    isRead: boolean;
+    category: string;
+}

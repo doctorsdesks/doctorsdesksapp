@@ -50,7 +50,8 @@ export const Colors = {
     slotBookedBg: "#99E4DF",
     slotBookedText: "#23918A",
     textNotSelected: "#A9A9AB",
-    iconDisabled: "#D9D9D9"
+    iconDisabled: "#D9D9D9",
+    divider: "#CFD8DCF1"
   },
   dark: {
     bannerDefaultBg: "#2DB9B0",
@@ -96,5 +97,6 @@ export const Colors = {
     slotBookedBg: "#99E4DF",
     slotBookedText: "#23918A",
     textNotSelected: "#757575",
+    divider: "#1F2937F1"
   },
 };

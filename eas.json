@@ -1,6 +1,6 @@
 {
   "cli": {
-    "version": ">= 12.6.0",
+    "version": ">= 15.0.13",
     "appVersionSource": "remote"
   },
   "build": {
@@ -13,7 +13,11 @@
     },
     "production": {
       "android": {
-        "buildType": "apk"
+        "buildType": "apk",
+        "withoutCredentials": true
+      },
+      "env": {
+        "EXPO_PUBLIC_API_URL": "http://docter-api-service-lb-413222422.ap-south-1.elb.amazonaws.com"
       },
       "autoIncrement": true
     }

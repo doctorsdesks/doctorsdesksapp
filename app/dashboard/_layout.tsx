@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { Dimensions, Pressable, StyleSheet, View } from 'react-native';
+import { useEffect, useState } from 'react';
+import { Dimensions, Pressable, StyleSheet, View, Keyboard } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router, Slot, usePathname } from 'expo-router';
 import { useAppContext } from '@/context/AppContext';
@@ -18,6 +18,7 @@ export default function DashboardLayout() {
     
     // Determine the current route for header and footer
     const [currentRoute, setCurrentRoute] = useState('home');
+    const [isKeyboardOpen, setIsKeyboardOpen] = useState<boolean>(false);
     
     useEffect(() => {
         // Extract the current route from pathname
@@ -47,9 +48,19 @@ export default function DashboardLayout() {
                 setCurrentRoute('clinicDetails');
             }
         } else if (pathname.includes('/personalDetails')) {
+            const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => {
+                setIsKeyboardOpen(true);
+            });
+            const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => {
+                setIsKeyboardOpen(false);
+            });
             setCurrentRoute('personalDetails');
         } else if (pathname.includes('/patientProfile')) {
             setCurrentRoute('patientProfile');
+        } else if (pathname === '/dashboard/tnc') {
+            setCurrentRoute('tnc');
+        } else if (pathname === '/dashboard/notifications') {
+            setCurrentRoute('notifications');
         }
     }, [pathname]);
 
@@ -93,6 +104,12 @@ export default function DashboardLayout() {
                 break;
             case "block":
                 router.replace("/dashboard/profile");
+                break;
+            case "tnc":
+                router.replace("/dashboard/profile");
+                break;
+            case "notifications":
+                router.replace("/dashboard");
                 break;
             default:
                 break;
@@ -140,6 +157,12 @@ export default function DashboardLayout() {
                 // For patient profile, the title might come from params
                 // This would need to be handled differently
                 text = "Patient Profile";
+                break;
+            case "tnc":
+                text = "Terms & Conditions";
+                break;
+            case "notifications":
+                text = "Notifications";
                 break;
             default:
                 text = "";
@@ -191,7 +214,7 @@ export default function DashboardLayout() {
             </View>
             
             {/* Footer Tabs */}
-            <ThemedView style={[styles.footerContainer, { backgroundColor: Colors[colorSchema].background }]}>
+            {!isKeyboardOpen && pathname !== "/dashboard/tnc" && pathname !== "/dashboard/notifications" && <ThemedView style={[styles.footerContainer, { backgroundColor: Colors[colorSchema].background }]}>
                 <Pressable 
                     onPress={() => handleFooterTabClick("home")} 
                     style={[
@@ -266,7 +289,7 @@ export default function DashboardLayout() {
                         {finalText("Profile", translations, selectedLanguage)}
                     </ThemedText>
                 </Pressable>
-            </ThemedView>
+            </ThemedView>}
         </SafeAreaView>
     );
 }

@@ -1,3 +1,4 @@
+import AppointmentCancelPopUp from '@/components/AppointmentCancelPopUp';
 import AppointmentCard from '@/components/AppointmentCard';
 import Banner from '@/components/Banner';
 import CustomButton from '@/components/CustomButton';
@@ -9,22 +10,22 @@ import PatientList from '@/components/PatientList';
 import SearchBar from '@/components/SearchBar';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
-import { finalText, formatDateToYYYYMMDD, getAppointments, getBanners, getDfo, getDoctorDetails, getPatientList, getSecureKey } from '@/components/Utils';
+import { finalText, formatDateToYYYYMMDD, getAllNotifications, getAppointments, getBanners, getDfo, getDoctorDetails, getNotificationCount, getPatientList, getSecureKey } from '@/components/Utils';
 import { Colors } from '@/constants/Colors';
-import { AppointmentStatus, DocStatusType, PatientListProps } from '@/constants/Enums';
+import { AppointmentStatus, DocStatusType, NotificationType, PatientListProps } from '@/constants/Enums';
 import { URLS } from '@/constants/Urls';
 import { useAppContext } from '@/context/AppContext';
 import { textObject } from '@/context/InitialState';
 import { useColorScheme } from '@/hooks/useColorScheme.web';
 import axios from 'axios';
 import { router } from 'expo-router';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Dimensions, Image, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import Toast from 'react-native-toast-message';
 
 
 const Home = () => {
-    const { setDoctorDetails, setDfo, translations, selectedLanguage } = useAppContext();
+    const { setDoctorDetails, setDfo, translations, selectedLanguage, notifications, setNotifications } = useAppContext();
     const { width } = Dimensions.get('window');
     const [isListOpened, setIsListOpened] = useState<boolean>(false);
     const [loader, setLoader] = useState<boolean>(true);
@@ -37,6 +38,7 @@ const Home = () => {
     const [bannerItems, setBannerItems] = useState<any[]>([]);
     const [showCancelPopUp, setShowCancelPopUp] = useState<boolean>(false);
     const [cancelReason, setCancelReason] = useState<any>(textObject);
+    const [unReadNotificationCount, setUnReadNotificationCount] = useState(0);
 
     const colorScheme = useColorScheme() ?? 'light';
 
@@ -49,6 +51,13 @@ const Home = () => {
         }
         getDoctorId();
     },[])
+
+    useEffect(() => {
+        if (notifications && notifications?.length > 0) {
+            const count = getNotificationCount(notifications);
+            setUnReadNotificationCount(count);
+        }
+    },[notifications])
 
     useEffect(() => {
         if (doctorId !== "") {
@@ -65,6 +74,43 @@ const Home = () => {
             setCancelReason({ ...cancelReason, appointmentId: "", value: "" });
         }
     }, [showCancelPopUp])
+
+    const fetchNotifications = async (phone: string) => {
+        setLoader(true);
+        try {
+            const response = await getAllNotifications(phone, "DOCTOR");
+            if (response?.status === "SUCCESS") {
+                const notifications = response?.data;
+                const notificationsToSave: NotificationType[] = notifications?.map((notification: { _id: string, title: string, body: string, image: string, icon: string, metadata: { notificationId: string, category: string }, isRead: boolean, category: string }) => {
+                    return {
+                        id: notification._id,
+                        title: notification.title,
+                        body: notification.body,
+                        image: notification.image || "",
+                        metadata: notification.metadata,
+                        isRead: notification.isRead,
+                        icon: notification.icon,
+                        category: notification.category
+                    }
+                })
+                setNotifications(notificationsToSave);
+            } else {
+                Toast.show({
+                    type: 'error',
+                    text1: response.error,
+                    visibilityTime: 3000,
+                });
+            }
+        } catch (error) {
+            Toast.show({
+                type: 'error',
+                text1: error as string ?? "Network error",
+                visibilityTime: 3000,
+            });
+        } finally {
+            setLoader(false);
+        }
+    }
 
     const getDfoInfo = async (docNumber: string) => {
         setLoader(true);
@@ -128,7 +174,7 @@ const Home = () => {
                     }
                 };
                 currentBanners.push(notVerifiedItem);
-
+                fetchNotifications(phone);
                 setBannerItems(currentBanners);
             }
             setBannerItems(currentBanners);
@@ -247,16 +293,29 @@ const Home = () => {
 
     return (
         <ThemedView style={styles.container} >
-            <SearchBar searchPatients={searchPatients}  showPatientList={showPatientList} listOpened={isListOpened} />
-            {showPatientList &&
-                (patientList?.length > 0 ?
-                    <PatientList patientList={patientList} />
-                : 
-                    <View style={styles.list}>
-                        <ThemedText style={{ fontSize: 16, lineHeight: 20, fontWeight: 600 }} >{finalText("No patient found", translations, selectedLanguage)}! </ThemedText>
-                    </View>
-                )
-            }
+            <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }} >
+                <View style={{ width: "86%" }} >
+                    <SearchBar searchPatients={searchPatients}  showPatientList={showPatientList} listOpened={isListOpened} />
+                    {showPatientList &&
+                        (patientList?.length > 0 ?
+                            <PatientList patientList={patientList} />
+                        : 
+                            <View style={styles.list}>
+                                <ThemedText style={{ fontSize: 16, lineHeight: 20, fontWeight: 600 }} >{finalText("No patient found", translations, selectedLanguage)}! </ThemedText>
+                            </View>
+                        )
+                    }
+                </View>
+                <Pressable 
+                    onPress={() => {
+                        router.replace("/dashboard/notifications");
+                    }}
+                    style={styles.notificationBell}
+                >
+                    <Icon type='bell' fill={Colors[colorScheme].icon} />
+                    {unReadNotificationCount !== 0 && <View style={styles.notificationCount} ></View>}
+                </Pressable>
+            </View>
             <ScrollView
                 contentContainerStyle={{ paddingBottom: 20 }} // Add padding to ensure content doesn't go behind footer
                 showsVerticalScrollIndicator={false}
@@ -340,22 +399,23 @@ const Home = () => {
                 </CustomPopUp>
             }
             {showCancelPopUp && 
-                <CustomPopUp visible={showCancelPopUp} onClose={() => setShowCancelPopUp(true)}>
-                    <ThemedView style={{ display: 'flex', alignItems: "flex-start", paddingVertical: 32, paddingTop: 40, position: 'relative' }} >
-                        <Pressable
-                            onPress={() => setShowCancelPopUp(false)}
-                            style={styles.closeButton}
-                        >
-                            <Icon type='cross' />
-                        </Pressable>
-                        <View style={{ display: "flex", width: width - 64, marginTop: 20 }} >
-                            <CustomInput2 data={cancelReason} onChange={handleCancelReason} />
-                        </View>
-                        <View style={{ display: "flex", width: width - 64, marginTop: 20 }} >
-                            <CustomButton multiLingual={true} width='FULL' title="Cancel Appointment" isDisabled={cancelReason?.value === ""} onPress={() => updateAppointment("CANCEL", cancelReason?.appointmentId)} />
-                        </View>
-                    </ThemedView>
-                </CustomPopUp>
+                // <CustomPopUp visible={showCancelPopUp} onClose={() => setShowCancelPopUp(true)}>
+                //     <ThemedView style={{ display: 'flex', alignItems: "flex-start", paddingVertical: 32, paddingTop: 40, position: 'relative' }} >
+                //         <Pressable
+                //             onPress={() => setShowCancelPopUp(false)}
+                //             style={styles.closeButton}
+                //         >
+                //             <Icon type='cross' />
+                //         </Pressable>
+                //         <View style={{ display: "flex", width: width - 64, marginTop: 20 }} >
+                //             <CustomInput2 data={cancelReason} onChange={handleCancelReason} />
+                //         </View>
+                //         <View style={{ display: "flex", width: width - 64, marginTop: 20 }} >
+                //             <CustomButton multiLingual={true} width='FULL' title="Cancel Appointment" isDisabled={cancelReason?.value === ""} onPress={() => updateAppointment("CANCEL", cancelReason?.appointmentId)} />
+                //         </View>
+                //     </ThemedView>
+                // </CustomPopUp>
+                <AppointmentCancelPopUp showCancelPopUp={showCancelPopUp} setShowCancelPopUp={setShowCancelPopUp} width={width} cancelReason={cancelReason} handleCancelReason={handleCancelReason} updateAppointment={updateAppointment} />
             }
             {loader && <Loader />}
         </ThemedView>
@@ -410,4 +470,17 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontWeight: '900',
     },
+    notificationBell: {
+        position: "relative",
+    },
+    notificationCount: {
+        position: "absolute",
+        top: 2,
+        right: 2,
+        zIndex: 21,
+        height: 8,
+        width: 8,
+        borderRadius: 8,
+        backgroundColor: "#EB3639"
+    }
   });

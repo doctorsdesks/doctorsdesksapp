@@ -1,5 +1,5 @@
-import { CardProps } from '@/constants/Enums';
-import React, { createContext, useState, useContext, ReactNode, useEffect } from 'react';
+import { NotificationType } from '@/constants/Enums';
+import { createContext, useState, useContext, ReactNode, useEffect } from 'react';
 import { signUpDetailsInitial, signUpHeaderDataInitial } from './InitialState';
 import { getSecureKey, saveSecureKey } from '@/components/Utils';
 
@@ -17,6 +17,8 @@ interface AppContextType {
   setSelectedLanguage: (language: string) => void;
   dfo: { [key: string]: any };
   setDfo: (data: any) => void;
+  notifications: NotificationType[];
+  setNotifications: (data: NotificationType[]) => void;
 }
 
 // Create the context with a default value (can be null)
@@ -24,12 +26,13 @@ const AppContext = createContext<AppContextType | null>(null);
 
 // Define the provider component
 export const AppProvider = ({ children }: { children: ReactNode }) => {
-  const [signUpHeaderData, setSignUpHeaderData] = React.useState(signUpHeaderDataInitial);
-  const [signUpDetails, setSignUpDetails] = React.useState(signUpDetailsInitial);
-  const [doctorDetails, setDoctorDetails] = React.useState({});
-  const [translations, setTranslations] = React.useState<any>({});
+  const [signUpHeaderData, setSignUpHeaderData] = useState(signUpHeaderDataInitial);
+  const [signUpDetails, setSignUpDetails] = useState(signUpDetailsInitial);
+  const [doctorDetails, setDoctorDetails] = useState({});
+  const [translations, setTranslations] = useState<any>({});
   const [selectedLanguage, setSelectedLanguage] = useState<string>("");
   const [dfo, setDfo] = useState<any>({});
+  const [notifications, setNotifications] = useState<any>([]);
 
   useEffect(() => {
     // Load saved language preference on app start
@@ -78,7 +81,9 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
         selectedLanguage,
         setSelectedLanguage,
         dfo,
-        setDfo
+        setDfo,
+        notifications,
+        setNotifications
       }}>
       {children}
     </AppContext.Provider>
