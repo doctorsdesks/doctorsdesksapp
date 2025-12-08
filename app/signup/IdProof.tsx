@@ -2,7 +2,6 @@ import Header from '@/components/Header';
 import IdProofCard from '@/components/IdProofCard';
 import { ThemedView } from '@/components/ThemedView';
 import { router } from 'expo-router';
-import React from 'react';
 import { Pressable, View } from 'react-native';
 
 interface IdProofProps {

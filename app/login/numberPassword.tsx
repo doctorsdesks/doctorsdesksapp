@@ -1,5 +1,5 @@
 import CustomButton from '@/components/CustomButton';
-import React, { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { BackHandler, Pressable, StyleSheet, View } from 'react-native';
 import { router } from 'expo-router';
 import Loader from '@/components/Loader';
@@ -15,12 +15,12 @@ import { triggerOtp, verifyOtp } from '@/components/Utils';
 
 const NumberPassword = () => {
     const { signUpDetails, setSignUpDetails } = useAppContext();
-    const [loginDetails, setLoginDetails] = React.useState<any>([]);
-    const [numberVerified, setNumberVerified] = React.useState<boolean>(false);
-    const [loader, setLoader] = React.useState<boolean>(false);
-    const [otpLoader, setOtpLoader] = React.useState<boolean>(false);
-    const [numberIcon, setNumberIcon] = React.useState<string>("emptyField");
-    const [testNumbers] = React.useState<Array<string>>(["1111111111", "1111111110", "1111111112", "1111111113", "1111111114", "1111111115", "1111111116", "1111111117", "1111111118"])
+    const [loginDetails, setLoginDetails] = useState<any>([]);
+    const [numberVerified, setNumberVerified] = useState<boolean>(false);
+    const [loader, setLoader] = useState<boolean>(false);
+    const [otpLoader, setOtpLoader] = useState<boolean>(false);
+    const [numberIcon, setNumberIcon] = useState<string>("emptyField");
+    const [testNumbers] = useState<Array<string>>(["1111111111", "1111111110", "1111111112", "1111111113", "1111111114", "1111111115", "1111111116", "1111111117", "1111111118"])
 
     useEffect(() => {
         const backAction = () => {
@@ -68,7 +68,6 @@ const NumberPassword = () => {
         if (id === "number" && finalValue?.length === 10) {
             setNumberIcon("processing");
             setOtpLoader(true);
-            console.info("two", finalValue)
             if (testNumbers.includes(finalValue)) {
                 const currentData = loginDetails.map((item: any) => {
                     if (item?.id === "number") {
@@ -187,7 +186,6 @@ const NumberPassword = () => {
     const handleOTPComplete = (otp: string) => {
         setOtpLoader(true);
         const phone = loginDetails?.find((item: { id: string }) => item?.id === "number")?.value;
-        console.info("one", phone)
         if (testNumbers.includes(phone)) {
             if (otp === '1234') {
                 setNumberVerified(true);
@@ -221,7 +219,6 @@ const NumberPassword = () => {
     };
 
     const verify_otp = async (payload: any) => {
-        console.info("asd", payload);
         const response = await verifyOtp(payload);
         if (response.status === "SUCCESS") {
             Toast.show({
@@ -261,12 +258,12 @@ const NumberPassword = () => {
         switch (item.inputType) {
             case "NUMBER":
                 return (
-                    <CustomInput2 data={item} onChange={(value, id) => handleChange(value, id)} rightIcon={numberIcon} />
+                    <CustomInput2 data={item} onChange={(value: string, id: string) => handleChange(value, id)} rightIcon={numberIcon} />
                 )
                 break;
             case "PASSWORD":
                 return (
-                    <CustomInput2 data={item} handleBlur={(value) => handleBlur(value, item?.id)} onChange={(value, id) => handleChange(value, id)} />
+                    <CustomInput2 data={item} handleBlur={(value: string) => handleBlur(value, item?.id)} onChange={(value: string, id: string) => handleChange(value, id)} />
                 )
                 break;
             case "OTP":

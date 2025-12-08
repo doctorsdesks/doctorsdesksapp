@@ -1,5 +1,6 @@
-import { ReactNode } from 'react';
-import { ScrollView, View, Text, StyleSheet, TouchableOpacity, Linking } from 'react-native';
+import { router } from 'expo-router';
+import { ReactNode, useEffect } from 'react';
+import { ScrollView, View, Text, StyleSheet, TouchableOpacity, Linking, BackHandler } from 'react-native';
 
 type SectionProps = {
     id: string, 
@@ -8,6 +9,18 @@ type SectionProps = {
 }
 
 const TnC = () => {
+
+  useEffect(() => {
+        const backAction = () => {
+            router.replace("/dashboard/profile");
+            return true;
+        };
+
+        const backHandler = BackHandler.addEventListener("hardwareBackPress", backAction);
+
+        return () => backHandler.remove();
+  }, []);
+  
   const company = "Nirvahcare Pvt. Ltd.";
   const app = "Nirvah care";
   const registeredOffice = "Nirvahcare Private limited C/o Krishan Kumar VPO, Chowki No-2 Rewari, Rewari, 123401, Haryana";

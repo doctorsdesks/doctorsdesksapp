@@ -1,8 +1,8 @@
 import { CardProps } from '@/constants/Enums';
 import { useAppContext } from '@/context/AppContext';
 import { router, useLocalSearchParams } from 'expo-router';
-import React, { useEffect, useState } from 'react';
-import { Text, View } from 'react-native';
+import { useEffect, useState } from 'react';
+import {  BackHandler, View } from 'react-native';
 import IdProofUploadCard from './IdProofUploadCard';
 import CustomButton from '@/components/CustomButton';
 import Toast from 'react-native-toast-message';
@@ -10,18 +10,31 @@ import Loader from '@/components/Loader';
 import { finalText, getValueById, uploadFile } from '@/components/Utils';
 import { ThemedView } from '@/components/ThemedView';
 import { ThemedText } from '@/components/ThemedText';
-import { Colors } from '@/constants/Colors';
-import { useColorScheme } from '@/hooks/useColorScheme.web';
 
 const UploadCard = () => {
     const { signUpDetails, setSignUpDetails, translations, selectedLanguage } = useAppContext();
     const { docId, docType } = useLocalSearchParams();
-    const colorScheme = useColorScheme() || 'light';
 
     const [currentData, setCurrentData] = useState<CardProps>();
     const [frontUri, setFrontUri] = useState<any>(null);
     const [backUri, setBackUri] = useState<any>(null);
     const [loader, setLoader] = useState<boolean>(false);
+
+    useEffect(() => {
+        const backAction = () => {
+            router.replace({
+                pathname: '/signup',
+                params: {
+                    currentStep: "IDP"
+                }
+            })
+            return true;
+        };
+
+        const backHandler = BackHandler.addEventListener("hardwareBackPress", backAction);
+
+        return () => backHandler.remove();
+    }, []);
 
     useEffect(() => {
         if(signUpDetails && docId) {
@@ -92,7 +105,7 @@ const UploadCard = () => {
                 <View style={{ marginTop: 24 }} >
                     {currentData && <IdProofUploadCard data={currentData} docType={docType} onChange={handleChange} handleUrl={handleUrl} frontUri={frontUri} backUri={backUri} setBackUri={setBackUri} setFrontUri={setFrontUri} />}
                 </View>
-                <CustomButton title='Upload Images' width='FULL' onPress={handleUploadImage} isDisabled={frontUri === null || backUri ===null || currentData?.value === "" ? true : false} containerStyle={{ marginTop: 32 }} />
+                <CustomButton title='Upload Images' width='FULL' onPress={handleUploadImage} isDisabled={docType === "Pan" ? frontUri === null || currentData?.value === "" ? true : false : frontUri === null || backUri === null || currentData?.value === "" ? true : false} containerStyle={{ marginTop: 32 }} />
             </ThemedView>
     )
 };

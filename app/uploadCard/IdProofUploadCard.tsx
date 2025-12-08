@@ -1,8 +1,6 @@
 import CustomInput2 from '@/components/CustomInput2';
 import { CardProps } from '@/constants/Enums';
-import React from 'react';
-import { Pressable, Text, View } from 'react-native';
-import Entypo from '@expo/vector-icons/Entypo';
+import { Dimensions, Pressable, View } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import ViewImage from '@/components/ViewImage';
 import Toast from 'react-native-toast-message';
@@ -28,6 +26,7 @@ interface IdProofUploadCardProps {
 const IdProofUploadCard: React.FC<IdProofUploadCardProps> = ({ data, onChange, handleUrl, backUri, frontUri, setBackUri, setFrontUri }) => {
     const { translations, selectedLanguage } = useAppContext();
     const colorScheme = useColorScheme() || 'light';
+    const { width } = Dimensions.get('window');
 
     const requestPermission = async () => {
         const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -91,7 +90,7 @@ const IdProofUploadCard: React.FC<IdProofUploadCardProps> = ({ data, onChange, h
                     {finalText(`Click & Upload Photos of ${data?.label}`, translations, selectedLanguage)}
                 </ThemedText>
                 <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', marginTop: 16 }} >
-                    <View style={{ height: 160, width: 174, borderWidth: 1, borderColor: "#D9D9D9", borderRadius: 8, justifyContent: 'center', alignItems: 'center' }} >
+                    <View style={{ height: 160, width: (width - 44) / 2, borderWidth: 1, borderColor: "#D9D9D9", borderRadius: 8, justifyContent: 'center', alignItems: 'center' }} >
                         {frontUri && frontUri?.uri !== "" ?
                             <>
                                 <ViewImage resizeMode='cover' height={100} width={140} style={{ borderWidth: 1, borderColor: "#D9D9D9", borderRadius: 8 }} data={frontUri} />
@@ -116,7 +115,7 @@ const IdProofUploadCard: React.FC<IdProofUploadCardProps> = ({ data, onChange, h
                             </Pressable>
                         }
                     </View>
-                    <View style={{ height: 160, width: 174, borderWidth: 1, borderColor: "#D9D9D9", borderRadius: 8, justifyContent: 'center', alignItems: 'center' }} >
+                    <View style={{ height: 160, width: (width - 44) / 2, borderWidth: 1, borderColor: "#D9D9D9", borderRadius: 8, justifyContent: 'center', alignItems: 'center' }} >
                         {backUri && backUri?.uri !== "" ?
                             <>
                                 <ViewImage resizeMode='cover' height={100} width={140} style={{ borderWidth: 1, borderColor: "#D9D9D9", borderRadius: 8 }} data={backUri} />

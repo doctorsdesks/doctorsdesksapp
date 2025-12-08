@@ -1,6 +1,6 @@
-import React from 'react';
-import { View, Text, TextInput, StyleSheet, Platform } from 'react-native';
+import { View, TextInput, StyleSheet, Platform } from 'react-native';
 import { ThemedText } from './ThemedText';
+import { useState } from 'react';
 
 interface CustomInputProps {
   data: {
@@ -16,8 +16,8 @@ interface CustomInputProps {
 }
 
 const CustomInput: React.FC<CustomInputProps> = ({ data, onChange }) => {
-  const [isError, setIsError] = React.useState(false);
-  const [isFocused, setIsFocused] = React.useState(false);
+  const [isError, setIsError] = useState(false);
+  const [isFocused, setIsFocused] = useState(false);
   const { label, value, isMandatory, errorMessage } = data;
 
   const handleBlur = () => {
