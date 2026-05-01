@@ -3,6 +3,7 @@ import Toast from 'react-native-toast-message';
 import * as SecureStore from 'expo-secure-store';
 import { URLS } from '@/constants/Urls';
 import axios from 'axios';
+import { NotificationType } from '@/constants/Enums';
 
 
 export const uploadFile = async (fileUri: any, fileName: string, phoneNumber: string) => {
@@ -631,4 +632,231 @@ export const uploadFile = async (fileUri: any, fileName: string, phoneNumber: st
             error: error?.response?.data?.message || "Something went wrong!"
           }
         }
+  }
+
+export const pushToken = async (payload: any, auth: string) => {
+  const url = URLS.BASE + URLS.PUSH_TOKEN;
+      try {
+          const response = await axios.post(url, payload,
+            {
+              headers: {
+                'X-Requested-With': 'nirvaanhealth_web_app',
+                "Authorization": `Bearer ${auth}`
+              },
+            }
+          );
+          const { data, status } = response;
+          if (status === 201){
+            return {
+              status: "SUCCESS",
+              message: data.message
+            }
+          } else {
+            return {
+              status: "FAILURE",
+              error: "Token registration failed!.",
+            }
+          }
+      } catch (error: any) {
+        return {
+          status: "FAILURE",
+          error: error?.response?.data?.message || "Token registration failed!."
+        }
+      }
+}
+
+export const deleteToken = async (payload: any) => {
+  const authToken = await getSecureKey("userAuthtoken");
+  const url = URLS.BASE + URLS.PUSH_TOKEN;
+      try {
+          const response = await axios.delete(url, {
+            data: payload,
+            headers: {
+              'X-Requested-With': 'nirvaanhealth_web_app',
+              'Authorization': `Bearer ${authToken}`,
+            },
+          });
+          const { data, status } = response;
+          if (status === 201){
+            return {
+              status: "SUCCESS",
+              message: data.message
+            }
+          } else {
+            return {
+              status: "FAILURE",
+              error: "Something wrong. Please try again.",
+            }
+          }
+      } catch (error: any) {
+        return {
+          status: "FAILURE",
+          error: error?.response?.data?.message || "Something went wrong!"
+        }
+      }
+}
+
+export const logoutUser = async (payload: any) => {
+  const authToken = await getSecureKey("userAuthtoken");
+  const url = URLS.BASE + URLS.LOGOUT;
+      try {
+          const response = await axios.post(url, payload,
+            {
+              headers: {
+                'X-Requested-With': 'nirvaanhealth_web_app',
+                "Authorization": `Bearer ${authToken}`
+              },
+            }
+          );
+          const { data, status } = response;
+          if (status === 201){
+            return {
+              status: "SUCCESS",
+              message: data.message
+            }
+          } else {
+            return {
+              status: "FAILURE",
+              error: "Something wrong. Please try again.",
+            }
+          }
+      } catch (error: any) {
+        return {
+          status: "FAILURE",
+          error: error?.response?.data?.message || "Something went wrong!"
+        }
+      }
+}
+
+export const markNotificationRead = async (payload: { isRead: boolean }, notificationId: string) => {
+  const authToken = await getSecureKey("userAuthtoken");
+  const url = URLS.BASE + URLS.READ_NOTIFICATION + "/" + notificationId + "/read";
+      try {
+          const response = await axios.patch(url, payload,
+            {
+              headers: {
+                'X-Requested-With': 'nirvaanhealth_web_app',
+                "Authorization": `Bearer ${authToken}`
+              },
+            }
+          );
+          const { data, status } = response;
+          if (status === 201){
+            return {
+              status: "SUCCESS",
+              message: data.message
+            }
+          } else {
+            return {
+              status: "FAILURE",
+              error: "Something wrong. Please try again.",
+            }
+          }
+      } catch (error: any) {
+        return {
+          status: "FAILURE",
+          error: error?.response?.data?.message || "Something went wrong!"
+        }
+      }
+}
+
+export const getAllNotifications = async (phone: string, type: string) => {
+  const authToken = await getSecureKey("userAuthtoken");
+  const url = URLS.BASE + URLS.READ_NOTIFICATION + "/all/?phone=" + phone + "&type=" + type;
+  try {
+      const response = await axios.get(url,
+          {
+            headers: {
+              'X-Requested-With': 'nirvaanhealth_web_app',
+              "Authorization": `Bearer ${authToken}`
+            },
+          }
+        );
+      const { data, status } = response;
+      if (status === 200){
+          return {
+            status: "SUCCESS",
+            data: data.data,
+          }
+      } else {
+        return {
+          status: "FAILURE",
+          error: "Something wrong. Please try again.",
+        }
+      }
+  } catch (error: any) {
+      return {
+        status: "FAILURE",
+        error: error?.response?.data?.message
+      }
+  }
+}
+
+export const markReadAllNotifications = async (phone: string, type: string) => {
+  const authToken = await getSecureKey("userAuthtoken");
+  const url = URLS.BASE + URLS.READ_NOTIFICATION + "/all/?phone=" + phone + "&type=" + type;
+  try {
+      const response = await axios.patch(url, {},
+          {
+            headers: {
+              'X-Requested-With': 'nirvaanhealth_web_app',
+              "Authorization": `Bearer ${authToken}`
+            },
+          }
+        );
+      const { data, status } = response;
+      if (status === 200){
+          return {
+            status: "SUCCESS",
+            data: data.data,
+          }
+      } else {
+        return {
+          status: "FAILURE",
+          error: "Something wrong. Please try again.",
+        }
+      }
+  } catch (error: any) {
+      return {
+        status: "FAILURE",
+        error: error?.response?.data?.message
+      }
+  }
+}
+
+export const getNotificationCount = (notifications: NotificationType[]) => {
+  const count = notifications?.filter((notification: { isRead: boolean }) => !notification?.isRead)?.length;
+  return count;
+}
+
+export const getOneAppointment = async (id: string) => {
+    const authToken = await getSecureKey("userAuthtoken");
+    let url = URLS.BASE + URLS.GET_APPOINTMENTS + "/one?id=" + id;
+    try {
+        const response = await axios.get(url,
+            {
+              headers: {
+                'X-Requested-With': 'nirvaanhealth_web_app',
+                "Authorization": `Bearer ${authToken}`
+              },
+            }
+          );
+        const { data, status } = response;
+        if (status === 200){
+            return {
+              status: "SUCCESS",
+              data: data.data,
+            }
+        } else {
+          return {
+            status: "FAILURE",
+            error: "Something wrong. Please try again.",
+          }
+        }
+    } catch (error: any) {
+        return {
+          status: "FAILURE",
+          error: error?.response?.data?.message
+        }
+    }
   }

@@ -3,7 +3,8 @@
     "name": "Nirvah Care Doctor",
     "slug": "doctorsdesksapp",
     "plugins": [
-      "expo-router"
+      "expo-router",
+      "expo-notifications"
     ],
     "version": "1.0.0",
     "orientation": "portrait",
@@ -21,22 +22,14 @@
       "bundleIdentifier": "com.doctorsdesks.doctorsdesksapp"
     },
     "android": {
+      "package": "com.doctorsdesks.doctorsdesksapp",
       "googleServicesFile": "./google-services.json",
+      "usesCleartextTraffic": true,
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/logo.png",
         "backgroundColor": "#fcfcfc",
         "monochromeImage": "./assets/images/logo.png"
-      },
-      "icon": "./assets/images/logo.png",
-      "usesCleartextTraffic": true,
-      "package": "com.doctorsdesks.doctorsdesksapp",
-      "permissions": [
-        "CAMERA",
-        "READ_EXTERNAL_STORAGE",
-        "WRITE_EXTERNAL_STORAGE",
-        "INTERNET",
-        "ACCESS_NETWORK_STATE"
-      ]
+      }
     },
     "web": {
       "bundler": "metro",
@@ -48,9 +41,9 @@
     },
     "extra": {
       "eas": {
-        "projectId": "ba1b6d4f-a871-4c66-b1aa-b673a46bdbbc"
+        "projectId": "dcf2fb39-f394-4bb0-8d68-502913a234db"
       }
     },
-    "owner": "sumitthrita"
+    "owner": "doctorsdesks"
   }
 }

@@ -11,6 +11,7 @@ import AnimatedSplash from '@/components/AnimatedSplash';
 import * as SplashScreen from 'expo-splash-screen';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { ThemedView } from '@/components/ThemedView';
+import { NotificationProvider } from '@/context/NotifcationContext';
 
 // Keep the splash screen visible while we fetch resources
 SplashScreen.preventAutoHideAsync();
@@ -122,17 +123,19 @@ export default function Layout() {
   }
 
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <SafeAreaProvider>
-        <AppProvider>
-          <ThemedView style={{ flex: 1 }} onLayout={onLayoutRootView}>
-            <Slot />
-          </ThemedView>
-          <Toast 
-            config={toastConfig}
-          />
-        </AppProvider>
-      </SafeAreaProvider>
-    </ThemeProvider>
+    <NotificationProvider>
+      <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+        <SafeAreaProvider>
+          <AppProvider>
+            <ThemedView style={{ flex: 1 }} onLayout={onLayoutRootView}>
+              <Slot />
+            </ThemedView>
+            <Toast 
+              config={toastConfig}
+            />
+          </AppProvider>
+        </SafeAreaProvider>
+      </ThemeProvider>
+    </NotificationProvider>
   );
 }

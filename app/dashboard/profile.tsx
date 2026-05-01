@@ -3,7 +3,7 @@ import { ThemedView } from '@/components/ThemedView';
 import { finalText, logout } from '@/components/Utils';
 import { useAppContext } from '@/context/AppContext';
 import { router } from 'expo-router';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { BackHandler, Dimensions, Image, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { DocStatusType } from '@/constants/Enums';
@@ -15,7 +15,7 @@ import { useColorScheme } from '@/hooks/useColorScheme.web';
 const Profile = () => {
     const { setDoctorDetails, doctorDetails, translations, selectedLanguage } = useAppContext();
     const { width, height } = Dimensions.get('window');
-    const scrollViewRef = React.useRef(null);
+    const scrollViewRef = useRef(null);
     const [loader, setLoader] = useState<boolean>(false);
     const colorScheme = useColorScheme() ?? 'light';
 
@@ -163,6 +163,23 @@ const Profile = () => {
                         <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }} >
                             <Icon type='clinicSetting' fill={Colors[colorScheme].icon} />
                             <ThemedText style={{ marginLeft: 8, fontSize: 15, lineHeight: 24, fontWeight: 500 }} >{finalText("App Language", translations, selectedLanguage)} </ThemedText>
+                        </View>
+                        <Icon type='arrowRight' fill={Colors[colorScheme].icon} />
+                    </Pressable>
+                    <Pressable
+                        onPress={() => {
+                            router.replace({
+                                pathname: "/dashboard/tnc",
+                                params: {
+                                    sourcePath: "/dashboard/profile",
+                                }
+                            })
+                        }}
+                        style={{ paddingVertical: 8, display: 'flex', flexDirection:'row', justifyContent: 'space-between', alignItems: 'center' }}
+                    >
+                        <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }} >
+                            <Icon type='tnc' fill={Colors[colorScheme].icon} />
+                            <ThemedText style={{ marginLeft: 8, fontSize: 15, lineHeight: 24, fontWeight: 500 }} >{finalText("Terms & Conditions", translations, selectedLanguage)} </ThemedText>
                         </View>
                         <Icon type='arrowRight' fill={Colors[colorScheme].icon} />
                     </Pressable>

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { View, StyleSheet, ScrollView, BackHandler, Keyboard } from 'react-native';
 import SignUpHeader from './SignupHeader';
 import CustomInput2 from '@/components/CustomInput2';
@@ -22,18 +22,18 @@ import { CONFIGS } from '@/constants/Enums';
 const SignUp = () => {
     const { currentStep } = useLocalSearchParams();
     const { signUpHeaderData, setSignUpHeaderData, signUpDetails, setSignUpDetails, setDoctorDetails } = useAppContext();
-    const scrollViewRef = React.useRef(null);
+    const scrollViewRef = useRef(null);
 
-    const [step, setStep] = React.useState(currentStep || "PD");
+    const [step, setStep] = useState(currentStep || "PD");
 
-    const [personalDetails, setPersonalDetails] = React.useState<any>([]);
-    const [imageUrl, setImageUrl] = React.useState<any>({uri: "", isUploaded: false});
-    const [idProofData, setIdProofData] = React.useState<any>([]);
-    const [clinicDetails, setClinicDetails] = React.useState<any>([]);
-    const [showImage, setShowImage] = React.useState<boolean>(true);
-    const [isKeyboardOpen, setIsKeyboardOpen] = React.useState<boolean>(false);
-    const [loader, setLoader] = React.useState<boolean>(false);
-    const [specialisationOptions, setSpecialisationOptions] = React.useState<any>([]);
+    const [personalDetails, setPersonalDetails] = useState<any>([]);
+    const [imageUrl, setImageUrl] = useState<any>({uri: "", isUploaded: false});
+    const [idProofData, setIdProofData] = useState<any>([]);
+    const [clinicDetails, setClinicDetails] = useState<any>([]);
+    const [showImage, setShowImage] = useState<boolean>(true);
+    const [isKeyboardOpen, setIsKeyboardOpen] = useState<boolean>(false);
+    const [loader, setLoader] = useState<boolean>(false);
+    const [specialisationOptions, setSpecialisationOptions] = useState<any>([]);
 
     useEffect(() => {
         if(signUpDetails){
@@ -359,20 +359,20 @@ const SignUp = () => {
                 break;
             case "RADIO":
                 return (
-                    <CustomRadio data={item} onChange={(value, id) => handleChange(value, id, detailType)} />
+                    <CustomRadio data={item} onChange={(value: string, id: string) => handleChange(value, id, detailType)} />
                 )
                 break;
             case "SEARCHSELECT": {
                     let finalItem = { ...item };
                     finalItem.options = specialisationOptions;
                     return (
-                        <SearchSelect data={finalItem} onChange={(value, id) => handleChange(value, id, detailType)} />
+                        <SearchSelect data={finalItem} onChange={(value: string, id: string) => handleChange(value, id, detailType)} />
                     )
                 }
                 break;
             case "BOXES": 
                 return (
-                    <CustomInputBoxes data={item} onChange={(value, id, type) => handleChangeLanguage(value, id, type)} />
+                    <CustomInputBoxes data={item} onChange={(value: string, id: string, type: string) => handleChangeLanguage(value, id, type)} />
                 )
                 break;
             case "DATE":

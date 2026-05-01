@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Dimensions, Pressable, View } from 'react-native';
 import { AppointmentStatus } from '@/constants/Enums';
 import { changeTimeToAmPm, finalText } from './Utils';

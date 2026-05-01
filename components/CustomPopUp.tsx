@@ -1,4 +1,3 @@
-import React from 'react';
 import { Modal, Pressable, StyleSheet, View, useColorScheme } from 'react-native';
 import { Colors } from '@/constants/Colors';
 

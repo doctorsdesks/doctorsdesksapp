@@ -1,5 +1,5 @@
 import CustomButton from '@/components/CustomButton';
-import React, { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { BackHandler, Keyboard, Pressable, StyleSheet, View } from 'react-native';
 import { router } from 'expo-router';
 import Toast from 'react-native-toast-message';
@@ -10,12 +10,14 @@ import { saveSecureKey } from '@/components/Utils';
 import { ThemedView } from '@/components/ThemedView';
 import CustomInput2 from '@/components/CustomInput2';
 import { ThemedText } from '@/components/ThemedText';
+import { useNotification } from '@/context/NotifcationContext';
 
 const Login = () => {
     const { signUpDetails } = useAppContext();
-    const [loginDetails, setLoginDetails] = React.useState<any>([]);
-    const [isKeyboardOpen, setIsKeyboardOpen] = React.useState<boolean>(false);
-    const [loader, setLoader] = React.useState<boolean>(false);
+    const { initializeNotifications } = useNotification();
+    const [loginDetails, setLoginDetails] = useState<any>([]);
+    const [isKeyboardOpen, setIsKeyboardOpen] = useState<boolean>(false);
+    const [loader, setLoader] = useState<boolean>(false);
 
     useEffect(() => {
         if(signUpDetails){
@@ -86,8 +88,10 @@ const Login = () => {
               );
             const { data } = response;
             if (data.data?.success) {
-                await saveSecureKey("doctorId", data.data?.user?.phone);
-                await saveSecureKey("userAuthtoken", data.data?.user?.authToken);
+                saveSecureKey("userId", data.data?.user?.userId);
+                await initializeNotifications(data.data?.user?.userId, data.data?.user?.authToken);
+                saveSecureKey("doctorId", data.data?.user?.phone);
+                saveSecureKey("userAuthtoken", data.data?.user?.authToken);
                 router.replace("/dashboard");
             } else {
                 Toast.show({
@@ -111,12 +115,12 @@ const Login = () => {
         switch (item.inputType) {
             case "NUMBER":
                 return (
-                    <CustomInput2 data={item} onChange={(value, id) => handleChange(value, id)} />
+                    <CustomInput2 data={item} onChange={(value: string, id: string) => handleChange(value, id)} />
                 )
                 break;
             case "PASSWORD":
                 return (
-                    <CustomInput2 data={item} onChange={(value, id) => handleChange(value, id)} />
+                    <CustomInput2 data={item} onChange={(value: string, id: string) => handleChange(value, id)} />
                 )
                 break;
             default:

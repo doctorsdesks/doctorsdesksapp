@@ -1,6 +1,6 @@
 import CustomButton from '@/components/CustomButton';
 import CustomInput from '@/components/CustomInput';
-import React, { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { BackHandler, Pressable, StyleSheet, Text, View } from 'react-native';
 import auth from '@react-native-firebase/auth';
 import { router } from 'expo-router';
@@ -13,7 +13,7 @@ import { signUpDetailsInitial } from '@/context/InitialState';
 
 const OTPLogin = () => {
     const { signUpDetails, setSignUpDetails, setDoctorDetails } = useAppContext();
-    const [phoneNumber, setPhoneNumber] = React.useState({
+    const [phoneNumber, setPhoneNumber] = useState({
         id: 'phone',
         type: 'STRING',
         inputType: 'PHONE',
@@ -22,7 +22,7 @@ const OTPLogin = () => {
         isMandatory: true,
         errorMessage: 'Please enter 10 digits mobile number.',
     });
-    const [otp, setOtp] = React.useState({
+    const [otp, setOtp] = useState({
         id: 'otp',
         type: 'STRING',
         inputType: 'NUMBER',
@@ -31,14 +31,14 @@ const OTPLogin = () => {
         isMandatory: true,
         errorMessage: 'Please enter 4 digits otp.',
     });
-    const [confirm, setConfirm] = React.useState<any>(false);
+    const [confirm, setConfirm] = useState<any>(false);
 
-    const [timer, setTimer] = React.useState<number>(0);
-    const [canResendOtp, setCanResendOtp] = React.useState<boolean>(false);
-    const [isOTPWrong, setIsOTPWrong] = React.useState<boolean>(false);
-    const [loader, setLoader] = React.useState<boolean>(false);
+    const [timer, setTimer] = useState<number>(0);
+    const [canResendOtp, setCanResendOtp] = useState<boolean>(false);
+    const [isOTPWrong, setIsOTPWrong] = useState<boolean>(false);
+    const [loader, setLoader] = useState<boolean>(false);
 
-    const [testingNumbers] = React.useState<string>("1111111111, 1111111112, 1111111113, 1111111119");
+    const [testingNumbers] = useState<string>("1111111111, 1111111112, 1111111113, 1111111119");
 
     useEffect(() => {
         const backAction = () => {

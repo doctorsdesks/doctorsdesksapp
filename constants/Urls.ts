@@ -21,4 +21,6 @@ export const URLS = {
     TRIGGER_OTP: "/v1/message/trigger_otp",
     VERIFY_OTP: "/v1/message/verify_otp",
     RESET_PASSWORD: "/v1/user/reset_password",
+    PUSH_TOKEN: "/v1/notification-token/token",
+    READ_NOTIFICATION: "/v1/notifications",
 }

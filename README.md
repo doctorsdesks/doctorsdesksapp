@@ -49,3 +49,16 @@ Join our community of developers creating universal apps.
 - [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
 - [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
 # doctorsdesksapp
+
+
+# Deployment
+For Local Running 
+npx expo start
+
+For development build
+eas build --profile development --platform android  
+
+for production build
+eas build -p android --profile production
+
+export NODE_TLS_REJECT_UNAUTHORIZED=0 && eas build -p android --profile production --clear-cache

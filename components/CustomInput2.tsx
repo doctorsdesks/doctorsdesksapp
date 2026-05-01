@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { View, Text, TextInput, StyleSheet, Pressable } from 'react-native';
 import { ThemedText } from './ThemedText';
 import { ThemedView } from './ThemedView';
@@ -143,7 +143,7 @@ const CustomInput2: React.FC<CustomInput2Props> = ({ data, onChange, handleFocus
               }
             </Pressable>
             {showDatePicker && (
-              <DateTimePicker value={value ? new Date(value.split('-').reverse().join('-')) : new Date()} mode="date" display="default" onChange={handleDateChange} />
+              id === "dob" ? <DateTimePicker maximumDate={new Date()} value={value ? new Date(value.split('-').reverse().join('-')) : new Date()} mode="date" display="default" onChange={handleDateChange} /> : <DateTimePicker maximumDate={new Date()} value={value ? new Date(value.split('-').reverse().join('-')) : new Date()} mode="date" display="default" onChange={handleDateChange} />
             )}
           </>
         ) : 
