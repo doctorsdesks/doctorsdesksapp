@@ -37,6 +37,12 @@ export const AppointmentStatus = {
     CANCELLED: 'CANCELLED',
 }
 
+export const RequestStatus = {
+  PENDING: 'PENDING',
+  ACCEPTED: 'ACCEPTED',
+  REJECTED: 'REJECTED',
+}
+
 export const AppointmentType = {
     OPD: "OPD",
     EMERGENCY: 'EMERGENCY'
@@ -47,6 +53,13 @@ export const DocStatusType = {
     VERIFIED: "VERIFIED",
     BLOCKED: "BLOCKED"
 }
+
+export const DoctorRolesType = {
+    PRIMARY_DOCTOR: "Primary Doctor",
+    CONSULTANT: "Consultant",
+    VISITING_DOCTOR: "Visiting Doctor",
+    STAFF_DOCTOR: "Staff Doctor"
+};
 
 export interface DaysForSlot {
     day: string;
@@ -78,4 +91,9 @@ export interface NotificationType {
     },
     isRead: boolean;
     category: string;
+}
+
+export interface DoctorRequest {
+    doctorCode: string;
+    role: string;
 }

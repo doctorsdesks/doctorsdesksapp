@@ -16,12 +16,14 @@ import { useColorScheme } from '@/hooks/useColorScheme.web';
 import CustomModal from './CustomModal';
 
 export interface ManageSlotTimingProps {
+    source?: string;
     timings: any[];
     setTimings: (data: any) => void;
     eachDayChange: any;
+    clinicData?: string;
 }
 
-const ManageSlotTiming: React.FC<ManageSlotTimingProps> = ({ timings, setTimings, eachDayChange }) => {
+const ManageSlotTiming: React.FC<ManageSlotTimingProps> = ({ source, timings, setTimings, eachDayChange, clinicData }) => {
     const { translations, selectedLanguage } = useAppContext();
     const { height } = Dimensions.get('window');
     const scrollViewRef = React.useRef(null);
@@ -79,12 +81,22 @@ const ManageSlotTiming: React.FC<ManageSlotTimingProps> = ({ timings, setTimings
 
     useEffect(() => {
         const backAction = () => {
-            router.replace({
-                pathname: "/clinicDetail/manageSlotAndTiming",
-                params: {
-                    selectedNav: "Clinic Timing",
-                }
-            });
+            if (source === "hospitalClinic") {
+                router.replace({
+                    pathname: "/clinicDetail/manageSlotAndTiming",
+                    params: {
+                        source: source,
+                        clinicData: clinicData
+                    }
+                });
+            } else {
+                router.replace({
+                    pathname: "/clinicDetail/manageSlotAndTiming",
+                    params: {
+                        selectedNav: "Clinic Timing",
+                    }
+                });
+            }
             return true;
         };
 

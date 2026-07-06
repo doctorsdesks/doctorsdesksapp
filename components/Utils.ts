@@ -3,7 +3,7 @@ import Toast from 'react-native-toast-message';
 import * as SecureStore from 'expo-secure-store';
 import { URLS } from '@/constants/Urls';
 import axios from 'axios';
-import { NotificationType } from '@/constants/Enums';
+import { DoctorRequest, NotificationType } from '@/constants/Enums';
 
 
 export const uploadFile = async (fileUri: any, fileName: string, phoneNumber: string) => {
@@ -253,12 +253,12 @@ export const uploadFile = async (fileUri: any, fileName: string, phoneNumber: st
             }
           );
         const { data, status } = response;
-        if (status === 200){
-            return {
+       if (status === 200) {
+          return {
               status: "SUCCESS",
-              data: data.data[0],
-            }
-        } else {
+              data: data.data,
+          };
+      } else {
           return {
             status: "FAILURE",
             error: "Something wrong. Please try again.",
@@ -273,10 +273,12 @@ export const uploadFile = async (fileUri: any, fileName: string, phoneNumber: st
   }
 
   export const updateClinic = async (clinicId: string, payload: any) => {
+    const userType = await getSecureKey("userType");
+    const finalPayload = { ...payload, updateBy: userType }
     const url = URLS.BASE + URLS.UPDATE_CLINIC + "/"  + clinicId;
-        const authToken = await getSecureKey("userAuthtoken");
+    const authToken = await getSecureKey("userAuthtoken");
         try {
-            const response = await axios.post(url, payload,
+            const response = await axios.post(url, finalPayload,
               {
                 headers: {
                   'X-Requested-With': 'nirvaanhealth_web_app',
@@ -550,7 +552,6 @@ export const uploadFile = async (fileUri: any, fileName: string, phoneNumber: st
               }
             );
             const { data, status } = response;
-            console.info("one", payload, response, data, status)
             if (status === 201){
               return {
                 status: "SUCCESS",
@@ -582,7 +583,6 @@ export const uploadFile = async (fileUri: any, fileName: string, phoneNumber: st
               }
             );
             const { data, status } = response;
-            console.info("two", payload, response, data, status)
             if (status === 201){
               return {
                 status: "SUCCESS",
@@ -860,3 +860,166 @@ export const getOneAppointment = async (id: string) => {
         }
     }
   }
+
+export const getHospitalDetails = async (phone: string) => {
+  const url = URLS.BASE + URLS.GET_HOSPITAL_DETAILS + "?phone=" + phone;
+  const authToken = await getSecureKey("userAuthtoken");
+  try {
+      const response = await axios.get(url,
+          {
+            headers: {
+              'X-Requested-With': 'nirvaanhealth_web_app',
+              "Authorization": `Bearer ${authToken}`
+            },
+          }
+        );
+      const { data, status } = response;
+      if (status === 200){
+          return {
+            status: "SUCCESS",
+            data: data.data,
+          }
+      } else {
+        return {
+          status: "FAILURE",
+          error: "Something wrong. Please try again.",
+        }
+      }
+  } catch (error: any) {
+      return {
+        status: "FAILURE",
+        error: error?.response?.data?.message || "Something went wrong!"
+      }
+  }
+}
+
+export const getHospitalAppointments = async (id: string, date?: string) => {
+  let url = URLS.BASE + URLS.GET_APPOINTMENTS + "/?hospital=" + id;
+  if (date && date !== "") {
+    url = URLS.BASE + URLS.GET_APPOINTMENTS + "/?hospital=" + id + "&date=" + date;
+  }
+  const authToken = await getSecureKey("userAuthtoken");
+  try {
+      const response = await axios.get(url,
+          {
+            headers: {
+              'X-Requested-With': 'nirvaanhealth_web_app',
+                "Authorization": `Bearer ${authToken}`
+            },
+          }
+        );
+      const { data, status } = response;
+      if (status === 200){
+          return {
+            status: "SUCCESS",
+            data: data.data,
+          }
+      } else {
+        return {
+          status: "FAILURE",
+          error: "Something wrong. Please try again.",
+        }
+      }
+  } catch (error: any) {
+      return {
+        status: "FAILURE",
+        error: error?.response?.data?.message || "Something went wrong!"
+      }
+  }
+}
+
+export const getAllDoctorsByHospital = async (hospitalId: string) => {
+  const url = URLS.BASE + URLS.ALL_DOCTORS_FOR_HOSPITAL + "/" + hospitalId;
+  const authToken = await getSecureKey("userAuthtoken");
+  try {
+      const response = await axios.get(url,
+          {
+            headers: {
+              'X-Requested-With': 'nirvaanhealth_web_app',
+              "Authorization": `Bearer ${authToken}`
+            },
+          }
+        );
+      const { data, status } = response;
+      if (status === 200){
+          return {
+            status: "SUCCESS",
+            data: data.data,
+          }
+      } else {
+        return {
+          status: "FAILURE",
+          error: "Something wrong in fetch doctors. Please try again.",
+        }
+      }
+  } catch (error: any) {
+      return {
+        status: "FAILURE",
+        error: error?.response?.data?.message || "Something went wrong for fetch doctors!"
+      }
+  }
+}
+
+export const getHospitalClinicForDoctor = async (docId: string, hospitalId: string) => {
+  const url = URLS.BASE + URLS.GET_HOSPITAL_CLINIC_FOR_DOCTOR + "?doctor=" + docId + "&hospital=" + hospitalId;
+  const authToken = await getSecureKey("userAuthtoken");
+  try {
+      const response = await axios.get(url,
+          {
+            headers: {
+              'X-Requested-With': 'nirvaanhealth_web_app',
+              "Authorization": `Bearer ${authToken}`
+            },
+          }
+        );
+      const { data, status } = response;
+      if (status === 200){
+          return {
+            status: "SUCCESS",
+            data: data.data,
+          }
+      } else {
+        return {
+          status: "FAILURE",
+          error: "Something wrong. Please try again.",
+        }
+      }
+  } catch (error: any) {
+      return {
+        status: "FAILURE",
+        error: error?.response?.data?.message || "Something went wrong!"
+      }
+  }
+}
+
+export const raiseRequestForDoctor = async (payload: any) => {
+  const authToken = await getSecureKey("userAuthtoken");
+  const url = URLS.BASE + URLS.RAISE_REQUEST;
+      try {
+          const response = await axios.post(url, payload,
+            {
+              headers: {
+                'X-Requested-With': 'nirvaanhealth_web_app',
+                "Authorization": `Bearer ${authToken}`
+              },
+            }
+          );
+          const { data, status } = response;
+          if (status === 201){
+            return {
+              status: "SUCCESS",
+              message: data.message
+            }
+          } else {
+            return {
+              status: "FAILURE",
+              error: "Something wrong during raise request. Please try again.",
+            }
+          }
+      } catch (error: any) {
+        return {
+          status: "FAILURE",
+          error: error?.response?.data?.message || "Something went wrong for raising request!"
+        }
+      }
+}

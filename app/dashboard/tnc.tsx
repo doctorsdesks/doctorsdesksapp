@@ -1,4 +1,4 @@
-import { router } from 'expo-router';
+import { Href, router, useLocalSearchParams } from 'expo-router';
 import { ReactNode, useEffect } from 'react';
 import { ScrollView, View, Text, StyleSheet, TouchableOpacity, Linking, BackHandler } from 'react-native';
 
@@ -9,10 +9,15 @@ type SectionProps = {
 }
 
 const TnC = () => {
+  const { sourcePath } = useLocalSearchParams();
 
   useEffect(() => {
         const backAction = () => {
-            router.replace("/dashboard/profile");
+            if (sourcePath) {
+              router.replace(sourcePath as Href<string>);
+            } else {
+              router.replace("/dashboard/profile");
+            }
             return true;
         };
 

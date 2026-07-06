@@ -5,7 +5,7 @@ import { ThemedView } from '@/components/ThemedView';
 import { getClinics, updateClinic } from '@/components/Utils';
 import { StringObject } from '@/constants/Enums';
 import { useAppContext } from '@/context/AppContext';
-import { router } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { BackHandler, Dimensions, StyleSheet, View } from 'react-native';
 import Toast from 'react-native-toast-message';
@@ -41,9 +41,15 @@ const ConsultationFee = () => {
     ]);
     const [clinicId, setClinicId] = useState<string>("");
 
+    const { source, clinicData } = useLocalSearchParams();
+
     useEffect(() => {
         const backAction = () => {
-            router.replace("/dashboard/profile");
+            if (source === "hospitalClinic") {
+                router.replace("/hospitalDashboard/doctors");
+            } else {
+                router.replace("/dashboard/profile");
+            }
             return true;
         };
 
@@ -74,8 +80,23 @@ const ConsultationFee = () => {
                 setLoader(false);
             }
         }
-        getFeeDetails();
+        if (doctorDetails && doctorDetails?.phone) {
+            getFeeDetails();
+        }
     },[doctorDetails])
+
+    useEffect(() => {
+        if (source === "hospitalClinic") {
+            const clinicInfo = JSON.parse(clinicData as string);
+            setClinicId(clinicInfo?._id);
+            const finalData = data?.map((item: any) => {
+                if (item?.id === "consultationFee") return { ...item, value: JSON.stringify(clinicInfo?.appointmentFee) }
+                if (item?.id === "emergencyFee") return { ...item, value: JSON.stringify(clinicInfo?.emergencyFee) }
+            })
+            setData(finalData);
+            setLoader(false);
+        }
+    },[source])
 
     const handleSave = () => {
         if (isEditable) {
@@ -117,7 +138,11 @@ const ConsultationFee = () => {
                 visibilityTime: 3000,
             });
             setLoader(false);
-            router.replace("/dashboard/profile");
+            if (source === "hospitalClinic") {
+                router.replace("/hospitalDashboard/doctors");
+            } else {
+                router.replace("/dashboard/profile");
+            }
         } else {
             Toast.show({
                 type: 'error',  
@@ -127,7 +152,6 @@ const ConsultationFee = () => {
             setLoader(false);
         }
     }
-
 
     return(loader ?
             <Loader />

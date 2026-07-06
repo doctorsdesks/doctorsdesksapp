@@ -12,7 +12,7 @@ interface SuccessPageProps {
 
 const SuccessPage: React.FC<SuccessPageProps> = ({ onClick }) => {
     const colorSchema = useColorScheme();
-    const { isLoggedFailed } = useLocalSearchParams();
+    const { isLoggedFailed, accountType } = useLocalSearchParams();
 
     useEffect(() => {
         const backAction = () => {
@@ -29,7 +29,11 @@ const SuccessPage: React.FC<SuccessPageProps> = ({ onClick }) => {
         if (isLoggedFailed === "true") {
             router.replace('/login');
         } else {
-            router.replace('/dashboard');
+            if (accountType === "doctor") {
+                router.replace('/dashboard');
+            } else if (accountType === "hospital") {
+                router.replace("/hospitalDashboard");
+            }
         }
     }
 

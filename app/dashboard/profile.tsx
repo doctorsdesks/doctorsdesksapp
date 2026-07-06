@@ -82,6 +82,7 @@ const Profile = () => {
             <View style={{ marginTop: 56, display: 'flex', alignItems: 'center', marginBottom: 12 }}>
                 <ThemedText style={{ fontSize: 14, lineHeight: 14, fontWeight: 500 }} >Dr. {doctorDetails?.name}</ThemedText>
                 <ThemedText style={{ fontSize: 12, lineHeight: 12, fontWeight: 400, marginTop: 6 }} >{getQualification()}</ThemedText>
+                <ThemedText style={{ fontSize: 12, lineHeight: 12, fontWeight: 400, marginTop: 6 }} >Code: {doctorDetails?.doctorCode}</ThemedText>
             </View>
             <ScrollView 
                 ref={scrollViewRef}
@@ -104,13 +105,13 @@ const Profile = () => {
                     </Pressable>
                     <Pressable 
                         onPress={() => {
-                            router.replace("/clinicDetail");
+                            router.replace("/clinicDetail/clinics");
                         }}
                         style={{ paddingVertical: 8, display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 8 }} 
                     >
                         <View style={{ display: 'flex', alignItems: 'center', flexDirection: 'row' }} >
                             <Icon type='clinicAddress' fill={Colors[colorScheme].icon} />
-                            <ThemedText style={{ marginLeft: 8, fontSize: 15, lineHeight: 24, fontWeight: 500 }} >{finalText("Clinic Address", translations, selectedLanguage)} </ThemedText>
+                            <ThemedText style={{ marginLeft: 8, fontSize: 15, lineHeight: 24, fontWeight: 500 }} >{finalText("Clinics", translations, selectedLanguage)} </ThemedText>
                         </View>
                         <Icon type='arrowRight' fill={Colors[colorScheme].icon} />
                     </Pressable>

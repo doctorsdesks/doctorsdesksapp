@@ -111,7 +111,7 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({
       // ✅ Register listeners
       notificationListener.current =
         Notifications.addNotificationReceivedListener(async (notification) => {
-          console.log("Notification received in foreground:");
+          console.log("Notification received in foreground:", notification);
 
           setNotification(notification);
 

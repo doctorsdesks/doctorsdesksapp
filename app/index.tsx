@@ -45,8 +45,13 @@ const OnboardingScreen = () => {
 
     const checkForLogin = async () => {
         const value = await getSecureKey("userAuthtoken");
+        const userType = await getSecureKey("userType")
         if (value && value !== "") {
-            router.replace("/dashboard");
+            if (userType === "DOCTOR") {
+                router.replace("/dashboard");
+            } else if (userType === "ADMIN") {
+                router.replace("/hospitalDashboard");
+            }
         } else {
             checkForOnBoarding();
         }

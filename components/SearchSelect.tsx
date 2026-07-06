@@ -237,9 +237,10 @@ const styles = StyleSheet.create({
         padding: 10,
     },
     option: {
-        paddingHorizontal: 16,
+        paddingHorizontal: 0,
         paddingVertical: 12,
         borderBottomWidth: 1,
+        marginHorizontal: 16
     },
     optionText: {
         fontSize: 14,
