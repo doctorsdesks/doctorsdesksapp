@@ -131,7 +131,7 @@ const Notifications = () => {
                                     <EachNotification
                                         key={item.id || index.toString()}
                                         notification={item}
-                                        onPress={() => onNotificationClick(item)}
+                                        onNotificationClick={() => onNotificationClick(item)}
                                     />
                                 ))
                             }

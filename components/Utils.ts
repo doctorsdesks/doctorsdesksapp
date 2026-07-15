@@ -994,7 +994,7 @@ export const getHospitalClinicForDoctor = async (docId: string, hospitalId: stri
 
 export const raiseRequestForDoctor = async (payload: any) => {
   const authToken = await getSecureKey("userAuthtoken");
-  const url = URLS.BASE + URLS.RAISE_REQUEST;
+  const url = URLS.BASE + URLS.HOSPITAL_DOCTOR_BASE + "/request";
       try {
           const response = await axios.post(url, payload,
             {
@@ -1022,4 +1022,100 @@ export const raiseRequestForDoctor = async (payload: any) => {
           error: error?.response?.data?.message || "Something went wrong for raising request!"
         }
       }
+}
+
+export const getOneMappingDoctor = async (id: string) => {
+    const authToken = await getSecureKey("userAuthtoken");
+    let url = URLS.BASE + URLS.HOSPITAL_DOCTOR_BASE + "/one/" + id;
+    try {
+        const response = await axios.get(url,
+            {
+              headers: {
+                'X-Requested-With': 'nirvaanhealth_web_app',
+                "Authorization": `Bearer ${authToken}`
+              },
+            }
+          );
+        const { data, status } = response;
+        if (status === 200){
+            return {
+              status: "SUCCESS",
+              data: data.data,
+            }
+        } else {
+          return {
+            status: "FAILURE",
+            error: "Something wrong. Please try again.",
+          }
+        }
+    } catch (error: any) {
+        return {
+          status: "FAILURE",
+          error: error?.response?.data?.message
+        }
+    }
+  }
+
+export const acceptHospitalJoiningRequest = async (id: string) => {
+  const authToken = await getSecureKey("userAuthtoken");
+  const url = URLS.BASE + URLS.HOSPITAL_DOCTOR_BASE + "/accept/" + id;
+    try {
+        const response = await axios.patch(url, {},
+          {
+            headers: {
+              'X-Requested-With': 'nirvaanhealth_web_app',
+              "Authorization": `Bearer ${authToken}`
+            },
+          }
+        );
+        const { data, status } = response;
+        if (status === 201){
+          return {
+            status: "SUCCESS",
+            message: data.message
+          }
+        } else {
+          return {
+            status: "FAILURE",
+            error: "Something wrong during accepting request. Please try again.",
+          }
+        }
+    } catch (error: any) {
+      return {
+        status: "FAILURE",
+        error: error?.response?.data?.message || "Something went wrong for accept request!"
+      }
+    }
+}
+
+export const rejectHospitalJoiningRequest = async (id: string) => {
+  const authToken = await getSecureKey("userAuthtoken");
+  const url = URLS.BASE + URLS.HOSPITAL_DOCTOR_BASE + "/reject/" + id;
+    try {
+        const response = await axios.patch(url, {},
+          {
+            headers: {
+              'X-Requested-With': 'nirvaanhealth_web_app',
+              "Authorization": `Bearer ${authToken}`
+            },
+          }
+        );
+        const { data, status } = response;
+        if (status === 201){
+          return {
+            status: "SUCCESS",
+            message: data.message
+          }
+        } else {
+          return {
+            status: "FAILURE",
+            error: "Something wrong during rejecting request. Please try again.",
+          }
+        }
+    } catch (error: any) {
+      return {
+        status: "FAILURE",
+        error: error?.response?.data?.message || "Something went wrong for reject request!"
+      }
+    }
 }

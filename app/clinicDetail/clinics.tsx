@@ -5,7 +5,7 @@ import {
   StyleSheet,
   View,
 } from "react-native";
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import Toast from "react-native-toast-message";
 
 import { ThemedView } from "@/components/ThemedView";
@@ -17,6 +17,7 @@ import { getClinics } from "@/components/Utils";
 
 const Clinics = () => {
   const { doctorDetails } = useAppContext();
+  const { source } = useLocalSearchParams();
 
   const [loader, setLoader] = useState(true);
   const [clinics, setClinics] = useState<any[]>([]);
@@ -61,12 +62,38 @@ const Clinics = () => {
   const handleClinicPress = (clinic: any) => {
     if (clinic?.hospitalId) return;
 
-    router.push({
-      pathname: "/clinicDetail",
-      params: {
-        clinicInfo: JSON.stringify(clinic)
-      },
-    });
+    if (source === "clinicAddress") {
+      router.push({
+        pathname: "/clinicDetail",
+        params: {
+          clinicInfo: JSON.stringify(clinic)
+        },
+      });
+    }
+    if (source === "clinicFee") {
+      router.push({
+        pathname: "/clinicDetail/consultationFee",
+        params: {
+          clinicInfo: JSON.stringify(clinic)
+        },
+      });
+    }
+    if (source === "clinicTiming") {
+      router.push({
+        pathname: "/clinicDetail/manageSlotAndTiming",
+        params: {
+          clinicData: JSON.stringify(clinic)
+        },
+      });
+    }
+    if (source === "blockSlots") {
+      router.push({
+        pathname: "/clinicDetail/blockSlots",
+        params: {
+          clinicData: JSON.stringify(clinic)
+        },
+      });
+    }
   };
 
   if (loader) {
@@ -79,13 +106,16 @@ const Clinics = () => {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.scroll}
       >
-        {clinics?.map((clinic) => (
-          <ClinicCard
-            key={clinic._id}
-            clinic={clinic}
-            onPress={() => handleClinicPress(clinic)}
-          />
-        ))}
+        {clinics?.map((clinic) => {
+          return (
+            <ClinicCard
+              key={clinic._id}
+              clinic={clinic}
+              source={source as string}
+              onPress={() => handleClinicPress(clinic)}
+            />
+          )
+        })}
       </ScrollView>
     </ThemedView>
   );

@@ -79,7 +79,7 @@ const Profile = () => {
                     }
                 </View>
             </View>
-            <View style={{ marginTop: 56, display: 'flex', alignItems: 'center', marginBottom: 12 }}>
+            <View style={{ marginTop: 56, display: 'flex', alignItems: 'center', marginBottom: 0, borderBottomColor: "#14534F", borderBottomWidth: 1, paddingBottom: 12 }}>
                 <ThemedText style={{ fontSize: 14, lineHeight: 14, fontWeight: 500 }} >Dr. {doctorDetails?.name}</ThemedText>
                 <ThemedText style={{ fontSize: 12, lineHeight: 12, fontWeight: 400, marginTop: 6 }} >{getQualification()}</ThemedText>
                 <ThemedText style={{ fontSize: 12, lineHeight: 12, fontWeight: 400, marginTop: 6 }} >Code: {doctorDetails?.doctorCode}</ThemedText>
@@ -105,7 +105,12 @@ const Profile = () => {
                     </Pressable>
                     <Pressable 
                         onPress={() => {
-                            router.replace("/clinicDetail/clinics");
+                            router.replace({
+                                pathname: "/clinicDetail/clinics",
+                                params: {
+                                    source: "clinicAddress",
+                                }
+                            });
                         }}
                         style={{ paddingVertical: 8, display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 8 }} 
                     >
@@ -119,7 +124,12 @@ const Profile = () => {
                 <View style={{ borderRadius: 8, borderColor: "#D9D9D9", borderWidth: 1, display: 'flex', flexDirection: 'column', paddingHorizontal: 16, paddingRight: 8, paddingVertical: 12, width: "100%", marginTop: 16 }} >
                     <Pressable 
                         onPress={() => {
-                            router.replace("/clinicDetail/manageSlotAndTiming");
+                            router.replace({
+                                pathname: "/clinicDetail/clinics",
+                                params: {
+                                    source: "clinicTiming",
+                                }
+                            });
                         }}
                         style={{ paddingVertical: 8, display: 'flex', flexDirection:'row', justifyContent: 'space-between', alignItems: 'center' }} 
                     >
@@ -129,9 +139,14 @@ const Profile = () => {
                         </View>
                         <Icon type='arrowRight' fill={Colors[colorScheme].icon} />
                     </Pressable>
-                    <Pressable 
+                    <Pressable
                         onPress={() => {
-                            router.replace("/clinicDetail/consultationFee");
+                            router.replace({
+                                pathname: "/clinicDetail/clinics",
+                                params: {
+                                    source: "clinicFee",
+                                }
+                            });
                         }}
                         style={{ paddingVertical: 8, display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 8 }} 
                     >
@@ -143,7 +158,12 @@ const Profile = () => {
                     </Pressable>
                     <Pressable 
                         onPress={() => {
-                            router.replace("/clinicDetail/blockSlots");
+                            router.replace({
+                                pathname: "/clinicDetail/clinics",
+                                params: {
+                                    source: "blockSlots",
+                                }
+                            });
                         }}
                         style={{ paddingVertical: 8, display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 8 }} 
                     >

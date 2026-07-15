@@ -26,5 +26,5 @@ export const URLS = {
     GET_HOSPITAL_DETAILS: "/v1/hospital/details",
     ALL_DOCTORS_FOR_HOSPITAL: "/v1/hospital-doctor/hospital",
     GET_HOSPITAL_CLINIC_FOR_DOCTOR: "/v1/clinic/hospitalclinic",
-    RAISE_REQUEST: "/v1/hospital-doctor/request"
+    HOSPITAL_DOCTOR_BASE: "/v1/hospital-doctor",
 }

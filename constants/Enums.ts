@@ -78,6 +78,21 @@ export const CONFIGS = {
     SPECIALISATION: "SPECIALISATION"
 }
 
+export enum NotificationCategory {
+  GENERAL = 'GENERAL',
+  APPOINTMENT_REQUEST = 'APPOINTMENT_REQUEST',
+  APPOINTMENT_STATUS = 'APPOINTMENT_STATUS',
+  DOCTOR_JOINING_REQUEST = 'DOCTOR_JOINING_REQUEST',
+  DOCTOR_JOINING_STATUS = 'DOCTOR_JOINING_STATUS',
+  HOSPITAL_ANNOUNCEMENT = 'HOSPITAL_ANNOUNCEMENT',
+}
+
+export enum NotificationActionCategory {
+  NONE = "NONE",
+  APPOINTMENT_REQUEST_ACTIONS = "APPOINTMENT_REQUEST_ACTIONS",
+  DOCTOR_JOINING_REQUEST_ACTIONS = "DOCTOR_JOINING_REQUEST_ACTIONS",
+}
+
 export interface NotificationType {
     id: string;
     title: string;
@@ -86,11 +101,14 @@ export interface NotificationType {
     icon?: string;
     metadata: {
         notificationId: string;
-        category: string;
+        category: NotificationCategory;
         appointmentId: string;
+        actionCategory?: NotificationActionCategory;
+        deepLink?: string;
+        mappingId?: string;
     },
     isRead: boolean;
-    category: string;
+    category: NotificationCategory;
 }
 
 export interface DoctorRequest {

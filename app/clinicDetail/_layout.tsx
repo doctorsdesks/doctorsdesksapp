@@ -43,13 +43,27 @@ export default function ClinicDetailLayout() {
         const userType = await getSecureKey("userType")
         switch (currentRoute) {
             case "clinicDetails":
-                router.replace("/clinicDetail/clinics");
+                router.replace({
+                    pathname: "/clinicDetail/clinics",
+                    params: {
+                        source: "clinicAddress"
+                    }
+                });
                 break;
             case "clinics": 
                 router.replace("/dashboard/profile");
                 break;
             case "manageSlotAndTiming":
-                userType === "ADMIN" ? router.replace("/hospitalDashboard/doctors") : router.replace("/dashboard/profile");
+                if (userType === "ADMIN") {
+                    router.replace("/hospitalDashboard/doctors")
+                } else {
+                    router.replace({
+                        pathname: "/clinicDetail/clinics",
+                        params: {
+                            source: "clinicTiming"
+                        }
+                    })
+                }
                 break;
             case "manageSlotTiming":
                 router.replace({
@@ -60,13 +74,27 @@ export default function ClinicDetailLayout() {
                 });
                 break;
             case "consultationFee": 
-                userType === "ADMIN" ? router.replace("/hospitalDashboard/doctors") :router.replace("/dashboard/profile");
+                if (userType === "ADMIN") {
+                    router.replace("/hospitalDashboard/doctors")
+                } else {
+                    router.replace({
+                        pathname: "/clinicDetail/clinics",
+                        params: {
+                            source: "clinicFee"
+                        }
+                    })
+                }
                 break;
             case "appLanguage":
                 userType === "ADMIN" ? router.replace("/hospitalDashboard/profile") : router.replace("/dashboard/profile");
                 break;
             case "block":
-                router.replace("/dashboard/profile");
+                router.replace({
+                    pathname: "/clinicDetail/clinics",
+                    params: {
+                        source: "blockSlots"
+                    }
+                })
                 break;
             default:
                 router.replace("/dashboard/profile");

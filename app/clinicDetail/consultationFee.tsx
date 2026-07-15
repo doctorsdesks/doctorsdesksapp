@@ -11,7 +11,7 @@ import { BackHandler, Dimensions, StyleSheet, View } from 'react-native';
 import Toast from 'react-native-toast-message';
 
 const ConsultationFee = () => {
-    const { doctorDetails } = useAppContext();
+    const { clinicInfo } = useLocalSearchParams();
     const { height } = Dimensions.get("window");
     const [loader, setLoader] = useState<boolean>(true);
     const [isEditable, setIsEditable] = useState<boolean>(false);
@@ -48,7 +48,12 @@ const ConsultationFee = () => {
             if (source === "hospitalClinic") {
                 router.replace("/hospitalDashboard/doctors");
             } else {
-                router.replace("/dashboard/profile");
+                router.replace({ 
+                    pathname: "/clinicDetail/clinics",
+                    params: {
+                        source: "clinicFee"
+                    }
+                });
             }
             return true;
         };
@@ -59,31 +64,18 @@ const ConsultationFee = () => {
     }, []);
 
     useEffect(() => {
-        const getFeeDetails = async () => {
-            setLoader(true);
-            const respnose = await getClinics(doctorDetails?.phone);
-            if (respnose.status === "SUCCESS") {
-                const clinicDetails = respnose.data;
-                setClinicId(clinicDetails?._id);
-                const finalData = data?.map((item: any) => {
-                    if (item?.id === "consultationFee") return { ...item, value: JSON.stringify(clinicDetails?.appointmentFee) }
-                    if (item?.id === "emergencyFee") return { ...item, value: JSON.stringify(clinicDetails?.emergencyFee) }
-                })
-                setData(finalData);
-                setLoader(false);
-            } else {
-                Toast.show({
-                    type: 'error',  
-                    text1: respnose.error,
-                    visibilityTime: 3000,
-                });
-                setLoader(false);
-            }
+        if (clinicInfo && clinicInfo !== "") {
+            const clinicDetails = JSON.parse(clinicInfo as string);
+            setClinicId(clinicDetails?._id);
+            const finalData = data?.map((item: any) => {
+                if (item?.id === "consultationFee") return { ...item, value: JSON.stringify(clinicDetails?.appointmentFee) }
+                if (item?.id === "emergencyFee") return { ...item, value: JSON.stringify(clinicDetails?.emergencyFee) }
+            })
+            setData(finalData);
+            setLoader(false);
         }
-        if (doctorDetails && doctorDetails?.phone) {
-            getFeeDetails();
-        }
-    },[doctorDetails])
+    },[clinicInfo])
+    
 
     useEffect(() => {
         if (source === "hospitalClinic") {
@@ -141,7 +133,12 @@ const ConsultationFee = () => {
             if (source === "hospitalClinic") {
                 router.replace("/hospitalDashboard/doctors");
             } else {
-                router.replace("/dashboard/profile");
+                router.replace({ 
+                    pathname: "/clinicDetail/clinics",
+                    params: {
+                        source: "clinicFee"
+                    }
+                });
             }
         } else {
             Toast.show({

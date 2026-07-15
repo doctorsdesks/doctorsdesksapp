@@ -184,7 +184,18 @@ const Appointments = () => {
                     : 
                         filteredAppointments?.map((appointment: any, index: number) => {
                             return (
-                                <AppointmentCardTwo key={appointment?._id} lastAppointment={index === filteredAppointments?.length - 1} firstAppointment={index === 0} status={appointment?.status} name={appointment?.doctorName} number={appointment?.patientId} startTime={appointment?.startTime} handleStatusUpdate={(status: string) => handleStatusUpdate(status, appointment?._id)} />
+                                <AppointmentCardTwo 
+                                    key={appointment?._id} 
+                                    hospitalName={appointment?.hospitalId?.hospitalName}
+                                    isHospitalAppointment={!!appointment?.hospitalId} 
+                                    lastAppointment={index === filteredAppointments?.length - 1} 
+                                    firstAppointment={index === 0} 
+                                    status={appointment?.status} 
+                                    name={appointment?.doctorName} 
+                                    number={appointment?.patientId} 
+                                    startTime={appointment?.startTime} 
+                                    handleStatusUpdate={(status: string) => handleStatusUpdate(status, appointment?._id)} 
+                                />
                             );
                         })
                     }

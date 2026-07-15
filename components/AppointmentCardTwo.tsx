@@ -15,9 +15,11 @@ interface AppointmentCardTwoProps {
     startTime: string;
     status: string;
     handleStatusUpdate: (status: string) => void;
+    hospitalName?: string;
+    isHospitalAppointment?: boolean;
 }
 
-const AppointmentCardTwo: React.FC<AppointmentCardTwoProps> = ({ lastAppointment, firstAppointment, name, number, startTime, status, handleStatusUpdate }) => {
+const AppointmentCardTwo: React.FC<AppointmentCardTwoProps> = ({ lastAppointment, firstAppointment, name, number, startTime, status, handleStatusUpdate, hospitalName, isHospitalAppointment }) => {
     const { translations, selectedLanguage } = useAppContext();
     const [parentHeight, setParentHeight] = useState(0);
     const { width } = Dimensions.get("window");
@@ -90,22 +92,65 @@ const AppointmentCardTwo: React.FC<AppointmentCardTwoProps> = ({ lastAppointment
                 <View
                     style={{
                         marginLeft: 16,
-                        backgroundColor: "#EAF4F3",
                         paddingVertical: 8,
                         paddingRight: 16,
                         paddingLeft: 8,
                         borderLeftWidth: 8,
-                        borderLeftColor: "#2DB9B0",
                         borderRadius: 8,
-                        width: width - 152
+                        width: width - 152,
+                        backgroundColor: isHospitalAppointment
+                            ? "#F4F9FF"
+                            : "#EAF4F3",
+                        borderLeftColor: isHospitalAppointment
+                            ? "#2F6FED"
+                            : "#2DB9B0",
+                        borderWidth: isHospitalAppointment ? 1 : 0,
+                        borderColor: isHospitalAppointment ? "#B8DAFF" : undefined,
+                        shadowColor: isHospitalAppointment ? "#2F6FED" : "#000",
+                        shadowOffset: {
+                            width: 0,
+                            height: 2,
+                        },
+                        shadowOpacity: isHospitalAppointment ? 0.12 : 0.05,
+                        shadowRadius: 4,
+                        elevation: isHospitalAppointment ? 3 : 1,
                     }}
                 >
                     <ThemedText style={{ fontSize: 14, lineHeight: 16, fontWeight: 600 }} lightColor='#000' darkColor='#000' >{name}</ThemedText>
-                    <ThemedText style={{ fontSize: 11, lineHeight: 16, fontWeight: 400, marginTop: 8 }} lightColor='#333' darkColor='#333' >{number}</ThemedText>
+                    {isHospitalAppointment && (
+                        <View
+                            style={{
+                                flexDirection: "row",
+                                alignItems: "center",
+                                alignSelf: "flex-start",
+                                backgroundColor: "#E6F2FF",
+                                paddingHorizontal: 8,
+                                paddingVertical: 4,
+                                borderRadius: 20,
+                                marginTop: 8,
+                            }}
+                        >
+                            <Icon type="hospital" />
+
+                            <ThemedText
+                                style={{
+                                    marginLeft: 6,
+                                    fontSize: 11,
+                                    fontWeight: 600,
+                                    color: "#2F6FED",
+                                }}
+                            >
+                                {hospitalName}
+                            </ThemedText>
+                        </View>
+                    )}
+                    <ThemedText style={{ fontSize: 11, lineHeight: 16, fontWeight: 400, marginTop: isHospitalAppointment ? 10 : 8 }} lightColor='#333' darkColor='#333' >{number}</ThemedText>
                     <Pressable
                         style={{
                             borderRadius: 4,
-                            borderColor: "#2DB9B0",
+                            borderColor: isHospitalAppointment
+                                ? "#2F6FED"
+                                : "#2DB9B0",
                             borderWidth: 1,
                             paddingHorizontal: 8,
                             paddingVertical: 6,
@@ -114,7 +159,7 @@ const AppointmentCardTwo: React.FC<AppointmentCardTwoProps> = ({ lastAppointment
                         }}
                         onPress={() => handleStatusUpdate("COMPLETE")}
                     >
-                        <ThemedText style={{ fontSize: 14, lineHeight: 16, fontWeight: 600, color: "#2DB9B0" }} >{finalText("Complete", translations, selectedLanguage)}</ThemedText>
+                        <ThemedText style={{ fontSize: 14, lineHeight: 16, fontWeight: 600, color: isHospitalAppointment ? "#2F6FED" : "#2DB9B0" }} >{finalText("Complete", translations, selectedLanguage)}</ThemedText>
                     </Pressable>
                 </View>
             </View>

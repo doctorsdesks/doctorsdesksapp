@@ -13,6 +13,7 @@ import { ThemedView } from '@/components/ThemedView';
 const ClinicDetailsSetting = () => {
     const { height } = Dimensions.get('window');
     const { clinicInfo } = useLocalSearchParams();
+
     const scrollViewRef = React.useRef(null);
     const [clinicData, setClinicData] = useState<any>();
     const [loader, setLoader] = useState<boolean>(true);
@@ -25,7 +26,12 @@ const ClinicDetailsSetting = () => {
                 Keyboard.dismiss();
                 return true;
             } else {
-                router.replace("/clinicDetail/clinics");
+                router.replace({ 
+                    pathname: "/clinicDetail/clinics",
+                    params: {
+                        source: "clinicAddress"
+                    }
+                });
                 return true;
             }
         };
@@ -114,7 +120,12 @@ const ClinicDetailsSetting = () => {
                 visibilityTime: 3000,
             });
             setLoader(false);
-            router.replace("/clinicDetail/clinics");
+            router.replace({ 
+                pathname: "/clinicDetail/clinics",
+                params: {
+                    source: "clinicAddress"
+                }
+            });
         } else {
             Toast.show({
                 type: 'error',  
