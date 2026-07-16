@@ -1,18 +1,23 @@
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
-import { finalText } from '@/components/Utils';
+import { finalText, getSecureKey } from '@/components/Utils';
 import { useAppContext } from '@/context/AppContext';
-import { router } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { BackHandler, Pressable, StyleSheet, View } from 'react-native';
 
 const AppLanguage = () => {
     const { translations, selectedLanguage, setSelectedLanguage } = useAppContext();
     const [languages, setLanguages] = useState<Array<any>>([]);
+    const { userType } = useLocalSearchParams();
 
     useEffect(() => {
         const backAction = () => {
-            router.replace("/dashboard/profile");
+            if (userType === "ADMIN") {
+                router.replace("/hospitalDashboard/profile");
+            } else {
+                router.replace("/dashboard/profile");
+            }
             return true;
         };
 

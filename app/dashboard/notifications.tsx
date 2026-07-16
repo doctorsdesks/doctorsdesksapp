@@ -5,29 +5,28 @@ import EachNotification from '@/components/EachNotification';
 import Loader from '@/components/Loader';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
-import { finalText, getAllNotifications, getNotificationCount, getOneAppointment, getSecureKey, markNotificationRead, markReadAllNotifications } from '@/components/Utils';
-import { NotificationType } from '@/constants/Enums';
+import { acceptHospitalJoiningRequest, finalText, getAllNotifications, getNotificationCount, getOneAppointment, getOneMappingDoctor, getSecureKey, markNotificationRead, markReadAllNotifications, rejectHospitalJoiningRequest } from '@/components/Utils';
+import { NotificationCategory, NotificationType } from '@/constants/Enums';
 import { URLS } from '@/constants/Urls';
 import { useAppContext } from '@/context/AppContext';
 import { textObject } from '@/context/InitialState';
 import axios from 'axios';
-import { router, useLocalSearchParams } from 'expo-router';
+import { Href, router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useState, useRef } from 'react';
 import { BackHandler, Dimensions, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
 import Toast from "react-native-toast-message";
 
 
 const Notifications = () => {
-    const { selectedAppointment } = useLocalSearchParams();
+    const { notificationId } = useLocalSearchParams();
     const { notifications, setNotifications, translations, selectedLanguage, doctorDetails } = useAppContext();
     const { height, width } = Dimensions.get('window');
     const [loader, setLoader] = useState(false);
     const [isUnReadNotificationExist, setIsUnReadNotificationExist] = useState(false);
-    const [isModalVisible, setIsModalVisible] = useState(false);
     const scrollViewRef = useRef(null);
-    const [appointment, setAppointment] = useState(null);
     const [showCancelPopUp, setShowCancelPopUp] = useState<boolean>(false);
     const [cancelReason, setCancelReason] = useState<any>(textObject);
+    const [selectedNotification, setSelectedNotification] = useState<string>("");
 
     useEffect(() => {
         const backAction = () => {
@@ -41,10 +40,10 @@ const Notifications = () => {
     }, []);
 
     useEffect(() => {
-        if (selectedAppointment &&  selectedAppointment as string !== "") {
-            fetchAppointment(selectedAppointment as string);
+        if (notificationId &&  notificationId as string !== "") {
+            setSelectedNotification(notificationId as string);
         }
-    },[selectedAppointment])
+    },[notificationId])
 
     useEffect(() => {
         if (notifications && notifications?.length > 0) {
@@ -57,8 +56,42 @@ const Notifications = () => {
         try {
             const response = await getOneAppointment(appointmentId);
             if (response?.status === "SUCCESS") {
-                setAppointment(response?.data || null);
-                setIsModalVisible(true);
+                const data = response?.data;
+                if (data.status === "PENDING") {
+                    setSelectedNotification(notification?.metadata?.notificationId as string);
+                } else {
+                    setSelectedNotification("");
+                }
+                if (notification) {
+                    await markNotificationRead({ isRead: true } ,notification?.id);
+                }
+                await fetchNotifications();
+            } else {
+                Toast.show({
+                    type: 'error',
+                    text1: response.error,
+                    visibilityTime: 3000,
+                });
+            }
+        } catch (error) {
+            Toast.show({
+                type: 'error',
+                text1: error as string ?? "Network error",
+                visibilityTime: 3000,
+            });
+        }
+    }
+
+     const fetchHospitalJoiningRequest = async (id: string, notification: NotificationType) => {
+        try {
+            const response = await getOneMappingDoctor(id);
+            if (response?.status === "SUCCESS") {
+                const data = response?.data;
+                if (data.requestStatus === "PENDING") {
+                    setSelectedNotification(notification?.metadata?.notificationId as string);
+                } else {
+                    setSelectedNotification("");
+                }
                 if (notification) {
                     await markNotificationRead({ isRead: true } ,notification?.id);
                 }
@@ -80,8 +113,39 @@ const Notifications = () => {
     }
 
     const onNotificationClick = async (notification: NotificationType) => {
-        const appointmentId = notification?.metadata?.appointmentId;
-        fetchAppointment(appointmentId, notification);
+        switch (notification.category) {
+            case NotificationCategory.APPOINTMENT_REQUEST: {
+                    const appointmentId = notification?.metadata?.appointmentId;
+                    fetchAppointment(appointmentId, notification);
+                }
+                break;
+            case NotificationCategory.APPOINTMENT_STATUS: {
+                    router.push(notification.metadata?.deepLink as Href<string> ?? "/dashboard/appointments");
+                }
+                break;
+            case NotificationCategory.DOCTOR_JOINING_REQUEST: {
+                    const mappingId = notification.metadata?.mappingId as string;
+                    fetchHospitalJoiningRequest(mappingId, notification);
+                }
+                break;
+            case NotificationCategory.GENERAL: {
+                    if (notification.metadata?.deepLink && notification.metadata?.deepLink !== "") {
+                        router.push(notification.metadata?.deepLink as Href<string>);
+                    }
+                }
+                break;
+            case NotificationCategory.HOSPITAL_ANNOUNCEMENT: {
+                    if (notification.metadata?.deepLink && notification.metadata?.deepLink !== "") {
+                        router.push(notification.metadata?.deepLink as Href<string>);
+                    }
+                }
+                break;
+            default:
+                if (notification.metadata?.deepLink && notification.metadata?.deepLink !== "") {
+                    router.push(notification.metadata?.deepLink as Href<string>);
+                }
+                break;
+        }
     }
 
     const fetchNotifications = async () => {
@@ -149,17 +213,6 @@ const Notifications = () => {
         }
     }
 
-    const handleStatusUpdate = (status: string, appointmentId: string) => {
-        if(status === "CANCEL") {
-            setCancelReason({ ...cancelReason, appointmentId: appointmentId });
-            setShowCancelPopUp(true);
-        } else {
-            setLoader(true)
-            setIsModalVisible(false);
-            updateAppointment(status, appointmentId)
-        }
-    }
-
     const updateAppointment = async (selectedStatus: string, appointmentId: string) => {
         setLoader(true);
         let updateData: any = {
@@ -180,9 +233,8 @@ const Notifications = () => {
                 },
               }
             );
-            const { data, status } = response;
+            const { status } = response;
             if (status === 201){
-                setIsModalVisible(false);
                 setShowCancelPopUp(false);
                 Toast.show({
                     type: 'success',  
@@ -211,6 +263,66 @@ const Notifications = () => {
         setCancelReason({ ...cancelReason, value: value, isError: value === "" });
     }
 
+    const handleAccept = async (item: NotificationType) => {
+        if (item?.category === NotificationCategory.DOCTOR_JOINING_REQUEST) {
+            try {
+                const response = await acceptHospitalJoiningRequest(item?.metadata?.mappingId as string);
+                if (response.status === "SUCCESS") {
+                    Toast.show({
+                        type: 'success',
+                        text1: response.message,
+                        visibilityTime: 3000,
+                    });
+                } else {
+                    Toast.show({
+                        type: 'error',
+                        text1: response.error,
+                        visibilityTime: 3000,
+                    });
+                }
+            } catch (error) {
+                Toast.show({
+                    type: 'error',
+                    text1: error as string ?? "Something went wrong for accept request!",
+                    visibilityTime: 3000,
+                });
+            }
+        } else if (item?.category === NotificationCategory.APPOINTMENT_REQUEST) {
+            setLoader(true)
+            updateAppointment("ACCEPT", item?.metadata?.appointmentId)
+        }
+    }
+
+    const handleReject = async (item: NotificationType) => {
+        if (item?.category === NotificationCategory.DOCTOR_JOINING_REQUEST) {
+            try {
+                const response = await rejectHospitalJoiningRequest(item?.metadata?.mappingId as string);
+                if (response.status === "SUCCESS") {
+                    Toast.show({
+                        type: 'success',
+                        text1: response.message,
+                        visibilityTime: 3000,
+                    });
+                } else {
+                    Toast.show({
+                        type: 'error',
+                        text1: response.error,
+                        visibilityTime: 3000,
+                    });
+                }
+            } catch (error) {
+                Toast.show({
+                    type: 'error',
+                    text1: error as string ?? "Something went wrong for reject request!",
+                    visibilityTime: 3000,
+                });
+            }
+        } else if (item?.category === NotificationCategory.APPOINTMENT_REQUEST) {
+            setCancelReason({ ...cancelReason, appointmentId: item?.metadata?.appointmentId });
+            setShowCancelPopUp(true);
+        }
+    }
+
     return (
         <ThemedView style={[styles.container, { height: height }]} >
             <TouchableOpacity 
@@ -235,7 +347,10 @@ const Notifications = () => {
                                     <EachNotification
                                         key={item.id || index.toString()}
                                         notification={item}
-                                        onPress={() => onNotificationClick(item)}
+                                        onAccept={() => handleAccept(item)}
+                                        onReject={() => handleReject(item)}
+                                        onNotificationClick={() => onNotificationClick(item)}
+                                        selectedNotification={selectedNotification}
                                     />
                                 ))
                             }
@@ -246,11 +361,6 @@ const Notifications = () => {
                     }
                 </View>
             }
-            <CustomPopUp visible={isModalVisible} onClose={() => setIsModalVisible(false)}>
-                {appointment ? <AppointmentCard handleStatusUpdate={handleStatusUpdate} width={width} appointment={appointment} source="notification" />
-                    : null
-                }
-            </CustomPopUp>
             {showCancelPopUp &&
                 <AppointmentCancelPopUp showCancelPopUp={showCancelPopUp} setShowCancelPopUp={setShowCancelPopUp} width={width} cancelReason={cancelReason} handleCancelReason={handleCancelReason} updateAppointment={updateAppointment} />
             }

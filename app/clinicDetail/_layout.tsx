@@ -3,7 +3,7 @@ import { Dimensions, Pressable, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router, Slot, usePathname } from 'expo-router';
 import { useAppContext } from '@/context/AppContext';
-import { finalText } from '@/components/Utils';
+import { finalText, getSecureKey } from '@/components/Utils';
 import { ThemedView } from '@/components/ThemedView';
 import { ThemedText } from '@/components/ThemedText';
 import Icon from '@/components/Icons';
@@ -33,17 +33,37 @@ export default function ClinicDetailLayout() {
             setCurrentRoute('appLanguage');
         } else if (pathname.includes('/clinicDetail/blockSlots')) {
             setCurrentRoute('block');
+        } else if (pathname === '/clinicDetail/clinics') {
+            setCurrentRoute('clinics');
         }
     }, [pathname]);
 
     // Handle back navigation based on current route
-    const handleBackNav = () => {
+    const handleBackNav = async () => {
+        const userType = await getSecureKey("userType")
         switch (currentRoute) {
             case "clinicDetails":
+                router.replace({
+                    pathname: "/clinicDetail/clinics",
+                    params: {
+                        source: "clinicAddress"
+                    }
+                });
+                break;
+            case "clinics": 
                 router.replace("/dashboard/profile");
                 break;
             case "manageSlotAndTiming":
-                router.replace("/dashboard/profile");
+                if (userType === "ADMIN") {
+                    router.replace("/hospitalDashboard/doctors")
+                } else {
+                    router.replace({
+                        pathname: "/clinicDetail/clinics",
+                        params: {
+                            source: "clinicTiming"
+                        }
+                    })
+                }
                 break;
             case "manageSlotTiming":
                 router.replace({
@@ -53,14 +73,28 @@ export default function ClinicDetailLayout() {
                     }
                 });
                 break;
-            case "consultationFee":
-                router.replace("/dashboard/profile");
+            case "consultationFee": 
+                if (userType === "ADMIN") {
+                    router.replace("/hospitalDashboard/doctors")
+                } else {
+                    router.replace({
+                        pathname: "/clinicDetail/clinics",
+                        params: {
+                            source: "clinicFee"
+                        }
+                    })
+                }
                 break;
             case "appLanguage":
-                router.replace("/dashboard/profile");
+                userType === "ADMIN" ? router.replace("/hospitalDashboard/profile") : router.replace("/dashboard/profile");
                 break;
             case "block":
-                router.replace("/dashboard/profile");
+                router.replace({
+                    pathname: "/clinicDetail/clinics",
+                    params: {
+                        source: "blockSlots"
+                    }
+                })
                 break;
             default:
                 router.replace("/dashboard/profile");
@@ -74,6 +108,9 @@ export default function ClinicDetailLayout() {
         switch (currentRoute) {
             case "clinicDetails":
                 text = "Clinic Address";
+                break;
+            case "clinics": 
+                text = "Clinics"
                 break;
             case "manageSlotAndTiming":
                 text = "Clinic Timings";

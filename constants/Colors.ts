@@ -87,7 +87,7 @@ export const Colors = {
     successBorder: "#059286",
     successBackground: "#99E4DF",
     subText: "#757575",
-    crossIcon: "#212B46",
+    crossIcon: "#fff",
     bannerInfoBg: "#FFB73F",
     bannerInfoText: "#fff",
     bannerInfoSubText: "#757575",

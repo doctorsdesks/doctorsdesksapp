@@ -11,6 +11,8 @@ interface AppContextType {
   setSignUpDetails: (finalData: any) => void;
   doctorDetails: any;
   setDoctorDetails: (data: any) => void;
+  hospitalDetails: any;
+  setHospitalDetails: (data: any) => void;
   translations: any;
   setTranslations: (data: any) => void;
   selectedLanguage: string;
@@ -29,6 +31,7 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
   const [signUpHeaderData, setSignUpHeaderData] = useState(signUpHeaderDataInitial);
   const [signUpDetails, setSignUpDetails] = useState(signUpDetailsInitial);
   const [doctorDetails, setDoctorDetails] = useState({});
+  const [hospitalDetails, setHospitalDetails] = useState({});
   const [translations, setTranslations] = useState<any>({});
   const [selectedLanguage, setSelectedLanguage] = useState<string>("");
   const [dfo, setDfo] = useState<any>({});
@@ -76,6 +79,8 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
         setSignUpDetails,
         doctorDetails,
         setDoctorDetails,
+        hospitalDetails,
+        setHospitalDetails,
         translations,
         setTranslations,
         selectedLanguage,

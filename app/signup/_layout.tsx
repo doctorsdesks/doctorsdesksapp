@@ -55,6 +55,20 @@ export default function () {
                     headerTitleAlign: 'center',
                 }}
             />
+            <Stack.Screen
+                name="hospital"
+                options={
+                    {
+                        title: 'Hospital Sign Up',
+                        headerLeft: () => (
+                            <Pressable onPress={() => router.replace('/signup')}>
+                                <Icon type='goBack' fill={Colors[colorScheme].icon} />
+                            </Pressable>
+                        ),
+                        headerTitleAlign: 'center',
+                    }
+                }
+            />
         </Stack>
     );
 };

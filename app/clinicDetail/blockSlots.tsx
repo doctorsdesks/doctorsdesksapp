@@ -8,13 +8,14 @@ import { blockSlots, finalText, formatDateToYYYYMMDD, getClinics, getSlots } fro
 import { Colors } from '@/constants/Colors';
 import { useAppContext } from '@/context/AppContext';
 import { useColorScheme } from '@/hooks/useColorScheme.web';
-import { router } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { BackHandler, Dimensions, Image, ScrollView, StyleSheet, View } from 'react-native';
 import Toast from 'react-native-toast-message';
 
 const BlockSlots = () => {
     const { height, width } = Dimensions.get('window');
+    const { clinicData } = useLocalSearchParams();
     const scrollViewRef = React.useRef(null);
     const { doctorDetails, translations, selectedLanguage } = useAppContext();
     const [selectedDay, setSelectedDay] = useState<string>("");
@@ -26,7 +27,12 @@ const BlockSlots = () => {
 
     useEffect(() => {
         const backAction = () => {
-            router.replace("/dashboard/profile");
+            router.replace({
+                pathname: "/clinicDetail/clinics",
+                params: {
+                    source: "blockSlots"
+                }
+            })
             return true;
         };
 
@@ -38,25 +44,11 @@ const BlockSlots = () => {
     }, []);
 
     useEffect(() => {
-        if (doctorDetails) {
-            const getClinicId = async () => {
-                setLoader(true);
-                const respnose = await getClinics(doctorDetails?.phone);
-                if (respnose.status === "SUCCESS") {
-                    const clinicDetails = respnose.data;
-                    setClinicId(clinicDetails?._id);
-                } else {
-                    Toast.show({
-                        type: 'error',  
-                        text1: respnose.error,
-                        visibilityTime: 3000,
-                    });
-                    setLoader(false);
-                }
-            }
-            getClinicId();
+        if (clinicData) {
+            const clinicDetails = JSON.parse(clinicData as string);
+            setClinicId(clinicDetails?._id);
         }
-    }, [doctorDetails])
+    }, [clinicData])
 
     useEffect(() => {
         if (clinicId !== "" && selectedDay !== "") {
@@ -135,7 +127,12 @@ const BlockSlots = () => {
         }
         const respnose = await blockSlots(payload);
         if (respnose.status === "SUCCESS") {
-            router.replace("/dashboard/profile");
+            router.replace({
+                pathname: "/clinicDetail/clinics",
+                params: {
+                    source: "blockSlots"
+                }
+            })
         } else {
             Toast.show({
                 type: 'error',  

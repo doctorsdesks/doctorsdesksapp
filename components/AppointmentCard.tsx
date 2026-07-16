@@ -17,6 +17,11 @@ interface AppointmentCardProps {
 export interface Appointment {
     _id: string,
     doctorId: string,
+    hospitalId?: {
+        _id: string;
+        hospitalName: string;
+    },
+    hospitalDoctorMappingId?: string,
     doctorImageUrl: string,
     doctorName: string,
     patientId: string,
@@ -32,6 +37,7 @@ export interface Appointment {
 
 const AppointmentCard: React.FC<AppointmentCardProps> = ({ appointment, width, handleStatusUpdate, source }) => {
     const { translations, selectedLanguage } = useAppContext();
+    const isHospitalAppointment = !!appointment?.hospitalId;
 
     const getStatusBGColor = (status: string) => {
         switch (status) {
@@ -87,8 +93,64 @@ const AppointmentCard: React.FC<AppointmentCardProps> = ({ appointment, width, h
     return (
         <ThemedView 
             key={appointment?._id} 
-            style={{ borderWidth: source === "notification" ? 0 : 1, borderRadius: 12, borderColor: "#D9D9D9", padding: 16, paddingHorizontal: source === "notification" ? 0 : 16 , marginBottom: source === "notification" ? 0 : 16 }}
+            style={{
+                borderWidth: source === "notification" ? 0 : 1,
+                borderRadius: 14,
+                backgroundColor: isHospitalAppointment
+                    ? "#F4F9FF"
+                    : "#FFFFFF",
+                borderColor: isHospitalAppointment
+                    ? "#B8DAFF"
+                    : "#D9D9D9",
+                padding: 16,
+                paddingHorizontal: source === "notification" ? 0 : 16,
+                marginBottom: source === "notification" ? 0 : 16,
+                shadowColor: isHospitalAppointment
+                    ? "#4F8EF7"
+                    : "#000",
+
+                shadowOffset: {
+                    width: 0,
+                    height: 4,
+                },
+
+                shadowOpacity: isHospitalAppointment
+                    ? 0.12
+                    : 0.04,
+
+                shadowRadius: 8,
+
+                elevation: isHospitalAppointment
+                    ? 4
+                    : 1,
+            }}
         >
+            {isHospitalAppointment && (
+                <View
+                    style={{
+                        alignSelf: "flex-start",
+                        backgroundColor: "#E6F2FF",
+                        borderRadius: 20,
+                        paddingHorizontal: 10,
+                        paddingVertical: 5,
+                        marginBottom: 12,
+                        flexDirection: "row",
+                        alignItems: "center",
+                    }}
+                >
+                    <Icon type="hospital" />
+                    <ThemedText
+                        style={{
+                            marginLeft: 6,
+                            color: "#2F6FED",
+                            fontWeight: "700",
+                            fontSize: 12,
+                        }}
+                    >
+                        Hospital Appointment
+                    </ThemedText>
+                </View>
+            )}
             <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', borderBottomWidth: appointment?.status === AppointmentStatus.PENDING ? 1 : 0, borderBottomColor: "#F1F1F1" }} >
                 <View style={{ height: 70, width: 70, borderRadius: 100, display: 'flex', alignItems: 'center', flexDirection: 'row', justifyContent: 'center', backgroundColor: "#2DB9B0" }} >
                     {appointment?.patientImageUrl && appointment?.patientImageUrl !== ""
@@ -100,6 +162,25 @@ const AppointmentCard: React.FC<AppointmentCardProps> = ({ appointment, width, h
                 </View>
                 <View style={{ marginLeft: 24, display: 'flex', width: width - 236 }} >
                     <ThemedText style={{ fontSize: 16, fontWeight: 600 }}>{capitalizeWords(appointment?.patientName)}</ThemedText>
+                    {isHospitalAppointment && (
+                        <View
+                            style={{
+                                flexDirection: "row",
+                                alignItems: "center",
+                                marginTop: 4,
+                            }}
+                        >
+                            <ThemedText
+                                style={{
+                                    fontSize: 12,
+                                    color: "#2F6FED",
+                                    fontWeight: "600",
+                                }}
+                            >
+                                🏥 {appointment?.hospitalId?.hospitalName}
+                            </ThemedText>
+                        </View>
+                    )}
                     <View style={{ marginTop: 6, display: 'flex', flexDirection: 'row', alignItems: 'center' }} >
                         <Icon type="calendarEmpty" />
                         <ThemedText style={{ marginLeft: 8, fontSize: 12, lineHeight: 16, fontWeight: 400 }} >{appointment?.date}</ThemedText>

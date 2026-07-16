@@ -21,18 +21,52 @@ Notifications.setNotificationHandler({
   }),
 });
 
-Notifications.setNotificationCategoryAsync("GENERAL_ACTIONS", [
+Notifications.setNotificationCategoryAsync(
+  "DOCTOR_JOINING_REQUEST_ACTIONS",
+  [
     {
-        identifier: "ACCEPT",
-        buttonTitle: "Accept",
-        options: { opensAppToForeground: false },
+      identifier: "ACCEPT",
+      buttonTitle: "Accept",
+      options: {
+        opensAppToForeground: false,
+      },
     },
     {
-        identifier: "OPEN",
-        buttonTitle: "Open",
-        options: { opensAppToForeground: true },
+      identifier: "REJECT",
+      buttonTitle: "Reject",
+      options: {
+        opensAppToForeground: false,
+      },
     },
-]);
+    {
+      identifier: "OPEN",
+      buttonTitle: "Open",
+      options: {
+        opensAppToForeground: true,
+      },
+    },
+  ]
+);
+
+Notifications.setNotificationCategoryAsync(
+  "APPOINTMENT_REQUEST_ACTIONS",
+  [
+    {
+      identifier: "ACCEPT",
+      buttonTitle: "Accept",
+      options: {
+        opensAppToForeground: false,
+      },
+    },
+    {
+      identifier: "OPEN",
+      buttonTitle: "Open",
+      options: {
+        opensAppToForeground: true,
+      },
+    },
+  ]
+);
 
 interface NotificationContextType {
   expoPushToken: string | null;
@@ -111,7 +145,7 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({
       // ✅ Register listeners
       notificationListener.current =
         Notifications.addNotificationReceivedListener(async (notification) => {
-          console.log("Notification received in foreground:");
+          console.log("Notification received in foreground:", notification);
 
           setNotification(notification);
 
@@ -142,32 +176,62 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({
 
           const action = response.actionIdentifier;
           const data = response.notification.request.content.data as any;
+          const category = data.category;
           const notificationId = response.notification.request.content.data?.notificationId
-          updateNotification(notificationId);
-          if (action) {
-            if (action === "ACCEPT") {
-              const appointmentId = data.appointmentId;
-              
-            } else if (action === "OPEN") {
-              if (data?.category === "APPOINTMENT") {
-                router.replace({
-                  pathname: "/dashboard/notifications",
-                  params: {
-                      selectedAppointment: data.appointmentId
-                  }
-                })
+          if (notificationId) {
+            updateNotification(notificationId);
+          }
+          switch (action) {
+            case "ACCEPT":
+              if (category === "APPOINTMENT_REQUEST") {
+                // accept appointment
               }
-            }
-          } else {
-            if (data?.category === "APPOINTMENT") {
+              if (category === "DOCTOR_JOINING_REQUEST") {
+                // accept joining request
+              }
+              return;
+            case "REJECT":
+              if (category === "APPOINTMENT_REQUEST") {
+                // accept appointment
+              }
+              if (category === "DOCTOR_JOINING_REQUEST") {
+                // accept joining request
+              }
+              return;
+            case "OPEN":
+            case Notifications.DEFAULT_ACTION_IDENTIFIER:
               router.replace({
                 pathname: "/dashboard/notifications",
                 params: {
-                    selectedAppointment: data.appointmentId
+                    notificationId: notificationId
                 }
               })
-            }
+              return;
           }
+          // if (action) {
+          //   if (action === "ACCEPT") {
+          //     const appointmentId = data.appointmentId;
+              
+          //   } else if (action === "OPEN") {
+          //     if (data?.category === "APPOINTMENT") {
+          //       router.replace({
+          //         pathname: "/dashboard/notifications",
+          //         params: {
+          //             notificationId: notificationId
+          //         }
+          //       })
+          //     }
+          //   }
+          // } else {
+          //   if (data?.category === "APPOINTMENT") {
+          //     router.replace({
+          //       pathname: "/dashboard/notifications",
+          //       params: {
+          //           notificationId: notificationId
+          //       }
+          //     })
+          //   }
+          // }
         });
     } catch (err) {
       console.error("Error initializing notifications:", err);
@@ -207,14 +271,12 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({
           title={inAppData.title}
           message={inAppData.body}
           onPress={() => {
-            if (inAppData.data?.category === "APPOINTMENT") {
-              router.replace({
-                pathname: "/dashboard/notifications",
-                params: {
-                    selectedAppointment: inAppData.data.appointmentId
-                }
-              })
-            }
+            router.replace({
+              pathname: "/dashboard/notifications",
+              params: {
+                  notificationId: inAppData.data.notificationId
+              }
+            })
             setInAppData(null);
           }}
           onClose={() => setInAppData(null)}

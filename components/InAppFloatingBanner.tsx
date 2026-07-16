@@ -14,7 +14,6 @@ export default function InAppFloatingBanner({
   onPress,
   onClose,
 }: Props) {
-  console.info("aaa", title);
   const slideAnim = useRef(new Animated.Value(-120)).current;
 
   useEffect(() => {

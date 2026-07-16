@@ -1,19 +1,19 @@
 import CustomButton from '@/components/CustomButton';
-import { useAppContext } from '@/context/AppContext';
 import React, { useEffect, useState } from 'react';
 import { BackHandler, Dimensions, Keyboard, ScrollView, StyleSheet, View } from 'react-native';
 import Toast from 'react-native-toast-message';
-import { getClinics, getValueById, updateClinic } from '@/components/Utils';
+import { getValueById, updateClinic } from '@/components/Utils';
 import CustomInput2 from '@/components/CustomInput2';
 import { signUpDetailsInitial } from '@/context/InitialState';
 import CustomRadio from '@/components/CustomRadio';
-import { router } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import Loader from '@/components/Loader';
 import { ThemedView } from '@/components/ThemedView';
 
 const ClinicDetailsSetting = () => {
     const { height } = Dimensions.get('window');
-    const { doctorDetails } = useAppContext();
+    const { clinicInfo } = useLocalSearchParams();
+
     const scrollViewRef = React.useRef(null);
     const [clinicData, setClinicData] = useState<any>();
     const [loader, setLoader] = useState<boolean>(true);
@@ -26,7 +26,12 @@ const ClinicDetailsSetting = () => {
                 Keyboard.dismiss();
                 return true;
             } else {
-                router.replace("/dashboard/profile");
+                router.replace({ 
+                    pathname: "/clinicDetail/clinics",
+                    params: {
+                        source: "clinicAddress"
+                    }
+                });
                 return true;
             }
         };
@@ -37,53 +42,41 @@ const ClinicDetailsSetting = () => {
     }, []);
 
     useEffect(() => {
-        const getAllClinics = async () => {
+        if (clinicInfo) {
             setLoader(true);
-            const respnose = await getClinics(doctorDetails?.phone);
-            if ( respnose.status === "SUCCESS") {
-                const docData = respnose.data;
-                const clinicDataInitial = signUpDetailsInitial?.clinicDetails;
-                const newClinicData = {
-                    clinicId: docData?._id,
+            const clinic = JSON.parse(clinicInfo as string);
+            const clinicDataInitial = signUpDetailsInitial?.clinicDetails;
+            const newClinicData = {
+                    clinicId: clinic?._id,
                     clinicInfo: clinicDataInitial?.map((item: any) => {
                         switch (item?.id) {
                             case "clinicName":
-                                return { ...item, value: docData?.clinicAddress?.clinicName, isDisabled: true };
+                                return { ...item, value: clinic?.clinicAddress?.clinicName, isDisabled: true };
                                 break;
                             case "clinicAddress":
-                                return { ...item, value: docData?.clinicAddress?.address?.addressLine, isDisabled: true };
+                                return { ...item, value: clinic?.clinicAddress?.address?.addressLine, isDisabled: true };
                                 break;
                             case "landmark":
-                                return { ...item, value: docData?.clinicAddress?.address?.landmark, isDisabled: true };
+                                return { ...item, value: clinic?.clinicAddress?.address?.landmark, isDisabled: true };
                                 break;
                             case "city":
-                                return { ...item, value: docData?.clinicAddress?.address?.city, isDisabled: true };
+                                return { ...item, value: clinic?.clinicAddress?.address?.city, isDisabled: true };
                                 break;
                             case "state":
-                                return { ...item, value: docData?.clinicAddress?.address?.state, isDisabled: true };
+                                return { ...item, value: clinic?.clinicAddress?.address?.state, isDisabled: true };
                                 break;
                             case "pincode":
-                                return { ...item, value: docData?.clinicAddress?.address?.pincode, isDisabled: true };
+                                return { ...item, value: clinic?.clinicAddress?.address?.pincode, isDisabled: true };
                                 break;
                             default:
                                 break;
                         }
                     })
                 }
-                setClinicData(newClinicData);
-                setLoader(false);
-            } else {
-                Toast.show({
-                    type: 'error',  
-                    text1: respnose.error,
-                    visibilityTime: 3000,
-                });
-                setLoader(false);
-            }
+            setClinicData(newClinicData);
+            setLoader(false);
         }
-
-        getAllClinics();
-    },[doctorDetails])
+    },[clinicInfo])
 
     useEffect(() => {
         if (isEditable) {
@@ -127,7 +120,12 @@ const ClinicDetailsSetting = () => {
                 visibilityTime: 3000,
             });
             setLoader(false);
-            router.replace("/dashboard/profile");
+            router.replace({ 
+                pathname: "/clinicDetail/clinics",
+                params: {
+                    source: "clinicAddress"
+                }
+            });
         } else {
             Toast.show({
                 type: 'error',  

@@ -406,6 +406,67 @@ const Icon: React.FC<IconProps> = ({ type, fill }) => {
                 </Svg>
             );
             break;
+        case "docUser":
+            return (
+                <Svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <Circle cx="12" cy="7" r="4" stroke="#2DB9B0" stroke-width="2"/>
+                    <Path d="M5 21C5 16.8 8.1 14 12 14C15.9 14 19 16.8 19 21" stroke="#2DB9B0" stroke-width="2" stroke-linecap="round"/>
+                    <Path d="M17 5V2.5" stroke="#2DB9B0" stroke-width="2" stroke-linecap="round"/>
+                    <Path d="M15.5 3.75H18.5" stroke="#2DB9B0" stroke-width="2" stroke-linecap="round"/>
+                </Svg>
+            );
+            break;
+        case "patientUser":
+            return (
+                <Svg width="24" height="24" viewBox="0 0 24 24" fill="none" >
+                    <Circle cx="12" cy="8" r="4" stroke="#2DB9B0" stroke-width="2"/>
+                    <Path d="M4.5 21C4.5 16.8 7.8 14 12 14C16.2 14 19.5 16.8 19.5 21" stroke="#2DB9B0" stroke-width="2" stroke-linecap="round"/>
+                </Svg>
+            );
+            break;
+        case "hospital":
+            return (
+                <Svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                    <Path
+                        d="M5 21V6C5 4.89543 5.89543 4 7 4H17C18.1046 4 19 4.89543 19 6V21"
+                        stroke="#2F6FED"
+                        strokeWidth={2}
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                    />
+                    <Path
+                        d="M9 21V17H15V21"
+                        stroke="#2F6FED"
+                        strokeWidth={2}
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                    />
+                    <Path
+                        d="M9 8H15"
+                        stroke="#2F6FED"
+                        strokeWidth={2}
+                        strokeLinecap="round"
+                    />
+                    <Path
+                        d="M12 5V11"
+                        stroke="#2F6FED"
+                        strokeWidth={2}
+                        strokeLinecap="round"
+                    />
+                    <Path
+                        d="M8 13H10"
+                        stroke="#2F6FED"
+                        strokeWidth={2}
+                        strokeLinecap="round"
+                    />
+                    <Path
+                        d="M14 13H16"
+                        stroke="#2F6FED"
+                        strokeWidth={2}
+                        strokeLinecap="round"
+                    />
+                    </Svg>
+            )
       default:
         break;
     }

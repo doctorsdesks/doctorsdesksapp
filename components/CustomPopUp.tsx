@@ -5,9 +5,10 @@ interface CustomPopUpProps {
     visible: boolean;
     onClose: () => void;
     children: React.ReactNode;
+    paddingTop?: number;
 }
 
-const CustomPopUp: React.FC<CustomPopUpProps> = ({ visible, onClose, children }) => {
+const CustomPopUp: React.FC<CustomPopUpProps> = ({ visible, onClose, children, paddingTop }) => {
     const colorScheme = useColorScheme() ?? 'light';
     const colors = Colors[colorScheme];
 
@@ -18,7 +19,7 @@ const CustomPopUp: React.FC<CustomPopUpProps> = ({ visible, onClose, children })
             animationType="fade"
             onRequestClose={onClose}
         >
-            <Pressable style={styles.modalOverlay} onPress={onClose}>
+            <Pressable style={[styles.modalOverlay, { paddingTop: paddingTop ? paddingTop : 240 }]} onPress={onClose}>
                 <Pressable 
                     style={[
                         styles.modalContent,
@@ -41,7 +42,6 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: 'rgba(0, 0, 0, 0.7)',
         justifyContent: 'flex-start',
-        paddingTop: 240,
     },
     modalContent: {
         marginHorizontal: 16,

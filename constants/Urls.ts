@@ -23,4 +23,8 @@ export const URLS = {
     RESET_PASSWORD: "/v1/user/reset_password",
     PUSH_TOKEN: "/v1/notification-token/token",
     READ_NOTIFICATION: "/v1/notifications",
+    GET_HOSPITAL_DETAILS: "/v1/hospital/details",
+    ALL_DOCTORS_FOR_HOSPITAL: "/v1/hospital-doctor/hospital",
+    GET_HOSPITAL_CLINIC_FOR_DOCTOR: "/v1/clinic/hospitalclinic",
+    HOSPITAL_DOCTOR_BASE: "/v1/hospital-doctor",
 }

@@ -247,14 +247,22 @@ const SignUp = () => {
                     setSignUpDetails(signUpDetailsInitial);
                     await saveSecureKey("isUserOnBoarded", "true");
                     await saveSecureKey("doctorId", data.data?.phone);
+                    await saveSecureKey("userType", loginResponse.data?.user?.userType);
                     await saveSecureKey("userAuthtoken", loginResponse?.data?.user?.authToken);
-                    router.replace("/successSignUp");
+                    router.replace({
+                        pathname: "/successSignUp",
+                        params: {
+                            isLoggedFailed: "false",
+                            accountType: "doctor",
+                        }
+                    });
                     setLoader(false);
                 } else {
                     router.replace({
                         pathname: "/successSignUp",
                         params: {
                             isLoggedFailed: "true",
+                            accountType: "doctor",
                         }
                     })
                     setLoader(false);

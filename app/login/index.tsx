@@ -18,6 +18,7 @@ const Login = () => {
     const [loginDetails, setLoginDetails] = useState<any>([]);
     const [isKeyboardOpen, setIsKeyboardOpen] = useState<boolean>(false);
     const [loader, setLoader] = useState<boolean>(false);
+    const [loginType, setLoginType] = useState<"doctor" | "admin">("doctor");
 
     useEffect(() => {
         if(signUpDetails){
@@ -74,7 +75,7 @@ const Login = () => {
         const updateData = {
             phone,
             password,
-            type: "DOCTOR"
+            type: loginType === "doctor" ? "DOCTOR" : "ADMIN"
         }
         
         const url = "http://docter-api-service-lb-413222422.ap-south-1.elb.amazonaws.com/v1/user/login";
@@ -88,11 +89,18 @@ const Login = () => {
               );
             const { data } = response;
             if (data.data?.success) {
-                saveSecureKey("userId", data.data?.user?.userId);
-                await initializeNotifications(data.data?.user?.userId, data.data?.user?.authToken);
-                saveSecureKey("doctorId", data.data?.user?.phone);
-                saveSecureKey("userAuthtoken", data.data?.user?.authToken);
-                router.replace("/dashboard");
+                    saveSecureKey("userId", data.data?.user?.userId);
+                    saveSecureKey("userType", data.data?.user?.userType);
+                    await initializeNotifications(data.data?.user?.userId, data.data?.user?.authToken);
+                if (loginType === "doctor") {
+                    saveSecureKey("doctorId", data.data?.user?.phone);
+                    saveSecureKey("userAuthtoken", data.data?.user?.authToken);
+                    router.replace("/dashboard");
+                } else if (loginType === "admin") {
+                    saveSecureKey("hospitalId", data.data?.user?.phone);
+                    saveSecureKey("userAuthtoken", data.data?.user?.authToken);
+                    router.replace("/hospitalDashboard");
+                }
             } else {
                 Toast.show({
                     type: 'error',  
@@ -157,6 +165,18 @@ const Login = () => {
 
     return (
         <ThemedView style={style.container} >
+            <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }} >
+                <Pressable onPress={() => setLoginType("doctor")} style={{ backgroundColor: loginType === 'doctor' ? "#009688" : "#fff", paddingVertical: 8, paddingHorizontal: 12, borderRadius: 8 }}  >
+                    <ThemedText type="subtitle" style={{ fontWeight: 600, color: loginType === 'doctor' ? "#fff" : "#1EA6D6" }}>
+                        Login as Doctor
+                    </ThemedText>
+                </Pressable>
+                <Pressable onPress={() => setLoginType("admin")} style={{ backgroundColor: loginType === 'admin' ? "#009688" : "#fff", paddingVertical: 8, paddingHorizontal: 12, borderRadius: 8 }}  >
+                    <ThemedText type="subtitle" style={{ fontWeight: 600, color: loginType === 'admin' ? "#fff" : "#1EA6D6" }}>
+                        Login as Hospital
+                    </ThemedText>
+                </Pressable>
+            </View>
             {renderValue()}
             <Pressable style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center' }} onPress={handleForgotPassword}>
                 <ThemedText type='link' >

@@ -3,7 +3,7 @@ import { Dimensions, Pressable, StyleSheet, View, Keyboard } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router, Slot, usePathname } from 'expo-router';
 import { useAppContext } from '@/context/AppContext';
-import { finalText, getSecureKey } from '@/components/Utils';
+import { finalText } from '@/components/Utils';
 import { ThemedView } from '@/components/ThemedView';
 import { ThemedText } from '@/components/ThemedText';
 import Icon from '@/components/Icons';
@@ -22,95 +22,35 @@ export default function DashboardLayout() {
     
     useEffect(() => {
         // Extract the current route from pathname
-        if (pathname === '/dashboard') {
+        if (pathname === '/hospitalDashboard') {
             setCurrentRoute('home');
-        } else if (pathname === '/dashboard/tasks') {
-            setCurrentRoute('task');
-        } else if (pathname === '/dashboard/appointments') {
-            setCurrentRoute('appointment');
-        } else if (pathname === '/dashboard/profile') {
-            setCurrentRoute('profile');
-        } else if (pathname.includes('/dashboard/profile')) {
-            setCurrentRoute('profile');
-        } else if (pathname.includes('/clinicDetail')) {
-            // Handle clinic detail routes
-            if (pathname.includes('manageSlotAndTiming')) {
-                setCurrentRoute('manageSlotAndTiming');
-            } else if (pathname.includes('manageSlotTiming')) {
-                setCurrentRoute('manageSlotTiming');
-            } else if (pathname.includes('consultationFee')) {
-                setCurrentRoute('consultationFee');
-            } else if (pathname.includes('appLanguage')) {
-                setCurrentRoute('appLanguage');
-            } else if (pathname.includes('blockSlots')) {
-                setCurrentRoute('block');
-            } else {
-                setCurrentRoute('clinicDetails');
-            }
-        } else if (pathname.includes('/personalDetails')) {
-            const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => {
-                setIsKeyboardOpen(true);
-            });
-            const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => {
-                setIsKeyboardOpen(false);
-            });
-            setCurrentRoute('personalDetails');
-        } else if (pathname.includes('/patientProfile')) {
-            setCurrentRoute('patientProfile');
-        } else if (pathname === '/dashboard/tnc') {
-            setCurrentRoute('tnc');
-        } else if (pathname === '/dashboard/notifications') {
+        } else if (pathname === '/hospitalDashboard/doctors') {
+            setCurrentRoute('doctors');
+        } else if(pathname === '/hospitalDashboard/notifications') {
             setCurrentRoute('notifications');
+        } else if (pathname === '/hospitalDashboard/appointments') {
+            setCurrentRoute('appointment');
+        } else if (pathname === '/hospitalDashboard/profile') {
+            setCurrentRoute('profile');
+        } else if (pathname.includes('/hospitalDashboard/profile')) {
+            setCurrentRoute('profile');
         }
     }, [pathname]);
 
     // Handle back navigation based on current route
-    const handleBackNav = async () => {
-        const userType = await getSecureKey("userType")
+    const handleBackNav = () => {
         switch (currentRoute) {
-            case 'task':
-                router.replace("/dashboard");
+            case 'doctors':
+                router.replace("/hospitalDashboard");
                 break;
             case 'appointment':
-                router.replace("/dashboard");
+                router.replace("/hospitalDashboard");
                 break;
             case 'profile': 
-                router.replace("/dashboard");
-                break;
-            case 'personalDetails':
-                router.replace("/dashboard/profile");
-                break;
-            case "clinicDetails":
-                router.replace("/dashboard/profile");
-                break;
-            case "manageSlotAndTiming":
-                router.replace("/dashboard/profile");
-                break;
-            case "manageSlotTiming":
-                router.replace({
-                    pathname: "/clinicDetail/manageSlotAndTiming",
-                    params: {
-                        selectedNav: "Clinic Timing",
-                    }
-                });
-                break;
-            case "consultationFee":
-                router.replace("/dashboard/profile");
-                break;
-            case "appLanguage":
-                router.replace("/dashboard/profile");
-                break;
-            case "patientProfile":
-                router.replace("/dashboard");
-                break;
-            case "block":
-                router.replace("/dashboard/profile");
-                break;
-            case "tnc":
-                userType === "ADMIN" ? router.replace("/hospitalDashboard/profile") : router.replace("/dashboard/profile");
+                router.replace("/hospitalDashboard");
                 break;
             case "notifications":
-                router.replace("/dashboard");
+                router.replace("/hospitalDashboard");
                 break;
             default:
                 break;
@@ -124,43 +64,14 @@ export default function DashboardLayout() {
             case "home":
                 text = "Home";
                 break;
-            case "task":
-                text = "Tasks";
+            case "doctors":
+                text = "Doctors";
                 break;
             case "appointment":
                 text = "Appointments";
                 break;
             case "profile":
-                text = "My Profile";
-                break;
-            case "personalDetails":
-                text = "Personal Details";
-                break;
-            case "clinicDetails":
-                text = "Clinic Address";
-                break;
-            case "manageSlotAndTiming":
-                text = "Clinic Timings";
-                break;
-            case "manageSlotTiming":
-                text = "Add Timings";
-                break;
-            case "consultationFee":
-                text = "Consultation Fee";
-                break;
-            case "appLanguage":
-                text = "App Language";
-                break;
-            case "block":
-                text = "Block Slots";
-                break;
-            case "patientProfile":
-                // For patient profile, the title might come from params
-                // This would need to be handled differently
-                text = "Patient Profile";
-                break;
-            case "tnc":
-                text = "Terms & Conditions";
+                text = "Hospital Profile";
                 break;
             case "notifications":
                 text = "Notifications";
@@ -176,16 +87,16 @@ export default function DashboardLayout() {
     const handleFooterTabClick = (value: string) => {
         switch (value) {
             case "home":
-                router.replace("/dashboard")
+                router.replace("/hospitalDashboard")
                 break;
-            case "task":
-                router.replace("/dashboard/tasks");
+            case "doctors":
+                router.replace("/hospitalDashboard/doctors");
                 break;
             case "appointment":
-                router.replace("/dashboard/appointments");
+                router.replace("/hospitalDashboard/appointments");
                 break;
             case "profile":
-                router.replace("/dashboard/profile");
+                router.replace("/hospitalDashboard/profile");
                 break;
             default:
                 break;
@@ -215,7 +126,7 @@ export default function DashboardLayout() {
             </View>
             
             {/* Footer Tabs */}
-            {!isKeyboardOpen && pathname !== "/dashboard/tnc" && pathname !== "/dashboard/notifications" && <ThemedView style={[styles.footerContainer, { backgroundColor: Colors[colorSchema].background }]}>
+            {!isKeyboardOpen && <ThemedView style={[styles.footerContainer, { backgroundColor: Colors[colorSchema].background }]}>
                 <Pressable 
                     onPress={() => handleFooterTabClick("home")} 
                     style={[
@@ -235,24 +146,6 @@ export default function DashboardLayout() {
                 </Pressable>
                 
                 <Pressable 
-                    onPress={() => handleFooterTabClick("task")} 
-                    style={[
-                        styles.footerTab, 
-                        { borderColor: currentRoute === "task" ? "#5257E9" : Colors[colorSchema].background }
-                    ]}
-                >
-                    <Icon type="task" fill={currentRoute === "task" ? "#5257E9" : "#A9A9AB"} />
-                    <ThemedText 
-                        style={[
-                            styles.footerTabText, 
-                            { color: currentRoute === "task" ? "#5257E9" : "#A9A9AB" }
-                        ]}
-                    >
-                        {finalText("Task", translations, selectedLanguage)}
-                    </ThemedText>
-                </Pressable>
-                
-                <Pressable 
                     onPress={() => handleFooterTabClick("appointment")} 
                     style={[
                         styles.footerTab, 
@@ -267,6 +160,24 @@ export default function DashboardLayout() {
                         ]}
                     >
                         {finalText("Appointment", translations, selectedLanguage)}
+                    </ThemedText>
+                </Pressable>
+
+                <Pressable 
+                    onPress={() => handleFooterTabClick("doctors")} 
+                    style={[
+                        styles.footerTab, 
+                        { borderColor: currentRoute === "doctors" ? "#5257E9" : Colors[colorSchema].background }
+                    ]}
+                >
+                    <Icon type="profile" fill={currentRoute === "doctors" ? "#5257E9" : "#A9A9AB"} />
+                    <ThemedText 
+                        style={[
+                            styles.footerTabText, 
+                            { color: currentRoute === "doctors" ? "#5257E9" : "#A9A9AB" }
+                        ]}
+                    >
+                        {finalText("Doctors", translations, selectedLanguage)}
                     </ThemedText>
                 </Pressable>
                 

@@ -21,6 +21,8 @@ const NumberPassword = () => {
     const [otpLoader, setOtpLoader] = useState<boolean>(false);
     const [numberIcon, setNumberIcon] = useState<string>("emptyField");
     const [testNumbers] = useState<Array<string>>(["1111111111", "1111111110", "1111111112", "1111111113", "1111111114", "1111111115", "1111111116", "1111111117", "1111111118"])
+    const [hospitalTestNumbers] = useState<Array<string>>(["3333333330","3333333331","3333333332", "3333333333","3333333334"]);
+    const [loginType, setLoginType] = useState<"doctor" | "admin">("doctor");
 
     useEffect(() => {
         const backAction = () => {
@@ -68,7 +70,8 @@ const NumberPassword = () => {
         if (id === "number" && finalValue?.length === 10) {
             setNumberIcon("processing");
             setOtpLoader(true);
-            if (testNumbers.includes(finalValue)) {
+            const numberList = loginType === "doctor" ? testNumbers : hospitalTestNumbers;
+            if (numberList.includes(finalValue)) {
                 const currentData = loginDetails.map((item: any) => {
                     if (item?.id === "number") {
                         return { ...item, value: finalValue }
@@ -127,7 +130,10 @@ const NumberPassword = () => {
         
         const phone = loginDetails?.find((item: { id: string }) => item?.id === "number")?.value;
         
-        const url = "http://docter-api-service-lb-413222422.ap-south-1.elb.amazonaws.com/v1/user/doctor/" + phone;
+        let url = "http://docter-api-service-lb-413222422.ap-south-1.elb.amazonaws.com/v1/user/doctor/" + phone;
+        if (loginType === 'admin') {
+            url = "http://docter-api-service-lb-413222422.ap-south-1.elb.amazonaws.com/v1/user/admin/" + phone;
+        }
         try {
             const response = await axios.get(url,
                 {
@@ -147,7 +153,7 @@ const NumberPassword = () => {
                 const newSignupDetails = { ...signUpDetailsInitial };
                 newSignupDetails.loginDetails = loginDetails;
                 setSignUpDetails(newSignupDetails);
-                router.replace('/signup');
+                loginType === "doctor" ? router.replace('/signup') : router.replace('/signup/hospital')
             }
         } catch (error: any) {
             Toast.show({
@@ -186,7 +192,8 @@ const NumberPassword = () => {
     const handleOTPComplete = (otp: string) => {
         setOtpLoader(true);
         const phone = loginDetails?.find((item: { id: string }) => item?.id === "number")?.value;
-        if (testNumbers.includes(phone)) {
+        const numberList = loginType === "doctor" ? testNumbers : hospitalTestNumbers;
+        if (numberList.includes(phone)) {
             if (otp === '1234') {
                 setNumberVerified(true);
                 const currentData = loginDetails.map((item: any) => {
@@ -303,6 +310,18 @@ const NumberPassword = () => {
 
     return (
         <ThemedView style={style.container} >
+            <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }} >
+                <Pressable onPress={() => setLoginType("doctor")} style={{ backgroundColor: loginType === 'doctor' ? "#009688" : "#fff", paddingVertical: 8, paddingHorizontal: 12, borderRadius: 8 }}  >
+                    <ThemedText type="subtitle" style={{ fontWeight: 600, color: loginType === 'doctor' ? "#fff" : "#1EA6D6" }}>
+                        Sign up as Doctor
+                    </ThemedText>
+                </Pressable>
+                <Pressable onPress={() => setLoginType("admin")} style={{ backgroundColor: loginType === 'admin' ? "#009688" : "#fff", paddingVertical: 8, paddingHorizontal: 12, borderRadius: 8 }}  >
+                    <ThemedText type="subtitle" style={{ fontWeight: 600, color: loginType === 'admin' ? "#fff" : "#1EA6D6" }}>
+                        Sing up as Hospital
+                    </ThemedText>
+                </Pressable>
+            </View>
             {renderValue()}
             <View style={{ marginTop: 4, display: 'flex', flexDirection: 'row', justifyContent: 'center' }} >
                 <ThemedText type='subtitle' >

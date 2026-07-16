@@ -5,7 +5,7 @@ import ManageSlotTiming from '@/components/ManageSlotTiming';
 import Navbar, { NavbarObject } from '@/components/Navbar';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
-import { changeTimeToAmPm, changeTimeTwentyFourHours, finalText, getClinics, updateClinic } from '@/components/Utils';
+import { changeTimeToAmPm, changeTimeTwentyFourHours, finalText, getClinics, getHospitalClinicForDoctor, updateClinic } from '@/components/Utils';
 import { Colors } from '@/constants/Colors';
 import { StringObject } from '@/constants/Enums';
 import { useAppContext } from '@/context/AppContext';
@@ -18,8 +18,8 @@ import Toast from 'react-native-toast-message';
 
 const ManageSlotDurationAndTiming = () => {
     const scrollViewRef = React.useRef(null);
-    const { doctorDetails, translations, selectedLanguage } = useAppContext();
-    const { isEditablePath } = useLocalSearchParams();
+    const { translations, selectedLanguage } = useAppContext();
+    const { isEditablePath, source, clinicData } = useLocalSearchParams();
     const { height } = Dimensions.get('window');
     const [liveSlotDuration, setLiveSlotDuration] =  useState<string>("");
     const [slotDurationObject, setSlotDurationObject] = useState<StringObject>({
@@ -56,7 +56,16 @@ const ManageSlotDurationAndTiming = () => {
 
     useEffect(() => {
         const backAction = () => {
-            router.replace("/dashboard/profile");
+            if (source === "hospitalClinic") {
+                router.replace("/hospitalDashboard/doctors");
+            } else {
+                router.replace({ 
+                    pathname: "/clinicDetail/clinics",
+                    params: {
+                        source: "clinicTiming"
+                    }
+                });
+            }
             return true;
         };
 
@@ -76,37 +85,22 @@ const ManageSlotDurationAndTiming = () => {
     }, []);
 
     useEffect(() => {
-       getTimingDetails();
-    },[doctorDetails]);
-
-    const getTimingDetails = async () => {
-        setLoader(true);
-        const respnose = await getClinics(doctorDetails?.phone);
-        if (respnose.status === "SUCCESS") {
-            const timingDetails = respnose.data;
-            setClinicId(timingDetails?._id);
-            const comingSlotDuration = timingDetails?.slotDuration || "";
-            let comingSlotTimings = timingDetails?.clinicTimings || [];
-            setLiveSlotDuration(JSON.stringify(comingSlotDuration));
-            setSlotDurationObject({ ...slotDurationObject, value: JSON.stringify(comingSlotDuration) });
-            comingSlotTimings = comingSlotTimings?.map((day: any) => {
-                let newTimings = [...day?.timings];
-                newTimings = newTimings?.map((eachTime: any) => {
-                    return { startTime : changeTimeToAmPm(eachTime?.startTime), endTime: changeTimeToAmPm(eachTime?.endTime) };
-                })
-                return { ...day, timings: newTimings };
+        const clinicInfo = JSON.parse(clinicData as string);
+        setClinicId(clinicInfo?._id);
+        const comingSlotDuration = clinicInfo?.slotDuration || "";
+        let comingSlotTimings = clinicInfo?.clinicTimings || [];
+        setLiveSlotDuration(JSON.stringify(comingSlotDuration));
+        setSlotDurationObject({ ...slotDurationObject, value: JSON.stringify(comingSlotDuration) });
+        comingSlotTimings = comingSlotTimings?.map((day: any) => {
+            let newTimings = [...day?.timings];
+            newTimings = newTimings?.map((eachTime: any) => {
+                return { startTime : changeTimeToAmPm(eachTime?.startTime), endTime: changeTimeToAmPm(eachTime?.endTime) };
             })
-            setTimings(comingSlotTimings);
-            setLoader(false);
-        } else {
-            Toast.show({
-                type: 'error',  
-                text1: respnose.error,
-                visibilityTime: 3000,
-            });
-            setLoader(false);
-        }
-    }
+            return { ...day, timings: newTimings };
+        })
+        setTimings(comingSlotTimings);
+        setLoader(false);
+    },[clinicData])
 
     const handleSlotChange = (value: string) => {
         setSlotDurationObject({ ...slotDurationObject, value: value });
@@ -178,7 +172,16 @@ const ManageSlotDurationAndTiming = () => {
             }
             setIsEditable(false);
             setLoader(false);
-            getTimingDetails();
+            if (source === "hospitalClinic") {
+                router.replace("/hospitalDashboard/doctors");
+            } else {
+                router.replace({ 
+                    pathname: "/clinicDetail/clinics",
+                    params: {
+                        source: "clinicTiming"
+                    }
+                });
+            }
         } else {
             Toast.show({
                 type: 'error',
@@ -277,7 +280,7 @@ const ManageSlotDurationAndTiming = () => {
                         }
                     </View>
                 }
-                {isAddSlots && <ManageSlotTiming eachDayChange={eachDayChange} timings={ timings } setTimings={(data: any) => handleSave(data)} />}
+                {isAddSlots && <ManageSlotTiming source={source as string} clinicData={clinicData as string} eachDayChange={eachDayChange} timings={ timings } setTimings={(data: any) => handleSave(data)} />}
                 {navData[0]?.isActive &&
                     <View style={{ display: "flex", alignItems: "center", position: 'absolute', bottom: 16, right: 16, left: 16, paddingBottom: 16 }} >
                         <CustomButton width='FULL' title={isEditable ? "Save Slot Duration" : "Edit Slot Duration"} onPress={handleSave} />
