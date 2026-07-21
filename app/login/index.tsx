@@ -11,6 +11,7 @@ import { ThemedView } from '@/components/ThemedView';
 import CustomInput2 from '@/components/CustomInput2';
 import { ThemedText } from '@/components/ThemedText';
 import { useNotification } from '@/context/NotifcationContext';
+import { URLS } from '@/constants/Urls';
 
 const Login = () => {
     const { signUpDetails } = useAppContext();
@@ -78,7 +79,7 @@ const Login = () => {
             type: loginType === "doctor" ? "DOCTOR" : "ADMIN"
         }
         
-        const url = "http://docter-api-service-lb-413222422.ap-south-1.elb.amazonaws.com/v1/user/login";
+        const url = URLS.BASE + "/v1/user/login";
         try {
             const response = await axios.post(url, updateData,
                 {

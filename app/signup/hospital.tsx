@@ -11,6 +11,7 @@ import Loader from '@/components/Loader';
 import { getValueById, login, saveSecureKey } from '@/components/Utils';
 import { signUpDetailsInitial } from '@/context/InitialState';
 import { ThemedView } from '@/components/ThemedView';
+import { URLS } from '@/constants/Urls';
 
 
 const HospitalSignUp = () => {
@@ -57,7 +58,7 @@ const HospitalSignUp = () => {
     }
 
     const createHospital = async (updateData: any) => {
-        const url = "http://docter-api-service-lb-413222422.ap-south-1.elb.amazonaws.com/v1/hospital/create";
+        const url = URLS.BASE + "/v1/hospital/create";
         try {
             const response = await axios.post(url, updateData,
               {
