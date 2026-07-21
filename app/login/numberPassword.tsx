@@ -12,6 +12,7 @@ import axios from 'axios';
 import Toast from 'react-native-toast-message';
 import CustomOTP from '@/components/CustomOTP';
 import { triggerOtp, verifyOtp } from '@/components/Utils';
+import { URLS } from '@/constants/Urls';
 
 const NumberPassword = () => {
     const { signUpDetails, setSignUpDetails } = useAppContext();
@@ -130,9 +131,9 @@ const NumberPassword = () => {
         
         const phone = loginDetails?.find((item: { id: string }) => item?.id === "number")?.value;
         
-        let url = "http://docter-api-service-lb-413222422.ap-south-1.elb.amazonaws.com/v1/user/doctor/" + phone;
+        let url = URLS.BASE + "/v1/user/doctor/" + phone;
         if (loginType === 'admin') {
-            url = "http://docter-api-service-lb-413222422.ap-south-1.elb.amazonaws.com/v1/user/admin/" + phone;
+            url = URLS.BASE + "/v1/user/admin/" + phone;
         }
         try {
             const response = await axios.get(url,
@@ -318,7 +319,7 @@ const NumberPassword = () => {
                 </Pressable>
                 <Pressable onPress={() => setLoginType("admin")} style={{ backgroundColor: loginType === 'admin' ? "#009688" : "#fff", paddingVertical: 8, paddingHorizontal: 12, borderRadius: 8 }}  >
                     <ThemedText type="subtitle" style={{ fontWeight: 600, color: loginType === 'admin' ? "#fff" : "#1EA6D6" }}>
-                        Sing up as Hospital
+                        Sign up as Hospital
                     </ThemedText>
                 </Pressable>
             </View>

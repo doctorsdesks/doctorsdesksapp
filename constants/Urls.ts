@@ -1,5 +1,5 @@
 export const URLS = {
-    BASE: "http://docter-api-service-lb-413222422.ap-south-1.elb.amazonaws.com",
+    BASE: "https://api.nirvahcare.com",
     CREATE_DOCTOR: "/v1/signup/doctor",
     UPDATE_DOCTOR: "/v1/doctor",
     GET_CLINICS: "/v1/clinic",

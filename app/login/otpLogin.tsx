@@ -10,6 +10,7 @@ import { useAppContext } from '@/context/AppContext';
 import axios from 'axios';
 import { saveSecureKey } from '@/components/Utils';
 import { signUpDetailsInitial } from '@/context/InitialState';
+import { URLS } from '@/constants/Urls';
 
 const OTPLogin = () => {
     const { signUpDetails, setSignUpDetails, setDoctorDetails } = useAppContext();
@@ -150,7 +151,7 @@ const OTPLogin = () => {
     }
 
     const CheckForUserExist = async () => {
-        const url = "http://docter-api-service-lb-413222422.ap-south-1.elb.amazonaws.com/v1/doctor/" + phoneNumber.value;
+        const url = URLS.BASE + "/v1/doctor/" + phoneNumber.value;
         // const url = "http://localhost:3000/v1/doctor/" + phoneNumber?.value;
         try {
             const response = await axios.get(url,

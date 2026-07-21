@@ -17,6 +17,7 @@ import { getConfig, getValueById, login, saveSecureKey, uploadFile } from '@/com
 import { signUpDetailsInitial, signUpHeaderDataInitial } from '@/context/InitialState';
 import { ThemedView } from '@/components/ThemedView';
 import { CONFIGS } from '@/constants/Enums';
+import { URLS } from '@/constants/Urls';
 
 
 const SignUp = () => {
@@ -224,7 +225,7 @@ const SignUp = () => {
     }
 
     const createDoctor = async (updateData: any) => {
-        const url = "http://docter-api-service-lb-413222422.ap-south-1.elb.amazonaws.com/v1/signup/doctor";
+        const url = URLS.BASE + "/v1/signup/doctor";
         try {
             const response = await axios.post(url, updateData,
               {

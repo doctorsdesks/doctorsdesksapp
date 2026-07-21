@@ -24,7 +24,6 @@
     "android": {
       "package": "com.doctorsdesks.doctorsdesksapp",
       "googleServicesFile": "./google-services.json",
-      "usesCleartextTraffic": true,
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/logo.png",
         "backgroundColor": "#fcfcfc",
