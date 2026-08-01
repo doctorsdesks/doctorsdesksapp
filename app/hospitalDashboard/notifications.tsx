@@ -39,6 +39,7 @@ const Notifications = () => {
 
     const onNotificationClick = async (notification: NotificationType) => {
         await markNotificationRead({ isRead: true } ,notification?.id);
+        await fetchNotifications();
     }
 
     const fetchNotifications = async () => {

@@ -466,7 +466,8 @@ const Icon: React.FC<IconProps> = ({ type, fill }) => {
                         strokeLinecap="round"
                     />
                     </Svg>
-            )
+            );
+            break;
       default:
         break;
     }

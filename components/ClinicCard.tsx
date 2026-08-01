@@ -77,7 +77,7 @@ const ClinicCard = ({ clinic, onPress, source }: Props) => {
         {clinic?.clinicAddress?.clinicName}
       </Text>
       {
-        source === "clinicAddress" || source === "blockSlots" &&
+        (source === "clinicAddress" || source === "blockSlots") &&
         <ThemedView style={[styles.feeContainer, {
           backgroundColor: isHospitalClinic
             ? colors.cardBackgroud

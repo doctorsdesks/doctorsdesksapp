@@ -1,3 +1,5 @@
+import { Href } from "expo-router";
+
 export const InputType = {
     "PHONE": "PHONE",
     "NUMBER": "NUMBER",
@@ -93,6 +95,14 @@ export enum NotificationActionCategory {
   DOCTOR_JOINING_REQUEST_ACTIONS = "DOCTOR_JOINING_REQUEST_ACTIONS",
 }
 
+export const routes = {
+  clinicDetailClinics: "/clinicDetail/clinics",
+  appointments: "/dashboard/appointments",
+  appointmentRequest: "/dashboard/tasks"
+} as const satisfies Record<string, Href>;
+
+type RouteKey = keyof typeof routes;
+
 export interface NotificationType {
     id: string;
     title: string;
@@ -104,8 +114,9 @@ export interface NotificationType {
         category: NotificationCategory;
         appointmentId: string;
         actionCategory?: NotificationActionCategory;
-        deepLink?: string;
+        screen?: RouteKey;
         mappingId?: string;
+        params?: Record<string, any>;
     },
     isRead: boolean;
     category: NotificationCategory;

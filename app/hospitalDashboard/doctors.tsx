@@ -74,14 +74,19 @@ const Tasks = () => {
 
     const handleRaiseRequest = async (data: DoctorRequest) => {
         setLoader(true);
-        const respnose = await raiseRequestForDoctor({ ...data, hospitalId: hospitalDetails?.hospitalId});
-        if (respnose.status === "SUCCESS") {
+        const response = await raiseRequestForDoctor({ ...data, hospitalId: hospitalDetails?.hospitalId});
+        if (response.status === "SUCCESS") {
             setShowRaiseRequestModal(false);
             getAllDoctors(hospitalDetails?.hospitalId);
+            Toast.show({
+                type: 'success',  
+                text1: `Request has been raise for Dr. ${response?.data.data?.docName}`,
+                visibilityTime: 3000,
+            });
         } else {
             Toast.show({
                 type: 'error',  
-                text1: respnose.error,
+                text1: response.error,
                 visibilityTime: 3000,
             });
             setLoader(false);
@@ -224,11 +229,11 @@ const Tasks = () => {
                 </ScrollView>
             </View>
             {showRaiseRequestModal &&
-            <CustomModalRaiseRequest
-                visible={showRaiseRequestModal}
-                onClose={() => setShowRaiseRequestModal(false)}
-                onSubmit={(data) => handleRaiseRequest(data)}
-            />
+                <CustomModalRaiseRequest
+                    visible={showRaiseRequestModal}
+                    onClose={() => setShowRaiseRequestModal(false)}
+                    onSubmit={(data) => handleRaiseRequest(data)}
+                />
             }
             {loader && <Loader />}
         </ThemedView>

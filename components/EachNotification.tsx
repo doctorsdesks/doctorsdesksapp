@@ -32,6 +32,7 @@ type Props = {
   onReject?: () => void;
   onNotificationClick: () => void;
   selectedNotification?: string;
+  closeNotification?: () => void;
 };
 
 const EachNotification: React.FC<Props> = ({
@@ -40,6 +41,7 @@ const EachNotification: React.FC<Props> = ({
   onReject,
   onNotificationClick,
   selectedNotification,
+  closeNotification,
 }) => {
 
   const colorScheme = useColorScheme() || 'light';
@@ -110,7 +112,7 @@ const EachNotification: React.FC<Props> = ({
     <ThemedView>
       <TouchableOpacity
         activeOpacity={0.8}
-        onPress={onNotificationClick}
+        onPress={() => !notification.isRead && onNotificationClick()}
         style={[
           styles.container,
           {
@@ -125,23 +127,22 @@ const EachNotification: React.FC<Props> = ({
         </View>
 
         <View style={styles.content}>
-
-          <View style={styles.headerRow}>
-
-            <ThemedText style={styles.title}>
-              {notification.title}
-            </ThemedText>
-
-            <Animated.View style={animatedChevronStyle}>
-              <Ionicons
-                name="chevron-down"
-                size={18}
-                color="#8E8E93"
-              />
-            </Animated.View>
-
-          </View>
-
+          <TouchableOpacity 
+            onPress={() => notification.id === selectedNotification ? (closeNotification && closeNotification()) : (!notification.isRead && onNotificationClick())}
+          >
+            <View style={styles.headerRow}>
+              <ThemedText style={styles.title}>
+                {notification.title}
+              </ThemedText>
+              <Animated.View style={animatedChevronStyle}>
+                <Ionicons
+                  name="chevron-down"
+                  size={18}
+                  color="#8E8E93"
+                />
+              </Animated.View>
+            </View>
+          </TouchableOpacity>
           <ThemedText style={styles.body}>
             {notification.body}
           </ThemedText>

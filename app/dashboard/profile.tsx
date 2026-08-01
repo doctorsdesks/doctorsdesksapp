@@ -70,13 +70,14 @@ const Profile = () => {
                             <Icon type='notVerified' />
                         }
                     </View>
-                    {doctorDetails && doctorDetails?.imageUrl && doctorDetails?.imageUrl !== "" ? <Image source={{uri: doctorDetails?.imageUrl}} resizeMode='cover' height={100} width={100} style={{ marginTop: 8, height: 100, width: 100, borderRadius: 100 }} />
-                    : 
+                    {/* {doctorDetails && doctorDetails?.imageUrl && doctorDetails?.imageUrl !== "" ? 
+                        <Image source={{uri: doctorDetails?.imageUrl}} resizeMode='cover' height={100} width={100} style={{ marginTop: 8, height: 100, width: 100, borderRadius: 100 }} />
+                    :  */}
                         <Image
                             source={require('@/assets/images/Girl_doctor.png')}
                             style={styles.profileImage}
                         />
-                    }
+                    {/* } */}
                 </View>
             </View>
             <View style={{ marginTop: 56, display: 'flex', alignItems: 'center', marginBottom: 0, borderBottomColor: "#14534F", borderBottomWidth: 1, paddingBottom: 12 }}>

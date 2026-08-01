@@ -8,7 +8,7 @@ import {
   useRef,
   useState,
 } from "react";
-import { deleteToken, markNotificationRead, pushToken, saveSecureKey } from "@/components/Utils";
+import { deleteToken, getSecureKey, pushToken, saveSecureKey } from "@/components/Utils";
 import { router } from "expo-router";
 import Toast from "react-native-toast-message";
 import InAppFloatingBanner from "@/components/InAppFloatingBanner";
@@ -21,52 +21,52 @@ Notifications.setNotificationHandler({
   }),
 });
 
-Notifications.setNotificationCategoryAsync(
-  "DOCTOR_JOINING_REQUEST_ACTIONS",
-  [
-    {
-      identifier: "ACCEPT",
-      buttonTitle: "Accept",
-      options: {
-        opensAppToForeground: false,
-      },
-    },
-    {
-      identifier: "REJECT",
-      buttonTitle: "Reject",
-      options: {
-        opensAppToForeground: false,
-      },
-    },
-    {
-      identifier: "OPEN",
-      buttonTitle: "Open",
-      options: {
-        opensAppToForeground: true,
-      },
-    },
-  ]
-);
+// Notifications.setNotificationCategoryAsync(
+//   "DOCTOR_JOINING_REQUEST_ACTIONS",
+//   [
+//     {
+//       identifier: "ACCEPT",
+//       buttonTitle: "Accept",
+//       options: {
+//         opensAppToForeground: false,
+//       },
+//     },
+//     {
+//       identifier: "REJECT",
+//       buttonTitle: "Reject",
+//       options: {
+//         opensAppToForeground: false,
+//       },
+//     },
+//     {
+//       identifier: "OPEN",
+//       buttonTitle: "Open",
+//       options: {
+//         opensAppToForeground: true,
+//       },
+//     },
+//   ]
+// );
 
-Notifications.setNotificationCategoryAsync(
-  "APPOINTMENT_REQUEST_ACTIONS",
-  [
-    {
-      identifier: "ACCEPT",
-      buttonTitle: "Accept",
-      options: {
-        opensAppToForeground: false,
-      },
-    },
-    {
-      identifier: "OPEN",
-      buttonTitle: "Open",
-      options: {
-        opensAppToForeground: true,
-      },
-    },
-  ]
-);
+// Notifications.setNotificationCategoryAsync(
+//   "APPOINTMENT_REQUEST_ACTIONS",
+//   [
+//     {
+//       identifier: "ACCEPT",
+//       buttonTitle: "Accept",
+//       options: {
+//         opensAppToForeground: false,
+//       },
+//     },
+//     {
+//       identifier: "OPEN",
+//       buttonTitle: "Open",
+//       options: {
+//         opensAppToForeground: true,
+//       },
+//     },
+//   ]
+// );
 
 interface NotificationContextType {
   expoPushToken: string | null;
@@ -105,12 +105,12 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({
   const responseListener = useRef<Subscription | null>(null);
   const [inAppData, setInAppData] = useState<any>(null);
 
-  const updateNotification = async (notificationId: string) => {
-    const payload = {
-        isRead: true
-    }
-    await markNotificationRead(payload, notificationId);
-  }
+  // const updateNotification = async (notificationId: string) => {
+  //   const payload = {
+  //       isRead: true
+  //   }
+  //   await markNotificationRead(payload, notificationId);
+  // }
 
   // ✅ Called only after successful login
   const initializeNotifications = async (userId: string, auth: string) => {
@@ -154,9 +154,9 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({
           const data = notification.request.content.data as any;
 
           const notificationId = data?.notificationId;
-          if (notificationId) {
-            updateNotification(notificationId);
-          }
+          // if (notificationId) {
+          //   updateNotification(notificationId);
+          // }
 
           // ✅ 1. Show IN-APP notification
           setInAppData({
@@ -168,7 +168,7 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({
         });
 
       responseListener.current =
-        Notifications.addNotificationResponseReceivedListener((response) => {
+        Notifications.addNotificationResponseReceivedListener(async (response) => {
           console.log(
             "User interacted with notification:",
             JSON.stringify(response, null, 2)
@@ -178,59 +178,51 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({
           const data = response.notification.request.content.data as any;
           const category = data.category;
           const notificationId = response.notification.request.content.data?.notificationId
-          if (notificationId) {
-            updateNotification(notificationId);
+          // if (notificationId) {
+          //   updateNotification(notificationId);
+          // }
+          const userType = await getSecureKey("userType");
+          if (userType === "DOCTOR") {
+            router.replace({
+              pathname: "/dashboard/notifications",
+              params: {
+                  notificationId: notificationId
+              }
+            })
+          } else if (userType === "ADMIN") {
+            router.replace({
+              pathname: "/hospitalDashboard/notifications",
+              params: {
+                  notificationId: notificationId
+              }
+            })
           }
-          switch (action) {
-            case "ACCEPT":
-              if (category === "APPOINTMENT_REQUEST") {
-                // accept appointment
-              }
-              if (category === "DOCTOR_JOINING_REQUEST") {
-                // accept joining request
-              }
-              return;
-            case "REJECT":
-              if (category === "APPOINTMENT_REQUEST") {
-                // accept appointment
-              }
-              if (category === "DOCTOR_JOINING_REQUEST") {
-                // accept joining request
-              }
-              return;
-            case "OPEN":
-            case Notifications.DEFAULT_ACTION_IDENTIFIER:
-              router.replace({
-                pathname: "/dashboard/notifications",
-                params: {
-                    notificationId: notificationId
-                }
-              })
-              return;
-          }
-          // if (action) {
-          //   if (action === "ACCEPT") {
-          //     const appointmentId = data.appointmentId;
-              
-          //   } else if (action === "OPEN") {
-          //     if (data?.category === "APPOINTMENT") {
-          //       router.replace({
-          //         pathname: "/dashboard/notifications",
-          //         params: {
-          //             notificationId: notificationId
-          //         }
-          //       })
+          // switch (action) {
+          //   case "ACCEPT":
+          //     if (category === "APPOINTMENT_REQUEST") {
+          //       // accept appointment
           //     }
-          //   }
-          // } else {
-          //   if (data?.category === "APPOINTMENT") {
+          //     if (category === "DOCTOR_JOINING_REQUEST") {
+          //       // accept joining request
+          //     }
+          //     return;
+          //   case "REJECT":
+          //     if (category === "APPOINTMENT_REQUEST") {
+          //       // accept appointment
+          //     }
+          //     if (category === "DOCTOR_JOINING_REQUEST") {
+          //       // accept joining request
+          //     }
+          //     return;
+          //   case "OPEN":
+          //   case Notifications.DEFAULT_ACTION_IDENTIFIER:
           //     router.replace({
           //       pathname: "/dashboard/notifications",
           //       params: {
           //           notificationId: notificationId
           //       }
           //     })
-          //   }
+          //     return;
           // }
         });
     } catch (err) {
@@ -270,13 +262,23 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({
         <InAppFloatingBanner
           title={inAppData.title}
           message={inAppData.body}
-          onPress={() => {
-            router.replace({
-              pathname: "/dashboard/notifications",
-              params: {
-                  notificationId: inAppData.data.notificationId
-              }
-            })
+          onPress={async () => {
+            const userType = await getSecureKey("userType");
+            if (userType === "DOCTOR") {
+              router.replace({
+                pathname: "/dashboard/notifications",
+                params: {
+                    notificationId: inAppData.data.notificationId
+                }
+              })
+            } else if (userType === "ADMIN") {
+              router.replace({
+                pathname: "/hospitalDashboard/notifications",
+                params: {
+                    notificationId: inAppData.data.notificationId
+                }
+              })
+            }
             setInAppData(null);
           }}
           onClose={() => setInAppData(null)}
