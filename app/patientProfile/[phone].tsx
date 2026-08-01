@@ -99,7 +99,7 @@ const PatientProfile = () => {
         <ThemedView style={styles.container} >
             <View style={[styles.profileCard, { width: width }]}>
                 <View style={styles.profileHeader}>
-                    {patientDetails?.imageUrl !== "" ? 
+                    {/* {patientDetails?.imageUrl !== "" ? 
                         <Image 
                             source={{uri: patientDetails?.imageUrl}} 
                             resizeMode='cover' 
@@ -107,12 +107,12 @@ const PatientProfile = () => {
                             width={100} 
                             style={styles.profileImage} 
                         />
-                    :
+                    : */}
                         <Image
                             source={require('@/assets/images/Girl_doctor.png')}
                             style={styles.profileImage}
                         />
-                    }
+                    {/* } */}
                     <View style={styles.headerInfo}>
                         <ThemedText style={styles.nameText} >{finalText(patientDetails?.name, translations, selectedLanguage)} </ThemedText>
                         <View style={styles.infoRow}>

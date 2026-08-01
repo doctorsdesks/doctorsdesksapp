@@ -6,7 +6,7 @@ import Loader from '@/components/Loader';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { acceptHospitalJoiningRequest, finalText, getAllNotifications, getNotificationCount, getOneAppointment, getOneMappingDoctor, getSecureKey, markNotificationRead, markReadAllNotifications, rejectHospitalJoiningRequest } from '@/components/Utils';
-import { NotificationCategory, NotificationType } from '@/constants/Enums';
+import { NotificationCategory, NotificationType, routes } from '@/constants/Enums';
 import { URLS } from '@/constants/Urls';
 import { useAppContext } from '@/context/AppContext';
 import { textObject } from '@/context/InitialState';
@@ -19,7 +19,7 @@ import Toast from "react-native-toast-message";
 
 const Notifications = () => {
     const { notificationId } = useLocalSearchParams();
-    const { notifications, setNotifications, translations, selectedLanguage, doctorDetails } = useAppContext();
+    const { setNotifications, translations, selectedLanguage, doctorDetails } = useAppContext();
     const { height, width } = Dimensions.get('window');
     const [loader, setLoader] = useState(false);
     const [isUnReadNotificationExist, setIsUnReadNotificationExist] = useState(false);
@@ -27,6 +27,7 @@ const Notifications = () => {
     const [showCancelPopUp, setShowCancelPopUp] = useState<boolean>(false);
     const [cancelReason, setCancelReason] = useState<any>(textObject);
     const [selectedNotification, setSelectedNotification] = useState<string>("");
+    const [notifications, setLocalNotifications] = useState<NotificationType[]>([]);
 
     useEffect(() => {
         const backAction = () => {
@@ -40,10 +41,14 @@ const Notifications = () => {
     }, []);
 
     useEffect(() => {
-        if (notificationId &&  notificationId as string !== "") {
+        fetchNotifications();
+    },[])
+
+    useEffect(() => {
+        if (notifications && notifications.length > 0 && notificationId &&  notificationId as string !== "") {
             setSelectedNotification(notificationId as string);
         }
-    },[notificationId])
+    },[notifications,notificationId])
 
     useEffect(() => {
         if (notifications && notifications?.length > 0) {
@@ -58,14 +63,10 @@ const Notifications = () => {
             if (response?.status === "SUCCESS") {
                 const data = response?.data;
                 if (data.status === "PENDING") {
-                    setSelectedNotification(notification?.metadata?.notificationId as string);
+                    setSelectedNotification(notification?.id as string);
                 } else {
                     setSelectedNotification("");
                 }
-                if (notification) {
-                    await markNotificationRead({ isRead: true } ,notification?.id);
-                }
-                await fetchNotifications();
             } else {
                 Toast.show({
                     type: 'error',
@@ -88,14 +89,10 @@ const Notifications = () => {
             if (response?.status === "SUCCESS") {
                 const data = response?.data;
                 if (data.requestStatus === "PENDING") {
-                    setSelectedNotification(notification?.metadata?.notificationId as string);
+                    setSelectedNotification(notification?.id as string);
                 } else {
                     setSelectedNotification("");
                 }
-                if (notification) {
-                    await markNotificationRead({ isRead: true } ,notification?.id);
-                }
-                await fetchNotifications();
             } else {
                 Toast.show({
                     type: 'error',
@@ -113,6 +110,7 @@ const Notifications = () => {
     }
 
     const onNotificationClick = async (notification: NotificationType) => {
+        console.info(notification.category);
         switch (notification.category) {
             case NotificationCategory.APPOINTMENT_REQUEST: {
                     const appointmentId = notification?.metadata?.appointmentId;
@@ -120,7 +118,10 @@ const Notifications = () => {
                 }
                 break;
             case NotificationCategory.APPOINTMENT_STATUS: {
-                    router.push(notification.metadata?.deepLink as Href<string> ?? "/dashboard/appointments");
+                    await markNotificationRead({ isRead: true } ,notification?.id);
+                    if (notification.metadata?.screen) {
+                        router.push(routes[notification.metadata?.screen]);
+                    }
                 }
                 break;
             case NotificationCategory.DOCTOR_JOINING_REQUEST: {
@@ -129,20 +130,45 @@ const Notifications = () => {
                 }
                 break;
             case NotificationCategory.GENERAL: {
-                    if (notification.metadata?.deepLink && notification.metadata?.deepLink !== "") {
-                        router.push(notification.metadata?.deepLink as Href<string>);
+                    await markNotificationRead({ isRead: true } ,notification?.id);
+                    if (notification.metadata?.screen) {
+                        if (notification.metadata?.params) {
+                            router.replace({
+                                pathname: routes[notification.metadata.screen],
+                                params: notification.metadata?.params
+                            });
+                        } else {
+                            router.push(routes[notification.metadata.screen]);
+                        }
                     }
                 }
                 break;
             case NotificationCategory.HOSPITAL_ANNOUNCEMENT: {
-                    if (notification.metadata?.deepLink && notification.metadata?.deepLink !== "") {
-                        router.push(notification.metadata?.deepLink as Href<string>);
+                    await markNotificationRead({ isRead: true } ,notification?.id);
+                    if (notification.metadata?.screen) {
+                        if (notification.metadata?.params) {
+                            router.replace({
+                                pathname: routes[notification.metadata.screen],
+                                params: notification.metadata?.params
+                            });
+                        } else {
+                            router.push(routes[notification.metadata.screen]);
+                        }
                     }
                 }
                 break;
-            default:
-                if (notification.metadata?.deepLink && notification.metadata?.deepLink !== "") {
-                    router.push(notification.metadata?.deepLink as Href<string>);
+            default: {
+                    await markNotificationRead({ isRead: true } ,notification?.id);
+                    if (notification.metadata?.screen) {
+                        if (notification.metadata?.params) {
+                            router.replace({
+                                pathname: routes[notification.metadata.screen],
+                                params: notification.metadata?.params
+                            });
+                        } else {
+                            router.push(routes[notification.metadata.screen]);
+                        }
+                    }
                 }
                 break;
         }
@@ -150,6 +176,7 @@ const Notifications = () => {
 
     const fetchNotifications = async () => {
         try {
+            setLoader(true);
             const response = await getAllNotifications(doctorDetails?.phone, "DOCTOR");
             if (response?.status === "SUCCESS") {
                 const notifications = response?.data;
@@ -166,6 +193,7 @@ const Notifications = () => {
                     }
                 })
                 setNotifications(notificationsToSave);
+                setLocalNotifications(notificationsToSave);
             } else {
                 Toast.show({
                     type: 'error',
@@ -213,7 +241,7 @@ const Notifications = () => {
         }
     }
 
-    const updateAppointment = async (selectedStatus: string, appointmentId: string) => {
+    const updateAppointment = async (selectedStatus: string, appointmentId: string, notificationId: string) => {
         setLoader(true);
         let updateData: any = {
             appointmentUpdateType: selectedStatus,
@@ -241,6 +269,11 @@ const Notifications = () => {
                     text1: `Appointment has been ${selectedStatus === "CANCEL" ? "cancelled" : "accepted"}`,
                     visibilityTime: 3000,
                 });
+                if (notificationId) {
+                    setSelectedNotification("");
+                    await markNotificationRead({ isRead: true } ,notificationId);
+                    await fetchNotifications()
+                }
             } else {
                 Toast.show({
                     type: 'error',  
@@ -268,6 +301,11 @@ const Notifications = () => {
             try {
                 const response = await acceptHospitalJoiningRequest(item?.metadata?.mappingId as string);
                 if (response.status === "SUCCESS") {
+                    if (item) {
+                        setSelectedNotification("");
+                        await markNotificationRead({ isRead: true } ,item?.id);
+                        await fetchNotifications()
+                    }
                     Toast.show({
                         type: 'success',
                         text1: response.message,
@@ -289,7 +327,7 @@ const Notifications = () => {
             }
         } else if (item?.category === NotificationCategory.APPOINTMENT_REQUEST) {
             setLoader(true)
-            updateAppointment("ACCEPT", item?.metadata?.appointmentId)
+            updateAppointment("ACCEPT", item?.metadata?.appointmentId, item?.id)
         }
     }
 
@@ -298,9 +336,14 @@ const Notifications = () => {
             try {
                 const response = await rejectHospitalJoiningRequest(item?.metadata?.mappingId as string);
                 if (response.status === "SUCCESS") {
+                    if (item) {
+                        setSelectedNotification("");
+                        await markNotificationRead({ isRead: true } ,item?.id);
+                        await fetchNotifications()
+                    }
                     Toast.show({
                         type: 'success',
-                        text1: response.message,
+                        text1: response.message?.message,
                         visibilityTime: 3000,
                     });
                 } else {
@@ -341,7 +384,7 @@ const Notifications = () => {
                         <ScrollView
                             ref={scrollViewRef} 
                             showsVerticalScrollIndicator={false}
-                            style={{ marginTop: 20 }}
+                            style={{ marginTop: 20, marginBottom: 100 }}
                         >
                             {notifications.map((item, index) => (
                                     <EachNotification
@@ -351,6 +394,7 @@ const Notifications = () => {
                                         onReject={() => handleReject(item)}
                                         onNotificationClick={() => onNotificationClick(item)}
                                         selectedNotification={selectedNotification}
+                                        closeNotification={() => setSelectedNotification("")}
                                     />
                                 ))
                             }
@@ -362,7 +406,7 @@ const Notifications = () => {
                 </View>
             }
             {showCancelPopUp &&
-                <AppointmentCancelPopUp showCancelPopUp={showCancelPopUp} setShowCancelPopUp={setShowCancelPopUp} width={width} cancelReason={cancelReason} handleCancelReason={handleCancelReason} updateAppointment={updateAppointment} />
+                <AppointmentCancelPopUp showCancelPopUp={showCancelPopUp} setShowCancelPopUp={setShowCancelPopUp} width={width} cancelReason={cancelReason} handleCancelReason={handleCancelReason} updateAppointment={(status: string, appointmentId: string) => updateAppointment(status, appointmentId, selectedNotification)} />
             }
         </ThemedView>
     )

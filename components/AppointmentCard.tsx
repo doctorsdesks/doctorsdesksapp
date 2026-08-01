@@ -6,6 +6,8 @@ import { ThemedView } from './ThemedView';
 import { ThemedText } from './ThemedText';
 import { useAppContext } from '@/context/AppContext';
 import Icon from './Icons';
+import { Colors } from '@/constants/Colors';
+import { useColorScheme } from '@/hooks/useColorScheme.web';
 
 interface AppointmentCardProps {
     appointment: Appointment;
@@ -38,6 +40,7 @@ export interface Appointment {
 const AppointmentCard: React.FC<AppointmentCardProps> = ({ appointment, width, handleStatusUpdate, source }) => {
     const { translations, selectedLanguage } = useAppContext();
     const isHospitalAppointment = !!appointment?.hospitalId;
+     const colorSchema = useColorScheme() || 'light';
 
     const getStatusBGColor = (status: string) => {
         switch (status) {
@@ -97,8 +100,8 @@ const AppointmentCard: React.FC<AppointmentCardProps> = ({ appointment, width, h
                 borderWidth: source === "notification" ? 0 : 1,
                 borderRadius: 14,
                 backgroundColor: isHospitalAppointment
-                    ? "#F4F9FF"
-                    : "#FFFFFF",
+                    ? Colors[colorSchema].cardBackgroud
+                    : Colors[colorSchema].background,
                 borderColor: isHospitalAppointment
                     ? "#B8DAFF"
                     : "#D9D9D9",
@@ -153,12 +156,12 @@ const AppointmentCard: React.FC<AppointmentCardProps> = ({ appointment, width, h
             )}
             <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', borderBottomWidth: appointment?.status === AppointmentStatus.PENDING ? 1 : 0, borderBottomColor: "#F1F1F1" }} >
                 <View style={{ height: 70, width: 70, borderRadius: 100, display: 'flex', alignItems: 'center', flexDirection: 'row', justifyContent: 'center', backgroundColor: "#2DB9B0" }} >
-                    {appointment?.patientImageUrl && appointment?.patientImageUrl !== ""
+                    {/* {appointment?.patientImageUrl && appointment?.patientImageUrl !== ""
                     ?
                         <Image source={{uri: appointment?.patientImageUrl}} resizeMode='cover' height={70} width={70} style={{ height: 70, width: 70, borderRadius: 100 }} />  
-                    :
+                    : */}
                         <ThemedText style={{ fontSize: 40, lineHeight: 52, fontWeight: 700 }}>{capitalizeWords(appointment?.patientName)?.substring(0,1)}</ThemedText>
-                    }
+                    {/* } */}
                 </View>
                 <View style={{ marginLeft: 24, display: 'flex', width: width - 236 }} >
                     <ThemedText style={{ fontSize: 16, fontWeight: 600 }}>{capitalizeWords(appointment?.patientName)}</ThemedText>

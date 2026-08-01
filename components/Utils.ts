@@ -1008,7 +1008,7 @@ export const raiseRequestForDoctor = async (payload: any) => {
           if (status === 201){
             return {
               status: "SUCCESS",
-              message: data.message
+              data: data.data
             }
           } else {
             return {
@@ -1101,10 +1101,10 @@ export const rejectHospitalJoiningRequest = async (id: string) => {
           }
         );
         const { data, status } = response;
-        if (status === 201){
+        if (status === 200){
           return {
             status: "SUCCESS",
-            message: data.message
+            message: data.data
           }
         } else {
           return {
