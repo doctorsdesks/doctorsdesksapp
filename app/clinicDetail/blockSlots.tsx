@@ -127,6 +127,11 @@ const BlockSlots = () => {
         }
         const respnose = await blockSlots(payload);
         if (respnose.status === "SUCCESS") {
+            Toast.show({
+                type: 'success',  
+                text1: "Slot has been updated successfully!",
+                visibilityTime: 3000,
+            });
             router.replace({
                 pathname: "/clinicDetail/clinics",
                 params: {

@@ -230,11 +230,12 @@ export const uploadFile = async (fileUri: any, fileName: string, phoneNumber: st
     }
   }
 
-  export const  formatDateToYYYYMMDD = (date: Date) => {
-    let month: any = date.getMonth()+1;
-    if (JSON.stringify(month)?.length === 1) month = "0" + month;
-    return `${date.getFullYear()}-${month}-${date.getDate()}` 
-  }
+ export const formatDateToYYYYMMDD = (date: Date) => {
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+
+  return `${date.getFullYear()}-${month}-${day}`;
+};
 
   export const getValueById = (data: Array<any>, id: string) => {
     return data?.find((item: {id: string}) => item?.id === id)?.value;
