@@ -25,7 +25,16 @@ const Banner: React.FC<BannerProps> = ({ item }) => {
 
     const handleAction = () => {
         if (item?.buttonData?.pathToGo && item?.buttonData?.pathToGo !== "") {
-            router.replace(item?.buttonData?.pathToGo);
+            if (item?.id === "blockSlot") {
+                router.replace({
+                    pathname: item?.buttonData?.pathToGo,
+                    params: {
+                        source: "blockSlots",
+                    }
+                });
+            } else {
+                router.replace(item?.buttonData?.pathToGo);
+            }
         }
     };
 
